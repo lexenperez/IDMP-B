@@ -18,6 +18,7 @@ public abstract class NPC : MonoBehaviour
     public Sprite[] spriteArray;
     public float hp;
     public float speed;
+    public GameObject thePlayer;
 
     protected void Init()
     {
@@ -37,20 +38,20 @@ public abstract class NPC : MonoBehaviour
     }
 
     // Flip sprite in the X axis (Horizontal)
-    protected void flipSprite()
+    protected void FlipSprite()
     {
         sprite.flipX = !sprite.flipX;
     }
 
     // Assuming npcs either teleports to a location
-    protected void moveTowards(Vector2 position)
+    protected void MoveTowards(Vector2 position)
     {
         transform.position = position;
     }
 
     // Assuming npcs walks towards a location with a sprite animation
     // Probably better way to animate but leave for now
-    protected void moveTowards(Vector2 position, int[] animations, float animationTime)
+    protected void MoveTowards(Vector2 position, int[] animations, float animationTime)
     {
 
     }

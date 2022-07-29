@@ -6,6 +6,7 @@ public abstract class Enemy : NPC
 {
     public BoxCollider2D[] colliders;
     public SpriteRenderer[] sprites;
+    public Transform[] projectileSpawnPlacements;
     public bool allowSelfHitbox;
     // Abstract class should handle all general animation changes and hitboxes to enable (at least, for general melee attacks)
     
@@ -21,21 +22,28 @@ public abstract class Enemy : NPC
     // For any melee attack, it's simply just an animation followed by a collider enabled somewhere near the unit for a certain duration
     // For ranged or any other special attacks, probably need to be its own gameobject that handles itself
 
-    protected void performAttack(int animationIndex, int colliderIndex, float duration)
-    {
+    //protected void PerformAttack(int animationIndex, int colliderIndex, float duration)
+    //{
 
-    }
+    //}
 
-    protected void toggleHitbox(int colliderIndex)
+    protected void ToggleHitbox(int colliderIndex)
     {
         Debug.Log("Toggling Hitbox");
         colliders[colliderIndex].enabled = !colliders[colliderIndex].enabled;
     }
 
-    protected void toggleSprite(int spriteIndex)
+    protected void ToggleSprite(int spriteIndex)
     {
         Debug.Log("Toggling Sprite");
         sprites[spriteIndex].enabled = !sprites[spriteIndex].enabled;
+    }
+
+    protected GameObject SpawnProjectile(int projectileIndex, GameObject prefab)
+    {
+        Debug.Log("Spawning a projectile");
+        return Instantiate(prefab, projectileSpawnPlacements[projectileIndex].position, Quaternion.identity, transform);
+        
     }
 
 }

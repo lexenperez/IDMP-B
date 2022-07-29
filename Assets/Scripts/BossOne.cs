@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class BossOne : Enemy
 {
+
     // Individual scripts should contain its state machine and handle all calls for activating hitboxes, animations and spawning
     // For this boss, it doesnt move
     // Idle - Boss stands still
@@ -18,9 +19,21 @@ public class BossOne : Enemy
 
     // Call Animations here
 
+    // Store projectiles in case need to change values when spawning them
+    public GameObject horizontalProjectile;
+    public GameObject missile;
+
     // Start is called before the first frame update
     void Start()
     {
+        if (!horizontalProjectile)
+        {
+            horizontalProjectile = Resources.Load("Prefabs/Projectile") as GameObject;
+        }
+        if (!missile)
+        {
+            missile = Resources.Load("Prefabs/Missile") as GameObject;
+        }
         base.Init();
     }
 
@@ -29,16 +42,90 @@ public class BossOne : Enemy
     {
         if (Keyboard.current[Key.Q].wasPressedThisFrame)
         {
-            animator.SetTrigger("LowAttack");
+            MeleeAttack(BossOneConstants.lowAttack);
             //StartCoroutine("hitbox");
             
         }
         if (Keyboard.current[Key.W].wasPressedThisFrame)
         {
-            animator.SetTrigger("HighAttack");
+           MeleeAttack(BossOneConstants.highAttack);
         }
 
-        //if ()
-    } 
+        if (Keyboard.current[Key.E].wasPressedThisFrame)
+        {
+            FullLeftProjectileAttack();
+        }
 
+        if (Keyboard.current[Key.R].wasPressedThisFrame)
+        {
+            FullRightProjectileAttack();
+        }
+
+        if (Keyboard.current[Key.T].wasPressedThisFrame)
+        {
+            SpawnMissiles(5, thePlayer.transform);
+        }
+    }
+
+
+    private void MeleeAttack(string trigger)
+    {
+        animator.SetTrigger(trigger);
+    }
+
+    private void FullLeftProjectileAttack()
+    {
+        horizontalProjectile.GetComponent<Projectile>().startingVelocity = new Vector2(-250f, 0.0f);
+        //GameObject temp = Instantiate(horizontalProjectile);
+        //temp.SetActive(false);
+        //StartCoroutine(spawn(temp));
+        for (int i = 0; i < 3; i++)
+        {
+            GameObject go = SpawnProjectile(i, horizontalProjectile);
+            //(2.0f);
+            go.SetActive(true);
+        }
+    }
+
+    // Use this for delayed patterns
+    // i.e bullethell
+    //IEnumerator spawn(GameObject temp)
+    //{
+    //    for (int i = 0; i < 3; i++)
+    //    {
+    //        GameObject go = SpawnProjectile(i, temp);
+    //        //(2.0f);
+    //        go.SetActive(true);
+    //        yield return new WaitForSeconds(2.0f);
+    //    }
+    //    Destroy(temp);
+    //}
+
+    private void FullRightProjectileAttack()
+    {
+        horizontalProjectile.GetComponent<Projectile>().startingVelocity = new Vector2(250f, 0.0f);
+        for (int i = 3; i < 6; i++)
+        {
+            GameObject go = SpawnProjectile(i, horizontalProjectile);
+            go.SetActive(true);
+        }
+    }
+
+    // Probs do similar to projectiles and find certain points to spawn at, or just spawn at parent center
+    private void SpawnMissiles(int total, Transform target)
+    {
+        missile.GetComponent<Missile>().target = thePlayer.transform;
+        for (int i = 0; i < total; i++)
+        {
+            GameObject go = Instantiate(missile, transform.position, Quaternion.identity, transform);
+            go.SetActive(true);
+        }
+    }
+
+}
+
+public class BossOneConstants
+{
+    public const string highAttack = "HighAttack";
+    public const string lowAttack = "LowAttack";
 }
