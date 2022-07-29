@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.InputSystem;
 public class BossOne : Enemy
 {
     // Individual scripts should contain its state machine and handle all calls for activating hitboxes, animations and spawning
@@ -16,6 +16,7 @@ public class BossOne : Enemy
     // https://answers.unity.com/questions/362629/how-can-i-check-if-an-animation-is-being-played-or.html
     // One way while in that pattern state, refresh in update whether we can do next attack
 
+    // Call Animations here
 
     // Start is called before the first frame update
     void Start()
@@ -26,8 +27,18 @@ public class BossOne : Enemy
     // Update is called once per frame
     void Update()
     {
-        
-    }
+        if (Keyboard.current[Key.Q].wasPressedThisFrame)
+        {
+            animator.SetTrigger("LowAttack");
+            //StartCoroutine("hitbox");
+            
+        }
+        if (Keyboard.current[Key.W].wasPressedThisFrame)
+        {
+            animator.SetTrigger("HighAttack");
+        }
 
+        //if ()
+    } 
 
 }
