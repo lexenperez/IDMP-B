@@ -15,7 +15,7 @@ public abstract class NPC : MonoBehaviour
     protected Animator animator;
 
     // Find some more similar stuff
-    public Sprite[] spriteArray;
+    //public Sprite[] spriteArray;
     public float hp;
     public float speed;
     public GameObject thePlayer;
@@ -29,13 +29,13 @@ public abstract class NPC : MonoBehaviour
     }
 
     // For animation change (simple sprites)
-    protected void SwapSprite(int spriteIndex)
-    {
-        if (!(spriteIndex > spriteArray.Length))
-        {
-            sprite.sprite = spriteArray[spriteIndex];
-        }
-    }
+    //protected void SwapSprite(int spriteIndex)
+    //{
+    //    if (!(spriteIndex > spriteArray.Length))
+    //    {
+    //        sprite.sprite = spriteArray[spriteIndex];
+    //    }
+    //}
 
     // Flip sprite in the X axis (Horizontal)
     protected void FlipSprite()

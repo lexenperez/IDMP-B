@@ -21,4 +21,10 @@ public class testHitbox : MonoBehaviour
         Debug.Log("collided");
         GetComponent<SpriteRenderer>().color = Color.black;
     }
+
+    private void OnParticleCollision(GameObject other)
+    {
+        Debug.Log("collided");
+        GetComponent<SpriteRenderer>().color = Color.black;
+    }
 }

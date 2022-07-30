@@ -22,6 +22,21 @@ public class BossOne : Enemy
     // Store projectiles in case need to change values when spawning them
     public GameObject horizontalProjectile;
     public GameObject missile;
+    public GameObject bullet;
+    public GameObject bulletLog;
+
+
+    public int circleStepSize;
+    public float circleSpawnInterval;
+    public int circleRepeats;
+    public float circleSpeed;
+    public float circleRotation;
+    public Circle circle;
+
+    public float bulletSpeed;
+    public BulletVars bv;
+    public float bulletSpawnInterval;
+    public int bulletRepeats;
 
     // Start is called before the first frame update
     void Start()
@@ -64,6 +79,18 @@ public class BossOne : Enemy
         if (Keyboard.current[Key.T].wasPressedThisFrame)
         {
             SpawnMissiles(5, thePlayer.transform);
+        }
+
+        if (Keyboard.current[Key.Y].wasPressedThisFrame)
+        {
+            StartCoroutine(BulletHellFuncs.CircularBullet(circleStepSize, circleSpawnInterval, circleRepeats, circleSpeed, circleRotation, circle,
+                bullet, transform));
+        }
+
+        if (Keyboard.current[Key.U].wasPressedThisFrame)
+        {
+            StartCoroutine(BulletHellFuncs.SpiralBullet(bulletSpawnInterval, bulletRepeats, bulletSpeed, transform.position, bv,
+                bulletLog, transform));
         }
     }
 
@@ -121,6 +148,7 @@ public class BossOne : Enemy
             go.SetActive(true);
         }
     }
+
 
 }
 

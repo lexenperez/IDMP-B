@@ -2,20 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Missile : MonoBehaviour
+public class Missile : LifeTimer
 {
     //Randomly "burst out" in random directions before targeting something
     public Transform target;
     public float speed;
     public float timeToActivate;
     public float rotationSpeed;
-    public float lifetime;
     public float lowerRandom;
     public float upperRandom;
 
     private Rigidbody2D rb2d;
     private float time;
     private bool launched;
+    public GameObject line;
 
     
     // Start is called before the first frame update
@@ -25,6 +25,7 @@ public class Missile : MonoBehaviour
         //float randomRotation = Random.rotation.z;
         Vector2 randomVelocity = new Vector2(Random.Range(lowerRandom, upperRandom), Random.Range(lowerRandom, upperRandom));
         rb2d.AddForce(randomVelocity);
+        //line = GetComponent<LineRenderer>();
     }
 
     private void FixedUpdate()
@@ -42,6 +43,10 @@ public class Missile : MonoBehaviour
                 launched = true;
                 time = 0;
                 transform.rotation = Quaternion.Euler(0.0f, 0.0f, rotationZ);
+                //line.useWorldSpace = true;
+
+                StartCoroutine(Fade());
+                line.transform.parent = null;
             }
             else
             {
@@ -54,15 +59,25 @@ public class Missile : MonoBehaviour
     void Update()
     {
         time += Time.deltaTime;
+        CheckForExpire();
+    }
 
-        if (launched)
+    private IEnumerator Fade()
+    {
+        LineRenderer renderer = line.GetComponent<LineRenderer>();
+        Color c = renderer.material.color;
+        for (float alpha = 1f; alpha >= 0; alpha -= 0.5f)
         {
-            
-            if (time >= lifetime)
-            {
-                Destroy(gameObject);
-            }
+            c.a = alpha;
+            renderer.material.color = c;
+            yield return new WaitForSeconds(0.4f);
         }
+        Destroy(line);
+    }
 
+    public override void Expire()
+    {
+        Destroy(gameObject);
+        Destroy(line);
     }
 }
