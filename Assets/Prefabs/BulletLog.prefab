@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifetime: 25
-  gf: 0
+  gf: 1
   speed: 0
   bv:
     a: 0

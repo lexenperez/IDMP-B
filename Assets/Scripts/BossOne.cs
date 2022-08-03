@@ -20,10 +20,13 @@ public class BossOne : Enemy
     // Call Animations here
 
     // Store projectiles in case need to change values when spawning them
+
+    // Maybe seperate this into classes for easier serialisation
     public GameObject horizontalProjectile;
     public GameObject missile;
     public GameObject bullet;
     public GameObject bulletLog;
+    public GameObject shotgun;
 
 
     public int circleStepSize;
@@ -37,6 +40,15 @@ public class BossOne : Enemy
     public BulletVars bv;
     public float bulletSpawnInterval;
     public int bulletRepeats;
+
+    public int shotgunsLeft;
+    public int shotgunsRight;
+    public float shotgunInterval;
+    public int shotgunRepeats;
+    public float shotgunSpeed;
+    public float shotgunRotation;
+    public float shotgunDistance;
+    public Circle shotgunCircle;
 
     // Start is called before the first frame update
     void Start()
@@ -91,6 +103,12 @@ public class BossOne : Enemy
         {
             StartCoroutine(BulletHellFuncs.SpiralBullet(bulletSpawnInterval, bulletRepeats, bulletSpeed, transform.position, bv,
                 bulletLog, transform));
+        }
+
+        if (Keyboard.current[Key.I].wasPressedThisFrame)
+        {
+            StartCoroutine(BulletHellFuncs.ShotgunBullet(shotgunsLeft, shotgunsRight, shotgunInterval, shotgunRepeats, shotgunSpeed,
+                shotgunRotation, shotgunDistance, shotgunCircle, shotgun, transform));
         }
     }
 

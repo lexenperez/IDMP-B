@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Bullet : LifeTimer
 {
+    // If this gets laggy then maybe combine the same spawn bullets into one bullet manager class
+
     // Start is called before the first frame update
     void Start()
     {

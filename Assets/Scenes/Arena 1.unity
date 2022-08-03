@@ -14984,9 +14984,10 @@ MonoBehaviour:
   missile: {fileID: 4951526269001340950, guid: 29cf2771fc6eb424cae2938fe4ad1abb, type: 3}
   bullet: {fileID: 7596809050977703109, guid: 5a33cd8dfc04997418ae14b83eabbef8, type: 3}
   bulletLog: {fileID: 7288028448534652705, guid: 3b6508db9f9306e47abc6f1f5cc897c6, type: 3}
+  shotgun: {fileID: 7596809050977703109, guid: 5a33cd8dfc04997418ae14b83eabbef8, type: 3}
   circleStepSize: 50
-  circleSpawnInterval: 1
-  circleRepeats: 5
+  circleSpawnInterval: 0.2
+  circleRepeats: 20
   circleSpeed: 300
   circleRotation: 0
   circle:
@@ -14995,11 +14996,21 @@ MonoBehaviour:
     r: 5
   bulletSpeed: 1
   bv:
-    a: 0
+    a: 2
     b: 0
     gf: 0
   bulletSpawnInterval: 1
   bulletRepeats: 1
+  shotgunsLeft: 1
+  shotgunsRight: 2
+  shotgunInterval: 1
+  shotgunRepeats: 1
+  shotgunSpeed: 300
+  shotgunRotation: 90
+  shotgunCircle:
+    a: 0
+    b: 0
+    r: 5
 --- !u!61 &396385006
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -29336,6 +29347,7 @@ MonoBehaviour:
   missile: {fileID: 0}
   bullet: {fileID: 0}
   bulletLog: {fileID: 0}
+  shotgun: {fileID: 0}
   circleStepSize: 0
   circleSpawnInterval: 0
   circleRepeats: 0
@@ -29352,6 +29364,16 @@ MonoBehaviour:
     gf: 0
   bulletSpawnInterval: 0
   bulletRepeats: 0
+  shotgunsLeft: 0
+  shotgunsRight: 0
+  shotgunInterval: 0
+  shotgunRepeats: 0
+  shotgunSpeed: 0
+  shotgunRotation: 0
+  shotgunCircle:
+    a: 0
+    b: 0
+    r: 0
 --- !u!212 &1321617242
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -39156,6 +39178,7 @@ MonoBehaviour:
   missile: {fileID: 0}
   bullet: {fileID: 0}
   bulletLog: {fileID: 0}
+  shotgun: {fileID: 0}
   circleStepSize: 0
   circleSpawnInterval: 0
   circleRepeats: 0
@@ -39172,6 +39195,16 @@ MonoBehaviour:
     gf: 0
   bulletSpawnInterval: 0
   bulletRepeats: 0
+  shotgunsLeft: 0
+  shotgunsRight: 0
+  shotgunInterval: 0
+  shotgunRepeats: 0
+  shotgunSpeed: 0
+  shotgunRotation: 0
+  shotgunCircle:
+    a: 0
+    b: 0
+    r: 0
 --- !u!212 &1516898983
 SpriteRenderer:
   m_ObjectHideFlags: 0
