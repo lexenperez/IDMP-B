@@ -28,27 +28,10 @@ public class BossOne : Enemy
     public GameObject bulletLog;
     public GameObject shotgun;
 
-
-    public int circleStepSize;
-    public float circleSpawnInterval;
-    public int circleRepeats;
-    public float circleSpeed;
-    public float circleRotation;
-    public Circle circle;
-
-    public float bulletSpeed;
-    public BulletVars bv;
-    public float bulletSpawnInterval;
-    public int bulletRepeats;
-
-    public int shotgunsLeft;
-    public int shotgunsRight;
-    public float shotgunInterval;
-    public int shotgunRepeats;
-    public float shotgunSpeed;
-    public float shotgunRotation;
-    public float shotgunDistance;
-    public Circle shotgunCircle;
+    public CircleBullet cb;
+    public SpiralBullet sb;
+    public ShotgunBullet shb;
+    public int totalMissiles;
 
     // Start is called before the first frame update
     void Start()
@@ -62,6 +45,8 @@ public class BossOne : Enemy
             missile = Resources.Load("Prefabs/Missile") as GameObject;
         }
         base.Init();
+
+        // Probs set values of projectiles here
     }
 
     // Update is called once per frame
@@ -90,29 +75,24 @@ public class BossOne : Enemy
 
         if (Keyboard.current[Key.T].wasPressedThisFrame)
         {
-            SpawnMissiles(5, thePlayer.transform);
+            SpawnMissiles(totalMissiles, thePlayer.transform);
         }
 
         if (Keyboard.current[Key.Y].wasPressedThisFrame)
         {
-            StartCoroutine(BulletHellFuncs.CircularBullet(circleStepSize, circleSpawnInterval, circleRepeats, circleSpeed, circleRotation, circle,
-                bullet, transform));
+            StartCoroutine(BulletHellFuncs.CircularBullet(cb, bullet, transform));
         }
 
         if (Keyboard.current[Key.U].wasPressedThisFrame)
         {
-            StartCoroutine(BulletHellFuncs.SpiralBullet(bulletSpawnInterval, bulletRepeats, bulletSpeed, transform.position, bv,
-                bulletLog, transform));
+            StartCoroutine(BulletHellFuncs.SpiralBullet(sb, bulletLog, transform));
         }
 
         if (Keyboard.current[Key.I].wasPressedThisFrame)
         {
-            StartCoroutine(BulletHellFuncs.ShotgunBullet(shotgunsLeft, shotgunsRight, shotgunInterval, shotgunRepeats, shotgunSpeed,
-                shotgunRotation, shotgunDistance, shotgunCircle, shotgun, transform));
+            StartCoroutine(BulletHellFuncs.ShotgunBullet(shb, shotgun, transform));
         }
     }
-
-
     private void MeleeAttack(string trigger)
     {
         animator.SetTrigger(trigger);

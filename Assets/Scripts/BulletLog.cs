@@ -26,8 +26,10 @@ public class BulletLog : Bullet
 
     private void FixedUpdate()
     {
+        // This gets really fast
         currentSpeed += speed * Time.deltaTime;
     }
+
     public override void Expire()
     {
         base.Expire();
