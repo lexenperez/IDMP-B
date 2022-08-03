@@ -1,0 +1,148 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class PlayerJump : MonoBehaviour
+{
+    private Rigidbody2D rigidBody;
+    private BoxCollider2D boxCollider;
+    [SerializeField] private bool debug = false;
+    [SerializeField] private LayerMask groundLayer;
+
+    [Header("Jumping Configurations")]
+    [SerializeField, Range(1f, 5f),      Tooltip("Maximum jump height")]                                       private float jumpHeight = 2f;
+    [SerializeField, Range(0f, 2f),      Tooltip("Minimum jump height")]                                       private float minJumpHeight = 0.2f;
+    [SerializeField,                     Tooltip("Terminal Velocity")]                                         private float maxFallSpeed = 10f;
+    [SerializeField, Range(0f, 0.3f),    Tooltip("How far from ground should we cache your jump?")]            private float jumpBuffer = 0.15f;
+
+    [Header("Jump States")]
+    [SerializeField] protected bool onGround = false;
+    [SerializeField] private bool desiredJump;
+    [SerializeField] private bool pressingJump;
+    [SerializeField] private bool currentlyJumping;
+    private float jumpBufferCounter;
+
+    private float lastJumpPositionY = 0f;
+
+    [SerializeField, Range(0.001f, 0.5f), Tooltip("Distance from bottom of collision box to ground layer")] private float groundLength = 0.05f;
+    private float groundOffset;
+    private Vector2 colliderOffset;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        rigidBody = GetComponent<Rigidbody2D>();
+        boxCollider = GetComponent<BoxCollider2D>();
+        colliderOffset = new Vector2(boxCollider.bounds.size.x / 2f, 0);
+        groundOffset = (boxCollider.bounds.size.y / 2f);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        IsGrounded();
+        JumpBuffer();
+    }
+
+    private void JumpBuffer()
+    {
+        if (jumpBuffer > 0 && desiredJump)
+        {
+            jumpBufferCounter += Time.deltaTime;
+
+            if (jumpBufferCounter > jumpBuffer)
+            {
+                desiredJump = false;
+                jumpBufferCounter = 0;
+            }
+        }
+    }
+
+    private void IsGrounded()
+    {
+        // Shoots 2 raycasts downwards on either side of the collision box of the player
+        onGround = Physics2D.Raycast((Vector2) transform.position - colliderOffset, Vector2.down, groundLength + groundOffset, groundLayer) ||
+                   Physics2D.Raycast((Vector2) transform.position + colliderOffset, Vector2.down, groundLength + groundOffset, groundLayer);
+    }
+
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            desiredJump = true;
+            pressingJump = true;
+        }
+
+        if (context.canceled)
+            pressingJump = false;
+    }
+
+    private void FixedUpdate()
+    {
+
+        if (desiredJump)
+            Jump();
+        else
+            CalculateJump();
+    }
+
+    private void CalculateJump()
+    {
+        if (onGround)
+        {
+            // Not moving vertically and is on ground
+            if (rigidBody.velocity.y == 0f)
+                currentlyJumping = false;
+        }
+        else
+        {
+            if (rigidBody.velocity.y > 0.01f)
+            {
+                // Variable Jump Height
+                if (!pressingJump || !currentlyJumping)
+                {
+                    // Forces player to jump a minimum distance before dropping down
+                    if (Mathf.Abs(transform.position.y - lastJumpPositionY) >= minJumpHeight)
+                    {
+                        // Causes player to quickly fall down
+                        rigidBody.velocity = new Vector2(rigidBody.velocity.x, 0);
+                    }
+                }
+            }
+        }
+
+        // Limit the speed the player will fall
+        rigidBody.velocity = new Vector2(rigidBody.velocity.x, Mathf.Clamp(rigidBody.velocity.y, -maxFallSpeed, 100));
+    }
+
+    private void Jump()
+    {
+        if (onGround)
+        {
+            desiredJump = false;
+            jumpBufferCounter = 0;
+            lastJumpPositionY = transform.position.y;
+
+            // Calculate jump power
+            float jumpVelocity = Mathf.Sqrt(-2f * Physics2D.gravity.y * rigidBody.gravityScale * jumpHeight);
+
+            // Apply jump velocity
+            rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpVelocity);
+            currentlyJumping = true;
+        }
+
+        if (jumpBuffer == 0)
+            desiredJump = false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (debug)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine((Vector2) transform.position - colliderOffset, (Vector2) transform.position - colliderOffset + Vector2.down * (groundLength + groundOffset));
+            Gizmos.DrawLine((Vector2) transform.position + colliderOffset, (Vector2) transform.position + colliderOffset + Vector2.down * (groundLength + groundOffset));
+        }
+    }
+}

@@ -295,7 +295,7 @@ GameObject:
   - component: {fileID: 697579446}
   - component: {fileID: 697579445}
   - component: {fileID: 697579448}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ground Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -388,7 +388,7 @@ Transform:
   m_GameObject: {fileID: 697579444}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.75, z: 0}
-  m_LocalScale: {x: 1000, y: 0.5, z: 1}
+  m_LocalScale: {x: 10, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
@@ -514,6 +514,7 @@ GameObject:
   - component: {fileID: 1524348962}
   - component: {fileID: 1524348957}
   - component: {fileID: 1524348960}
+  - component: {fileID: 1524348963}
   - component: {fileID: 1524348961}
   m_Layer: 0
   m_Name: Player
@@ -537,12 +538,12 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 1.5
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!212 &1524348958
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -620,7 +621,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c0db8f98a5df8048914afb450130172, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 5
+  maxSpeed: 3
 --- !u!114 &1524348961
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -634,7 +635,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: bcf6fb5601ff5304bbf7ec15c35e0773, type: 3}
-  m_NotificationBehavior: 0
+  m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -648,10 +649,10 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: 8c0db8f98a5df8048914afb450130172, type: 3}
-        m_TargetAssemblyTypeName: UnityEngine.Object, UnityEngine
-        m_MethodName: set_name
-        m_Mode: 5
+      - m_Target: {fileID: 1524348960}
+        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
+        m_MethodName: OnMove
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -663,7 +664,19 @@ MonoBehaviour:
     m_ActionId: dd09ecb9-21c7-4197-94fb-67783e94fa5d
     m_ActionName: Ground/Move[/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1524348963}
+        m_TargetAssemblyTypeName: PlayerJump, Assembly-CSharp
+        m_MethodName: OnJump
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: f5c7faa4-2638-4bac-82d0-a9a32d08747f
     m_ActionName: Ground/Jump[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
@@ -684,7 +697,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.025}
+  m_Offset: {x: 0, y: -0.0155618}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -695,8 +708,33 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.9, y: 0.95}
+  m_Size: {x: 0.9, y: 0.9311236}
   m_EdgeRadius: 0
+--- !u!114 &1524348963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1524348956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 609ddc80e1e03a84cb1ba24aaa27cfc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debug: 1
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  jumpHeight: 2
+  minJumpHeight: 0.5
+  maxFallSpeed: 10
+  jumpBuffer: 0.15
+  onGround: 0
+  desiredJump: 0
+  pressingJump: 0
+  currentlyJumping: 0
+  groundLength: 0.05
 --- !u!1 &1826610026
 GameObject:
   m_ObjectHideFlags: 0
