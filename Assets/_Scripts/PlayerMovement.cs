@@ -12,6 +12,12 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rigidBody;
     private SpriteRenderer spriteRenderer;
     private TrailRenderer trailRenderer;
+    private PlayerWallSlide playerWallSlideScript;
+    private PlayerJump playerJumpScript;
+
+    // Input
+    private PlayerInput playerInput;
+    private InputAction moveAction;
 
     // Movement
     private float directionX;
@@ -29,12 +35,21 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool dashOnCooldown;
     private float dashSpeed;
 
+    // Get - Setters
+    public float GetDirectionX { get { return directionX; } }
+
     // Start is called before the first frame update
     void Start()
     {
         rigidBody = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         trailRenderer = GetComponent<TrailRenderer>();
+        playerWallSlideScript = GetComponent<PlayerWallSlide>();
+        playerJumpScript = GetComponent<PlayerJump>();
+
+        // Inputs
+        playerInput = GetComponent<PlayerInput>();
+        moveAction = playerInput.actions["Move"];
     }
 
     // Update is called once per frame
@@ -57,11 +72,6 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         MovePlayer();
-    }
-
-    public void OnMove(InputAction.CallbackContext context)
-    {
-        directionX = context.ReadValue<float>();
     }
 
     public void OnDash(InputAction.CallbackContext context)
@@ -103,11 +113,27 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!currentlyDashing)
         {
+            // Read Direction Input
+            directionX = moveAction.ReadValue<float>();
+
             // Get Input and Desired Velocity
             desiredVelocity = new Vector2(directionX, 0f) * maxSpeed;
 
+            // Disable movement inputs if wall sliding
+            if (playerWallSlideScript.IsTouchingLeftWall && directionX == -1)
+                desiredVelocity.x = 0;
+            else if (playerWallSlideScript.IsTouchingRightWall && directionX == 1)
+                desiredVelocity.x = 0;
+
             // Set Velocity
-            rigidBody.velocity = new Vector2(desiredVelocity.x, rigidBody.velocity.y);
+            if (!playerJumpScript.GetLimitPlayerMovement)
+            {
+                // Player jumps off a wall, holding down jump and not pressing any directional inputs. Prevents setting the wall jump velocity.x to 0
+                if (playerJumpScript.GetCurrentJumpType == PlayerJump.CurrentJumpType.Wall && playerJumpScript.IsPressingJump && directionX == 0)                    
+                    desiredVelocity.x = rigidBody.velocity.x;
+
+                rigidBody.velocity = new Vector2(desiredVelocity.x, rigidBody.velocity.y);
+            }
         }
     }
 }
