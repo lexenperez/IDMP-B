@@ -10,12 +10,13 @@ public class LoadUI : MonoBehaviour
         SceneManager.LoadSceneAsync("UI", LoadSceneMode.Additive);
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (SceneManager.GetSceneByName("Pause").isLoaded)
             {
+                Time.timeScale = 1;
                 SceneManager.UnloadSceneAsync("Pause");
                 SceneManager.LoadSceneAsync("UI", LoadSceneMode.Additive);
             }
@@ -25,6 +26,10 @@ public class LoadUI : MonoBehaviour
                 SceneManager.UnloadSceneAsync("UI");
                 SceneManager.LoadSceneAsync("Pause", LoadSceneMode.Additive);
             }
+        }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            SceneManager.LoadScene("Scene 2");
         }
     }
 }
