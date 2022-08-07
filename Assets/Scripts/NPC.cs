@@ -44,15 +44,15 @@ public abstract class NPC : MonoBehaviour
     }
 
     // Assuming npcs either teleports to a location
-    protected void MoveTowards(Vector2 position)
-    {
-        transform.position = position;
-    }
+    //protected void MoveTowards(Vector2 position)
+    //{
+    //    transform.position = position;
+    //}
 
     // Assuming npcs walks towards a location with a sprite animation
     // Probably better way to animate but leave for now
-    protected void MoveTowards(Vector2 position, int[] animations, float animationTime)
-    {
+    //protected void MoveTowards(Vector2 position, int[] animations, float animationTime)
+    //{
 
-    }
+    //}
 }

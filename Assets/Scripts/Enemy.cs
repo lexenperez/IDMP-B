@@ -27,22 +27,24 @@ public abstract class Enemy : NPC
 
     //}
 
-    protected void ToggleHitbox(int colliderIndex)
-    {
-        Debug.Log("Toggling Hitbox");
-        colliders[colliderIndex].enabled = !colliders[colliderIndex].enabled;
-    }
+    //protected void ToggleHitbox(int colliderIndex)
+    //{
+    //    Debug.Log("Toggling Hitbox");
+    //    colliders[colliderIndex].enabled = !colliders[colliderIndex].enabled;
+    //}
 
-    protected void ToggleSprite(int spriteIndex)
-    {
-        Debug.Log("Toggling Sprite");
-        sprites[spriteIndex].enabled = !sprites[spriteIndex].enabled;
-    }
+    //protected void ToggleSprite(int spriteIndex)
+    //{
+    //    Debug.Log("Toggling Sprite");
+    //    sprites[spriteIndex].enabled = !sprites[spriteIndex].enabled;
+    //}
 
     protected GameObject SpawnProjectile(int projectileIndex, GameObject prefab)
     {
         Debug.Log("Spawning a projectile");
-        return Instantiate(prefab, projectileSpawnPlacements[projectileIndex].position, Quaternion.identity, transform);
+        GameObject go = Instantiate(prefab);
+        go.transform.position = projectileSpawnPlacements[projectileIndex].position;
+        return go;
         
     }
 

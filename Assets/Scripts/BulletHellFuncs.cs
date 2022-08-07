@@ -27,8 +27,9 @@ public class BulletHellFuncs : MonoBehaviour
         {
             Vector2 p = points[i];
             // Create objects and push it away from parent
-            GameObject go = Instantiate(obj, p, Quaternion.identity, parent);
-            Debug.Log(go);
+            GameObject go = Instantiate(obj);
+            Vector3 conversion = p;
+            go.transform.position = parent.position + conversion;
             Vector3 dir = (go.transform.position - parent.position).normalized;
             go.GetComponent<Rigidbody2D>().AddForce(dir * cb.speed);
             if (i % cb.stepSize == 0 && i != 0)
@@ -44,7 +45,8 @@ public class BulletHellFuncs : MonoBehaviour
     {
         for (int i = 0; i < sb.repeats; i++)
         {
-            GameObject go = Instantiate(obj, sb.position, Quaternion.identity, parent);
+            GameObject go = Instantiate(obj);
+            go.transform.position = parent.position + go.transform.position;
             go.GetComponent<BulletLog>().bv = sb.bulletVariables;
             go.GetComponent<BulletLog>().speed = sb.speed;
             yield return new WaitForSeconds(sb.spawnInterval);
@@ -62,9 +64,16 @@ public class BulletHellFuncs : MonoBehaviour
         for (int t = 0; t < total; t++)
         {
             // Find angle via step rotation addition
-            float angle = Mathf.Deg2Rad * (sb.rotation + ((float)step * sb.distanceBetweenBullets));
+            float angle = (Mathf.Deg2Rad * sb.rotation) + (Mathf.Deg2Rad * (float)step * sb.distanceBetweenBullets);
+            Debug.Log(angle);
+                 //
             Vector2 x = MathFuncs.PositionOnCircle(sb.circle, angle);
+            Debug.Log(x);
             points.Add(x);
+            if (t == 0)
+            {
+                BossOne.testV = x;
+            }
             step++;
         }
 
@@ -72,7 +81,10 @@ public class BulletHellFuncs : MonoBehaviour
         {
             foreach (Vector2 p in points)
             {
-                GameObject go = Instantiate(obj, p, Quaternion.identity, parent);
+                // Dont make parent since it'll follow the boss
+                GameObject go = Instantiate(obj);
+                Vector3 conversion = p;
+                go.transform.position = parent.position + conversion;
                 Vector3 dir = (go.transform.position - parent.position).normalized;
                 go.GetComponent<Rigidbody2D>().AddForce(dir * sb.speed);
             }
@@ -99,6 +111,19 @@ public class CircleBullet
     public float speed;
     public float rotation;
     public Circle circle;
+
+    public CircleBullet Copy()
+    {
+        CircleBullet c = new CircleBullet();
+        c.stepSize = stepSize;
+        c.spawnInterval = spawnInterval;
+        c.repeats = repeats;
+        c.speed = speed;
+        c.rotation = rotation;
+        c.circle = circle;
+        return c;
+
+    }
 }
 
 [System.Serializable]
@@ -109,6 +134,17 @@ public class SpiralBullet
     public float speed;
     public Vector3 position;
     public BulletVars bulletVariables;
+
+    public SpiralBullet Copy()
+    {
+        SpiralBullet s = new SpiralBullet();
+        s.spawnInterval = spawnInterval;
+        s.repeats = repeats;
+        s.speed = speed;
+        s.position = position;
+        s.bulletVariables = bulletVariables;
+        return s;
+    }
 }
 
 [System.Serializable]
@@ -121,4 +157,18 @@ public class ShotgunBullet
     public float rotation;
     public float distanceBetweenBullets;
     public Circle circle;
+    
+    public ShotgunBullet Copy()
+    {
+        ShotgunBullet b = new ShotgunBullet();
+        b.totalLeft = totalLeft;
+        b.totalRight = totalRight;
+        b.spawnInterval = spawnInterval;
+        b.repeats = repeats;
+        b.speed = speed;
+        b.rotation = rotation;
+        b.distanceBetweenBullets = distanceBetweenBullets;
+        b.circle = circle;
+        return b;
+    }
 }
