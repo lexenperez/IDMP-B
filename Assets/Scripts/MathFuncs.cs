@@ -47,6 +47,21 @@ public class MathFuncs : MonoBehaviour
 
     }
 
+    // Simulates a coinflip via random 0 to 1
+    // Returns false if 0, 1 if true
+    public static bool CoinFlip()
+    {
+        int flip = Random.Range(0, 2);
+        if (flip == 0) return false;
+        else return true;
+    }
+
+    // Simulates a 0-100% chance
+    public static bool Chance(float percentage)
+    {
+        return Random.value > (1.0f - percentage);
+    }
+
 }
 
 [System.Serializable]

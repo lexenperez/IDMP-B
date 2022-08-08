@@ -32,6 +32,7 @@ public class BulletHellFuncs : MonoBehaviour
             go.transform.position = parent.position + conversion;
             Vector3 dir = (go.transform.position - parent.position).normalized;
             go.GetComponent<Rigidbody2D>().AddForce(dir * cb.speed);
+            go.SetActive(true);
             if (i % cb.stepSize == 0 && i != 0)
             {
                 yield return new WaitForSeconds(cb.spawnInterval);
@@ -49,6 +50,7 @@ public class BulletHellFuncs : MonoBehaviour
             go.transform.position = parent.position + go.transform.position;
             go.GetComponent<BulletLog>().bv = sb.bulletVariables;
             go.GetComponent<BulletLog>().speed = sb.speed;
+            go.SetActive(true);
             yield return new WaitForSeconds(sb.spawnInterval);
         }
     }
@@ -87,6 +89,7 @@ public class BulletHellFuncs : MonoBehaviour
                 go.transform.position = parent.position + conversion;
                 Vector3 dir = (go.transform.position - parent.position).normalized;
                 go.GetComponent<Rigidbody2D>().AddForce(dir * sb.speed);
+                go.SetActive(true);
             }
             yield return new WaitForSeconds(sb.spawnInterval);
         }

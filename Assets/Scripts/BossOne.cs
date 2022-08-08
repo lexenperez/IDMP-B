@@ -34,20 +34,17 @@ public class BossOne : Enemy
     public int totalMissiles;
     public static Vector3 testV;
     public Transform[] waypoints;
-    enum State
-    {
-        Idle,
-        Attack,
-        Move,
-        Death
-    };
+
     public float lowerReactTime;
     public float higherReactTime;
     public float playerDistanceThreshold;
-    private float reactTime = 99;
+    public float moveTime = 0;
+
+    private float reactTime = 5;
     private float t = 0;
-    private int repeats = 0;
-    private bool starth = true;
+    private float moveT = 0;
+    //private int repeats = 0;
+    //private bool starth = true;
     private bool isMoving = false;
     private Vector3 waypoint;
 
@@ -62,48 +59,48 @@ public class BossOne : Enemy
     // Update is called once per frame
     void Update()
     {
-        //if (Keyboard.current[Key.Q].wasPressedThisFrame)
-        //{
-        //    float furthestPoint = 0;
-        //    Vector3 bestPoint = Vector3.zero;
-        //    for (int i = 0; i < waypoints.Length; i++)
-        //    {
-        //        float d = Vector3.Distance(thePlayer.transform.position, waypoints[i].position);
-        //        if (d > furthestPoint)
-        //        {
-        //            furthestPoint = d;
-        //            bestPoint = waypoints[i].position;
-        //        }
-        //    }
-        //    if (bestPoint != Vector3.zero)
-        //    {
-        //        waypoint = bestPoint;
-        //        isMoving = true;
-        //    }
-        //}
-        //t += Time.deltaTime;
-        if (repeats > 0)
+        if (!isMoving)
         {
-            if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1 && !animator.IsInTransition(0))
-            {
-                Debug.Log("waiting for anim to finish");
-                repeats = AlternateMeleeAttack(repeats, starth);
-                starth = !starth;
-            }
+            t += Time.deltaTime;
         }
+       
+        moveT += Time.deltaTime;
 
         if (t >= reactTime)
         {
             t = 0;
             reactTime = Random.Range(lowerReactTime, higherReactTime);
-            
+
+            // Melee a bit bugged so leave for now
+            //if (repeats > 0)
+            //{
+            //    if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1 && !animator.IsInTransition(0))
+            //    {
+            //        Debug.Log("waiting for anim to finish");
+            //        repeats = AlternateMeleeAttack(repeats, starth);
+            //        starth = !starth;
+            //    }
+            //}
+
             // If distance to player is on threshold
             // Do melee
-            if (Vector2.Distance(thePlayer.transform.position, transform.position) > playerDistanceThreshold)
-            {
-                repeats = 2;
-            }
-            
+            //if (Vector2.Distance(thePlayer.transform.position, transform.position) > playerDistanceThreshold)
+            //{
+            //    repeats = 2;
+            //    int coinflip = Random.Range(0, 2);
+            //    switch(coinflip)
+            //    {
+            //        case 0:
+            //            starth = false;
+            //            break;
+            //        case 1:
+            //            starth = true;
+            //            break;
+            //        default:
+            //            break;
+            //    }
+            //}
+
             // Then
             // Randomise total patterns and pick a pattern
             // Execute it
@@ -124,8 +121,8 @@ public class BossOne : Enemy
                     break;
             }
 
-            int projAttack = Random.Range(0, 2);
-            if (projAttack == 0)
+            bool projAttack = MathFuncs.Chance(0.25f);
+            if (projAttack)
             {
                 Vector2 playerDirection = transform.InverseTransformPoint(thePlayer.transform.position);
                 if (playerDirection.x < 0)
@@ -138,8 +135,18 @@ public class BossOne : Enemy
                 }
             }
 
-            // Then
-            // Move if needed
+
+            bool missileAttack = MathFuncs.Chance(0.15f);
+            if (missileAttack)
+            {
+                FireMissiles();
+            }
+        }
+
+
+        // Move if needed independent
+        if (moveT > moveTime)
+        {
             // Find furthest waypoint to player and move there
             float furthestPoint = 0;
             Vector3 bestPoint = Vector3.zero;
@@ -156,8 +163,12 @@ public class BossOne : Enemy
             {
                 waypoint = bestPoint;
                 isMoving = true;
+                t = 0;
             }
         }
+
+
+
 
     }
 
@@ -168,6 +179,12 @@ public class BossOne : Enemy
             Debug.Log("moving");
             Vector3 v = Vector3.zero;
             transform.position = Vector3.MoveTowards(transform.position, waypoint, speed * Time.deltaTime);
+
+            if (Vector3.Distance(transform.position, waypoint) < 0.01f)
+            {
+                isMoving = false;
+                moveT = 0;
+            }
         }
     }
 
@@ -206,7 +223,8 @@ public class BossOne : Enemy
         missile.GetComponent<Missile>().target = thePlayer.transform;
         for (int i = 0; i < total; i++)
         {
-            GameObject go = Instantiate(missile, transform.position, Quaternion.identity, transform);
+            GameObject go = Instantiate(missile);
+            go.transform.position = transform.position;
             go.SetActive(true);
         }
     }
@@ -233,9 +251,16 @@ public class BossOne : Enemy
     // P1
     public void SpiralWithShotgun()
     {
-        StartCoroutine(BulletHellFuncs.ShotgunBullet(shb, shotgun, transform));
-        StartCoroutine(BulletHellFuncs.SpiralBullet(sb, bulletLog, transform));
-        
+        ShotgunBullet temp = shb.Copy();
+        temp.repeats = 3;
+        temp.spawnInterval = 3.0f;
+        temp.rotation = AngleTowardsPlayer();
+        temp.totalLeft = 5;
+        temp.totalRight = 5;
+        temp.distanceBetweenBullets = 15;
+        StartCoroutine(BulletHellFuncs.ShotgunBullet(temp, shotgun, transform));
+        StartCoroutine(BulletHellFuncs.CircularBullet(cb, bullet, transform));
+
     }
 
     // P2
@@ -248,16 +273,17 @@ public class BossOne : Enemy
     // P3
     public void MultipleShotgun()
     {
-        float temp = AngleTowardsPlayer();
-        shb.rotation = temp;
-        StartCoroutine(BulletHellFuncs.ShotgunBullet(shb, shotgun, transform));
+        float angle = AngleTowardsPlayer();
+        ShotgunBullet temp = shb.Copy();
+        temp.rotation = angle;
+        StartCoroutine(BulletHellFuncs.ShotgunBullet(temp, shotgun, transform));
         ShotgunBullet temp1 = shb.Copy();
-        temp1.rotation = temp - 25.0f;
+        temp1.rotation = angle - 25.0f;
         StartCoroutine(BulletHellFuncs.ShotgunBullet(temp1, shotgun, transform));
         //shb.rotation = temp - 50.0f;
         //StartCoroutine(BulletHellFuncs.ShotgunBullet(shb, shotgun, transform));
         ShotgunBullet temp2 = shb.Copy();
-        temp2.rotation = temp + 25.0f;
+        temp2.rotation = angle + 25.0f;
         StartCoroutine(BulletHellFuncs.ShotgunBullet(temp2, shotgun, transform));
         //shb.rotation = temp + 50;
         //StartCoroutine(BulletHellFuncs.ShotgunBullet(shb, shotgun, transform));
