@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 public class BossOne : Enemy
 {
 
@@ -28,17 +25,18 @@ public class BossOne : Enemy
     public GameObject bulletLog;
     public GameObject shotgun;
 
-    public CircleBullet cb;
-    public SpiralBullet sb;
-    public ShotgunBullet shb;
+    public CircleBullet circleBulletVars;
+    public SpiralBullet spiralBulletVars;
+    public ShotgunBullet shotgunBulletVars;
     public int totalMissiles;
-    public static Vector3 testV;
     public Transform[] waypoints;
 
     public float lowerReactTime;
     public float higherReactTime;
     public float playerDistanceThreshold;
     public float moveTime = 0;
+    public float projectileChance = 0.25f;
+    public float missileChance = 0.15f;
 
     private float reactTime = 5;
     private float t = 0;
@@ -59,6 +57,7 @@ public class BossOne : Enemy
     // Update is called once per frame
     void Update()
     {
+        // Stop React State when moving
         if (!isMoving)
         {
             t += Time.deltaTime;
@@ -66,6 +65,7 @@ public class BossOne : Enemy
        
         moveT += Time.deltaTime;
 
+        // Start React State
         if (t >= reactTime)
         {
             t = 0;
@@ -121,7 +121,7 @@ public class BossOne : Enemy
                     break;
             }
 
-            bool projAttack = MathFuncs.Chance(0.25f);
+            bool projAttack = MathFuncs.Chance(projectileChance);
             if (projAttack)
             {
                 Vector2 playerDirection = transform.InverseTransformPoint(thePlayer.transform.position);
@@ -136,7 +136,7 @@ public class BossOne : Enemy
             }
 
 
-            bool missileAttack = MathFuncs.Chance(0.15f);
+            bool missileAttack = MathFuncs.Chance(missileChance);
             if (missileAttack)
             {
                 FireMissiles();
@@ -166,17 +166,12 @@ public class BossOne : Enemy
                 t = 0;
             }
         }
-
-
-
-
     }
 
     private void FixedUpdate()
     {
         if (isMoving)
         {
-            Debug.Log("moving");
             Vector3 v = Vector3.zero;
             transform.position = Vector3.MoveTowards(transform.position, waypoint, speed * Time.deltaTime);
 
@@ -196,13 +191,9 @@ public class BossOne : Enemy
     private void FullLeftProjectileAttack()
     {
         horizontalProjectile.GetComponent<Projectile>().startingVelocity = new Vector2(-250f, 0.0f);
-        //GameObject temp = Instantiate(horizontalProjectile);
-        //temp.SetActive(false);
-        //StartCoroutine(spawn(temp));
         for (int i = 0; i < 3; i++)
         {
             GameObject go = SpawnProjectile(i, horizontalProjectile);
-            //(2.0f);
             go.SetActive(true);
         }
     }
@@ -248,10 +239,11 @@ public class BossOne : Enemy
         SpawnMissiles(totalMissiles, thePlayer.transform);
     }
 
+    // EDIT THESE TO FIT GAMEPLAY
     // P1
     public void SpiralWithShotgun()
     {
-        ShotgunBullet temp = shb.Copy();
+        ShotgunBullet temp = shotgunBulletVars.Copy();
         temp.repeats = 3;
         temp.spawnInterval = 3.0f;
         temp.rotation = AngleTowardsPlayer();
@@ -259,30 +251,30 @@ public class BossOne : Enemy
         temp.totalRight = 5;
         temp.distanceBetweenBullets = 15;
         StartCoroutine(BulletHellFuncs.ShotgunBullet(temp, shotgun, transform));
-        StartCoroutine(BulletHellFuncs.CircularBullet(cb, bullet, transform));
+        StartCoroutine(BulletHellFuncs.CircularBullet(circleBulletVars, bullet, transform));
 
     }
 
     // P2
     public void TwoSpirals()
     {
-        StartCoroutine(BulletHellFuncs.CircularBullet(cb, bullet, transform));
-        StartCoroutine(BulletHellFuncs.CircularBullet(cb, bullet, transform));
+        StartCoroutine(BulletHellFuncs.CircularBullet(circleBulletVars, bullet, transform));
+        StartCoroutine(BulletHellFuncs.CircularBullet(circleBulletVars, bullet, transform));
     }
 
     // P3
     public void MultipleShotgun()
     {
         float angle = AngleTowardsPlayer();
-        ShotgunBullet temp = shb.Copy();
+        ShotgunBullet temp = shotgunBulletVars.Copy();
         temp.rotation = angle;
         StartCoroutine(BulletHellFuncs.ShotgunBullet(temp, shotgun, transform));
-        ShotgunBullet temp1 = shb.Copy();
+        ShotgunBullet temp1 = shotgunBulletVars.Copy();
         temp1.rotation = angle - 25.0f;
         StartCoroutine(BulletHellFuncs.ShotgunBullet(temp1, shotgun, transform));
         //shb.rotation = temp - 50.0f;
         //StartCoroutine(BulletHellFuncs.ShotgunBullet(shb, shotgun, transform));
-        ShotgunBullet temp2 = shb.Copy();
+        ShotgunBullet temp2 = shotgunBulletVars.Copy();
         temp2.rotation = angle + 25.0f;
         StartCoroutine(BulletHellFuncs.ShotgunBullet(temp2, shotgun, transform));
         //shb.rotation = temp + 50;
@@ -295,60 +287,9 @@ public class BossOne : Enemy
         return Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
     }
 }
-
-
-
 public class BossOneConstants
 {
     public const string highAttack = "HighAttack";
     public const string lowAttack = "LowAttack";
     public const int totalBossPatterns = 3;
 }
-//if (Keyboard.current[Key.Q].wasPressedThisFrame)
-//{
-//    AlternateMeleeAttack(20, true);
-//    //StartCoroutine("hitbox");
-
-//}
-//if (Keyboard.current[Key.W].wasPressedThisFrame)
-//{
-//    Vector2 playerDirection = transform.InverseTransformPoint(thePlayer.transform.position);
-//    if (playerDirection.x < 0)
-//    {
-//        FullLeftProjectileAttack();
-//    }
-//    else if (playerDirection.x > 0)
-//    {
-//        FullRightProjectileAttack();
-//    }
-//}
-
-//if (Keyboard.current[Key.E].wasPressedThisFrame)
-//{
-//    FullLeftProjectileAttack();
-//}
-
-//if (Keyboard.current[Key.R].wasPressedThisFrame)
-//{
-//    FullRightProjectileAttack();
-//}
-
-//if (Keyboard.current[Key.T].wasPressedThisFrame)
-//{
-//    SpawnMissiles(totalMissiles, thePlayer.transform);
-//}
-
-//if (Keyboard.current[Key.Y].wasPressedThisFrame)
-//{
-//    MultipleShotgun();
-//}
-
-//if (Keyboard.current[Key.U].wasPressedThisFrame)
-//{
-//    TwoSpirals();
-//}
-
-//if (Keyboard.current[Key.I].wasPressedThisFrame)
-//{
-//    SpiralWithShotgun();
-//}

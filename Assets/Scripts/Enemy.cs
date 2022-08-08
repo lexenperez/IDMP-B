@@ -41,11 +41,20 @@ public abstract class Enemy : NPC
 
     protected GameObject SpawnProjectile(int projectileIndex, GameObject prefab)
     {
-        Debug.Log("Spawning a projectile");
         GameObject go = Instantiate(prefab);
         go.transform.position = projectileSpawnPlacements[projectileIndex].position;
         return go;
         
+    }
+
+    public void TakeDamage(int damage)
+    {
+        hp -= damage;
+    }
+
+    public bool IsDead()
+    {
+        return hp <= 0;
     }
 
 }

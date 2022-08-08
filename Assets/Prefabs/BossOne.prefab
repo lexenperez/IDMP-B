@@ -568,7 +568,7 @@ MonoBehaviour:
   bullet: {fileID: 7021123897600641175, guid: 991a51cf6e195cb4287c7a89713ca8b4, type: 3}
   bulletLog: {fileID: 7288028448534652705, guid: 3b6508db9f9306e47abc6f1f5cc897c6, type: 3}
   shotgun: {fileID: 7596809050977703109, guid: 5a33cd8dfc04997418ae14b83eabbef8, type: 3}
-  cb:
+  circleBulletVars:
     stepSize: 6
     spawnInterval: 0.5
     repeats: 10
@@ -577,8 +577,8 @@ MonoBehaviour:
     circle:
       a: 0
       b: 0
-      r: 0.5
-  sb:
+      r: 1
+  spiralBulletVars:
     spawnInterval: 0.5
     repeats: 10
     speed: 2
@@ -587,10 +587,10 @@ MonoBehaviour:
       a: 3.25
       b: 0.05
       gf: 0
-  shb:
+  shotgunBulletVars:
     totalLeft: 3
     totalRight: 3
-    spawnInterval: 0.3
+    spawnInterval: 0.35
     repeats: 5
     speed: 300
     rotation: 0
@@ -598,7 +598,7 @@ MonoBehaviour:
     circle:
       a: 0
       b: 0
-      r: 0.5
+      r: 2
   totalMissiles: 5
   waypoints:
   - {fileID: 0}
@@ -607,6 +607,8 @@ MonoBehaviour:
   higherReactTime: 5
   playerDistanceThreshold: 1
   moveTime: 15
+  projectileChance: 0.25
+  missileChance: 0.15
 --- !u!61 &7410747864657933847
 BoxCollider2D:
   m_ObjectHideFlags: 0

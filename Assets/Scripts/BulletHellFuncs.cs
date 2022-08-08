@@ -67,15 +67,8 @@ public class BulletHellFuncs : MonoBehaviour
         {
             // Find angle via step rotation addition
             float angle = (Mathf.Deg2Rad * sb.rotation) + (Mathf.Deg2Rad * (float)step * sb.distanceBetweenBullets);
-            Debug.Log(angle);
-                 //
             Vector2 x = MathFuncs.PositionOnCircle(sb.circle, angle);
-            Debug.Log(x);
             points.Add(x);
-            if (t == 0)
-            {
-                BossOne.testV = x;
-            }
             step++;
         }
 
