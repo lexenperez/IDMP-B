@@ -55,6 +55,7 @@ public class PlayerJump : MonoBehaviour
 
     // Get - Setters
     public bool GetLimitPlayerMovement { get { return limitPlayerMovement; } }
+    public bool IsOnGround { get { return onGround; } }
     public CurrentJumpType GetCurrentJumpType { get { return currentJumpType; } }
     public bool IsPressingJump { get { return pressingJump; } }
 
@@ -75,16 +76,16 @@ public class PlayerJump : MonoBehaviour
     {
         IsGrounded();
         JumpBuffer();
+        CalculateCoyoteTime();
+    }
 
+    private void CalculateCoyoteTime()
+    {
         // Player not touching walls and is in the air
-        if (!(playerWallSlideScript.IsTouchingLeftWall || playerWallSlideScript.IsTouchingRightWall) && !onGround)
-        {
+        if (!(playerWallSlideScript.CanLeftWallSlide || playerWallSlideScript.CanRightWallSlide) && !onGround)
             coyoteTimeCounter += Time.deltaTime;
-        }
         else
-        {
             coyoteTimeCounter = 0;
-        }
     }
 
     private void JumpBuffer()
@@ -186,7 +187,7 @@ public class PlayerJump : MonoBehaviour
 
         // Wall Jump
         if (!limitPlayerMovement && !onGround && playerWallSlideScript.PrevTouchState != PlayerWallSlide.TouchState.Ground)
-            if (playerWallSlideScript.IsTouchingLeftWall || playerWallSlideScript.IsTouchingRightWall || coyoteTimeCounter < coyoteTime)
+            if (playerWallSlideScript.CanLeftWallSlide || playerWallSlideScript.CanRightWallSlide || coyoteTimeCounter < coyoteTime)
             {
                 // Set wall jump settings
                 desiredJump = false;
@@ -221,8 +222,8 @@ public class PlayerJump : MonoBehaviour
         currentlyJumping = true;
 
         // How long wall jump should last for. If holding input key towards wall then reduce wall jump time. (Allows to scale up the wall)
-        if (playerWallSlideScript.IsTouchingLeftWall && playerMovementScript.GetDirectionX == -1 || 
-            playerWallSlideScript.IsTouchingRightWall && playerMovementScript.GetDirectionX == 1)
+        if (playerWallSlideScript.CanLeftWallSlide && playerMovementScript.GetDirectionX == -1 || 
+            playerWallSlideScript.CanRightWallSlide && playerMovementScript.GetDirectionX == 1)
             yield return new WaitForSeconds(wallJumpTime * wallJumpWithInputMultiplier);
         else
             yield return new WaitForSeconds(wallJumpTime);
