@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class PlayerWallSlide : MonoBehaviour
 {
+    public enum TouchState
+    {
+        Ground,
+        LeftWall,
+        RightWall
+    };
+
     // References
     private Rigidbody2D rigidBody;
     private BoxCollider2D boxCollider;
@@ -18,6 +25,7 @@ public class PlayerWallSlide : MonoBehaviour
     [Header("Wall States")]
     [SerializeField] private bool touchLeftWall = false;
     [SerializeField] private bool touchRightWall = false;
+    [SerializeField] private TouchState previousTouchState = TouchState.Ground;
     [SerializeField] private bool canSlide = true;
 
     // Raycast offset
@@ -29,6 +37,12 @@ public class PlayerWallSlide : MonoBehaviour
     // Get - Setters
     public bool IsTouchingLeftWall { get { return touchLeftWall; } }
     public bool IsTouchingRightWall { get { return touchRightWall; } }
+    public TouchState PrevTouchState
+    { 
+        get { return previousTouchState; } 
+        set { previousTouchState = value; }
+    }
+
     public bool CanSlide { get { return canSlide; }  set { canSlide = value; } }
 
     // Start is called before the first frame update
@@ -51,6 +65,11 @@ public class PlayerWallSlide : MonoBehaviour
     {
         touchLeftWall = Physics2D.Raycast((Vector2)transform.position + leftColliderOffset, Vector2.left, sideLength, groundLayer);
         touchRightWall = Physics2D.Raycast((Vector2)transform.position + rightColliderOffset, Vector2.right, sideLength, groundLayer);
+
+        if (touchLeftWall)
+            previousTouchState = TouchState.LeftWall;
+        else if (touchRightWall)
+            previousTouchState = TouchState.RightWall;
     }
 
     private void FixedUpdate()
