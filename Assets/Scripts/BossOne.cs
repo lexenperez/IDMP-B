@@ -61,9 +61,10 @@ public class BossOne : Enemy
         if (!isMoving)
         {
             t += Time.deltaTime;
+            moveT += Time.deltaTime;
         }
        
-        moveT += Time.deltaTime;
+       
 
         // Start React State
         if (t >= reactTime)
@@ -164,6 +165,7 @@ public class BossOne : Enemy
                 waypoint = bestPoint;
                 isMoving = true;
                 t = 0;
+                moveT = 0;
             }
         }
     }
