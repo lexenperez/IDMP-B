@@ -10,6 +10,7 @@ public class LoadUI : MonoBehaviour
         SceneManager.LoadSceneAsync("UI", LoadSceneMode.Additive);
     }
 
+    //TODO -- NEED TO UPDATE TO NEW INPUT METHOD WITH INPUT MANAGER
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -29,7 +30,7 @@ public class LoadUI : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.P))
         {
-            SceneManager.LoadScene("Scene 2");
+            //SceneManager.LoadScene("Scene 2");
         }
     }
 }
