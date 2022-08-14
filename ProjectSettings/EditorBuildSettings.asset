@@ -5,9 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Scenes/BossTestingArena.unity
+    guid: 43b82bd16f837644ba5d9da16bf7118e
   - enabled: 1
     path: Assets/Scenes/UI.unity
     guid: cbd38044a73bdc6439248688d7335aa9
@@ -17,9 +17,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/post proc test.unity
     guid: f2d343151b3a6eb4587aafdb5735d020
-  - enabled: 1
-    path: Assets/Scenes/BossTestingArena.unity
-    guid: 43b82bd16f837644ba5d9da16bf7118e
   - enabled: 1
     path: Assets/Scenes/Menu.unity
     guid: 1d0486743e56b7d4b8c1ee16d54366aa
