@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+
 public class BossOne : Enemy
 {
 
@@ -38,6 +40,8 @@ public class BossOne : Enemy
     public float projectileChance = 0.25f;
     public float missileChance = 0.15f;
 
+    public float tweenTime;
+
     private float reactTime = 5;
     private float t = 0;
     private float moveT = 0;
@@ -46,17 +50,31 @@ public class BossOne : Enemy
     private bool isMoving = false;
     private Vector3 waypoint;
 
+
+
     // Start is called before the first frame update
     void Start()
     {
         base.Init();
+        Tween();
 
         // Probs set values of projectiles here
     }
 
+    public void Tween()
+    {
+        LeanTween.cancel(gameObject);
+        LeanTween.rotateAround(gameObject, Vector3.forward, 360.0f, tweenTime).setRepeat(-1);
+    }
     // Update is called once per frame
     void Update()
     {
+        
+        if (Keyboard.current[Key.Q].wasPressedThisFrame)
+        {
+            SpawnMissiles(3, thePlayer.transform);
+        }
+
         // Stop React State when moving
         if (!isMoving)
         {
@@ -254,6 +272,7 @@ public class BossOne : Enemy
         temp.distanceBetweenBullets = 15;
         StartCoroutine(BulletHellFuncs.ShotgunBullet(temp, shotgun, transform));
         StartCoroutine(BulletHellFuncs.CircularBullet(circleBulletVars, bullet, transform));
+        LeanTween.color(gameObject, Color.red, 2.0f);
 
     }
 
@@ -262,15 +281,16 @@ public class BossOne : Enemy
     {
         StartCoroutine(BulletHellFuncs.CircularBullet(circleBulletVars, bullet, transform));
         StartCoroutine(BulletHellFuncs.CircularBullet(circleBulletVars, bullet, transform));
+        LeanTween.color(gameObject, Color.blue, 2.0f);
     }
 
     // P3
     public void MultipleShotgun()
     {
         float angle = AngleTowardsPlayer();
-        ShotgunBullet temp = shotgunBulletVars.Copy();
-        temp.rotation = angle;
-        StartCoroutine(BulletHellFuncs.ShotgunBullet(temp, shotgun, transform));
+        //ShotgunBullet temp = shotgunBulletVars.Copy();
+        //temp.rotation = angle;
+        //StartCoroutine(BulletHellFuncs.ShotgunBullet(temp, shotgun, transform));
         ShotgunBullet temp1 = shotgunBulletVars.Copy();
         temp1.rotation = angle - 25.0f;
         StartCoroutine(BulletHellFuncs.ShotgunBullet(temp1, shotgun, transform));
@@ -281,6 +301,7 @@ public class BossOne : Enemy
         StartCoroutine(BulletHellFuncs.ShotgunBullet(temp2, shotgun, transform));
         //shb.rotation = temp + 50;
         //StartCoroutine(BulletHellFuncs.ShotgunBullet(shb, shotgun, transform));
+        LeanTween.color(gameObject, Color.green, 2.0f);
     }
 
     private float AngleTowardsPlayer()
