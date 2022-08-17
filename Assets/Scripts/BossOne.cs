@@ -41,6 +41,12 @@ public class BossOne : Enemy
     public float missileChance = 0.15f;
 
     public float tweenTime;
+    private int currentPhase = 0;
+
+    // Phase One Modifiers
+    public float projectileInterval;
+    public GameObject bulletSpawner;
+    //public CircleBullet PhaseOneCircleVariables;
 
     private float reactTime = 5;
     private float t = 0;
@@ -49,31 +55,37 @@ public class BossOne : Enemy
     //private bool starth = true;
     private bool isMoving = false;
     private Vector3 waypoint;
+    private Color bossColor = new Color(0.7051759f, 0.5385814f, 0.8584906f);
+    private float totalHP;
 
+    enum Phase
+    {
+        TimeReset,
+        HPThreshold,
+        Nothing
+    }
 
 
     // Start is called before the first frame update
     void Start()
     {
+        transform.localScale = Vector3.zero;
         base.Init();
-        Tween();
+        totalHP = this.hp;
+        //Tween();
 
         // Probs set values of projectiles here
     }
 
     public void Tween()
     {
-        LeanTween.cancel(gameObject);
-        LeanTween.rotateAround(gameObject, Vector3.forward, 360.0f, tweenTime).setRepeat(-1);
+        //LeanTween.cancel(gameObject);
+        LeanTween.rotateAround(gameObject, Vector3.forward, 360.0f, tweenTime)
+            .setRepeat(-1);
     }
     // Update is called once per frame
     void Update()
     {
-        
-        if (Keyboard.current[Key.Q].wasPressedThisFrame)
-        {
-            SpawnMissiles(3, thePlayer.transform);
-        }
 
         // Stop React State when moving
         if (!isMoving)
@@ -81,87 +93,41 @@ public class BossOne : Enemy
             t += Time.deltaTime;
             moveT += Time.deltaTime;
         }
-       
-       
 
-        // Start React State
-        if (t >= reactTime)
+        /* Phase Zero
+         * Spawn in animation
+         */
+        if (currentPhase == 0)
         {
-            t = 0;
-            reactTime = Random.Range(lowerReactTime, higherReactTime);
+            Phase p = PhaseZero(t);
 
-            // Melee a bit bugged so leave for now
-            //if (repeats > 0)
-            //{
-            //    if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1 && !animator.IsInTransition(0))
-            //    {
-            //        Debug.Log("waiting for anim to finish");
-            //        repeats = AlternateMeleeAttack(repeats, starth);
-            //        starth = !starth;
-            //    }
-            //}
-
-            // If distance to player is on threshold
-            // Do melee
-            //if (Vector2.Distance(thePlayer.transform.position, transform.position) > playerDistanceThreshold)
-            //{
-            //    repeats = 2;
-            //    int coinflip = Random.Range(0, 2);
-            //    switch(coinflip)
-            //    {
-            //        case 0:
-            //            starth = false;
-            //            break;
-            //        case 1:
-            //            starth = true;
-            //            break;
-            //        default:
-            //            break;
-            //    }
-            //}
-
-            // Then
-            // Randomise total patterns and pick a pattern
-            // Execute it
-            // Could store patterns in a pattern class
-            int patternToExecute = Random.Range(0, BossOneConstants.totalBossPatterns);
-            switch(patternToExecute)
+            if (p == Phase.TimeReset)
             {
-                case 0:
-                    SpiralWithShotgun();
-                    break;
-                case 1:
-                    TwoSpirals();
-                    break;
-                case 2:
-                    MultipleShotgun();
-                    break;
-                default:
-                    break;
-            }
-
-            bool projAttack = MathFuncs.Chance(projectileChance);
-            if (projAttack)
-            {
-                Vector2 playerDirection = transform.InverseTransformPoint(thePlayer.transform.position);
-                if (playerDirection.x < 0)
-                {
-                    FullLeftProjectileAttack();
-                }
-                else if (playerDirection.x > 0)
-                {
-                    FullRightProjectileAttack();
-                }
-            }
-
-
-            bool missileAttack = MathFuncs.Chance(missileChance);
-            if (missileAttack)
-            {
-                FireMissiles();
+                t = 0;
+                currentPhase++;
             }
         }
 
+        /* Phase One
+         * Constant Spiral Attack
+         * Projectile Attacks on centre
+         * Missiles if player is above or under
+         */
+        if (currentPhase == 1)
+        {
+            Phase p = PhaseOne(t);
+            if (p == Phase.TimeReset)
+            {
+                t = 0;
+            }
+            else if (p == Phase.HPThreshold)
+            {
+                t = 0;
+                currentPhase++;
+            }
+        }
+
+        //if(PhaseOne(t)) t =0;
 
         // Move if needed independent
         if (moveT > moveTime)
@@ -203,15 +169,86 @@ public class BossOne : Enemy
         }
     }
 
+    private Phase PhaseZero(float t)
+    {
+        if (t > 5)
+        {
+            LeanTween.scale(gameObject, new Vector3(8, 8, 1), 5);
+            LTSeq sq = LeanTween.sequence();
+            sq.append(1.0f);
+            sq.append(LeanTween.color(gameObject, Color.red, 1));
+            sq.append(LeanTween.color(gameObject, Color.blue, 1));
+            sq.append(LeanTween.color(gameObject, Color.red, 1));
+            sq.append(LeanTween.color(gameObject, Color.blue, 1));
+            sq.append(LeanTween.color(gameObject, bossColor, 1));
+            sq.append(() => Tween());
+            return Phase.TimeReset;
+        }
+        return Phase.Nothing;
+    }
+
+    private Phase PhaseOne(float t)
+    {
+
+        float heightThreshold = -7.0f;
+        if (t > 6)
+        {
+            if (!bulletSpawner.activeSelf)
+            {
+                bulletSpawner.SetActive(true);
+            }
+            LTSeq sq = LeanTween.sequence();
+            sq.append(1.0f);
+            sq.append(() => ProjectileAttack());
+            
+            if (thePlayer.transform.position.y <= heightThreshold)
+            {
+                sq.append(LeanTween.color(gameObject, Color.blue, 1));
+                sq.append(() => SpawnMissiles(5, thePlayer.transform));
+                sq.append(LeanTween.color(gameObject, bossColor, 1));
+            }
+
+            return Phase.TimeReset;
+        }
+
+        if (hp / totalHP <= 0.75)
+        {
+            bulletSpawner.SetActive(false);
+            return Phase.HPThreshold;
+        }
+
+        return Phase.Nothing;
+    }
+
     private void MeleeAttack(string trigger)
     {
         animator.SetTrigger(trigger);
     }
 
+    private void ProjectileAttack()
+    {
+        Vector2 playerPos = thePlayer.transform.position;
+        Vector2 myPosition = transform.position;
+
+        if (playerPos.x < myPosition.x)
+        {
+            FullLeftProjectileAttack();
+        }
+        else if (myPosition.x < playerPos.x)
+        {
+            FullRightProjectileAttack();
+        }
+        else
+        {
+            FullLeftProjectileAttack();
+            FullRightProjectileAttack();
+        }
+    }
+
     private void FullLeftProjectileAttack()
     {
         horizontalProjectile.GetComponent<Projectile>().startingVelocity = new Vector2(-250f, 0.0f);
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 6; i++)
         {
             GameObject go = SpawnProjectile(i, horizontalProjectile);
             go.SetActive(true);
@@ -221,7 +258,7 @@ public class BossOne : Enemy
     private void FullRightProjectileAttack()
     {
         horizontalProjectile.GetComponent<Projectile>().startingVelocity = new Vector2(250f, 0.0f);
-        for (int i = 3; i < 6; i++)
+        for (int i = 0; i < 6; i++)
         {
             GameObject go = SpawnProjectile(i, horizontalProjectile);
             go.SetActive(true);

@@ -38659,11 +38659,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3366323562984693705, guid: 88a222394c20da146941a2581a96c59b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.33
+      value: 16.99
       objectReference: {fileID: 0}
     - target: {fileID: 3366323562984693705, guid: 88a222394c20da146941a2581a96c59b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.06
+      value: -6.95
       objectReference: {fileID: 0}
     - target: {fileID: 3366323562984693705, guid: 88a222394c20da146941a2581a96c59b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -43915,6 +43915,11 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!4 &1191884261 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7410747864657933851, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
+  m_PrefabInstance: {fileID: 1593370294}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1375109457
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -58477,6 +58482,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7410747863574114199, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410747864158645426, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410747864387755086, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410747864531856511, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410747864657933844, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
+      propertyPath: hp
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 7410747864657933844, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
       propertyPath: thePlayer
       value: 
@@ -58485,6 +58510,10 @@ PrefabInstance:
       propertyPath: tweenTime
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 7410747864657933844, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
+      propertyPath: bulletSpawner
+      value: 
+      objectReference: {fileID: 1879343125}
     - target: {fileID: 7410747864657933844, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
       propertyPath: missileChance
       value: 0.1
@@ -58514,16 +58543,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
     - target: {fileID: 7410747864657933850, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410747864657933850, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
       propertyPath: m_Color.b
-      value: 0.46226418
+      value: 0.8584906
       objectReference: {fileID: 0}
     - target: {fileID: 7410747864657933850, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
       propertyPath: m_Color.g
-      value: 0.46226418
+      value: 0.5385814
       objectReference: {fileID: 0}
     - target: {fileID: 7410747864657933850, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
       propertyPath: m_Color.r
-      value: 0.46226418
+      value: 0.70517594
       objectReference: {fileID: 0}
     - target: {fileID: 7410747864657933851, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
       propertyPath: m_RootOrder
@@ -58568,6 +58601,14 @@ PrefabInstance:
     - target: {fileID: 7410747864657933851, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410747865131104031, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410747865154819347, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.21
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
@@ -58902,6 +58943,60 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cb52426e0e2aeb74db620e9178ea1005, type: 3}
+--- !u!1 &1879343125
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1879343126}
+  - component: {fileID: 1879343127}
+  m_Layer: 0
+  m_Name: PhaseOneBulletSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1879343126
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1879343125}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1191884261}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1879343127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1879343125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 964412ec896f4c74a801fb45ba1a3c5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vars:
+    stepSize: 6
+    spawnInterval: 0.5
+    repeats: 99999
+    speed: 300
+    rotation: 20
+    circle:
+      a: 0
+      b: 0
+      r: 1
+  bullet: {fileID: 7021123897600641175, guid: 991a51cf6e195cb4287c7a89713ca8b4, type: 3}
 --- !u!1 &1883375377
 GameObject:
   m_ObjectHideFlags: 0
