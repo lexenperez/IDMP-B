@@ -600,6 +600,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4705838633256273049, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
+      propertyPath: editorData.vertexPathUpToDate
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
 --- !u!1 &697579444

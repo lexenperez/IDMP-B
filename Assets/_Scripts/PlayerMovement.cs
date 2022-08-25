@@ -64,9 +64,13 @@ public class PlayerMovement : MonoBehaviour
     private void FaceDirection()
     {
         if (directionX > 0)
+        {
             spriteRenderer.flipX = false;
+        }    
         else if (directionX < 0)
+        {
             spriteRenderer.flipX = true;
+        }
     }
 
     private void FixedUpdate()
