@@ -21,7 +21,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu.unity
     guid: 1d0486743e56b7d4b8c1ee16d54366aa
   - enabled: 1
-    path: Assets/Scenes/PlayerMovement.unity
+    path: Assets/Scenes/PlayerAttack.unity
     guid: 1473577f22256d84d8989649a923081b
   - enabled: 1
     path: Assets/Scenes/Scene 2.unity
