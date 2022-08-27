@@ -25,8 +25,12 @@ public class Bullet : LifeTimer
     
     private void Tween()
     {
-        LeanTween.cancel(gameObject);
-        LeanTween.rotateAround(gameObject, Vector3.forward, 360.0f, tweenTime)
-            .setRepeat(-1);
+        if (gameObject)
+        {
+            LeanTween.cancel(gameObject);
+            LeanTween.rotateAround(gameObject, Vector3.forward, 360.0f, tweenTime)   
+                .setRepeat(-1);
+        }
+
     }
 }

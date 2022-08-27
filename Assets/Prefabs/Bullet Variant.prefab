@@ -75,6 +75,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.3962264
       objectReference: {fileID: 0}
+    - target: {fileID: 3745558832262285039, guid: 5a33cd8dfc04997418ae14b83eabbef8, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f4130bb39a53b1344b6e3c298e8be7bc, type: 2}
     - target: {fileID: 7596809050977703109, guid: 5a33cd8dfc04997418ae14b83eabbef8, type: 3}
       propertyPath: m_Name
       value: Bullet Variant

@@ -23,6 +23,7 @@ public class BossOne : Enemy
     // Maybe seperate this into classes for easier serialisation
     public GameObject horizontalProjectile;
     public GameObject missile;
+    public int totalMissiles;
     public GameObject bullet;
     public GameObject bulletLog;
     public GameObject shotgun;
@@ -30,7 +31,6 @@ public class BossOne : Enemy
     public CircleBullet circleBulletVars;
     public SpiralBullet spiralBulletVars;
     public ShotgunBullet shotgunBulletVars;
-    public int totalMissiles;
     public Transform[] waypoints;
 
     public float lowerReactTime;
@@ -40,13 +40,22 @@ public class BossOne : Enemy
     public float projectileChance = 0.25f;
     public float missileChance = 0.15f;
 
+    public Color phaseOneColor;
+    public Color phaseTwoColor;
+    public Color phaseThreeColor;
+    public Color missileColor;
+    public Color shotgunColor;
+
     public float tweenTime;
     private int currentPhase = 0;
 
     // Phase One Modifiers
-    public float projectileInterval;
     public GameObject bulletSpawner;
     //public CircleBullet PhaseOneCircleVariables;
+
+    public GameObject bulletSpawnerThird;
+
+    //public GameObject gameManager;
 
     private float reactTime = 5;
     private float t = 0;
@@ -55,8 +64,7 @@ public class BossOne : Enemy
     //private bool starth = true;
     private bool isMoving = false;
     private Vector3 waypoint;
-    private Color bossColor = new Color(0.7051759f, 0.5385814f, 0.8584906f);
-    private float totalHP;
+    private Material material;
 
     enum Phase
     {
@@ -70,8 +78,11 @@ public class BossOne : Enemy
     void Start()
     {
         transform.localScale = Vector3.zero;
+        material = GetComponent<SpriteRenderer>().material;
+        material.EnableKeyword("_EMISSION");
+        
         base.Init();
-        totalHP = this.hp;
+        //totalHP = this.hp;
         //Tween();
 
         // Probs set values of projectiles here
@@ -86,7 +97,13 @@ public class BossOne : Enemy
     // Update is called once per frame
     void Update()
     {
-
+        material.SetColor("_EmissionColor", gameObject.GetComponent<SpriteRenderer>().color);
+        if (Keyboard.current[Key.Q].wasPressedThisFrame)
+        {
+            hp -= 10;
+            Debug.Log("HP: "+ hp);
+            UpdateHealthBar();
+        }
         // Stop React State when moving
         if (!isMoving)
         {
@@ -105,6 +122,7 @@ public class BossOne : Enemy
             {
                 t = 0;
                 currentPhase++;
+                //gameManager.GetComponent<GameManager>().StartCurrentTime();
             }
         }
 
@@ -122,12 +140,83 @@ public class BossOne : Enemy
             }
             else if (p == Phase.HPThreshold)
             {
+                t = -999;
+                tweenTime -= 1;
+                currentPhase++;
+                LTSeq sq = LeanTween.sequence();
+                sq.append(1.0f);
+                sq.append(LeanTween.color(gameObject, phaseTwoColor, 2));
+                sq.append(() =>
+                {
+                    t = 0;
+                });
+            }
+        }
+
+        /* Phase Two
+         * Constant Spiral Attack
+         * Missile threshold lower
+         * Shotgun Attacks
+         */
+        if (currentPhase == 2)
+        {
+
+            Phase p = PhaseTwo(t);
+            if (p == Phase.TimeReset)
+            {
+                t = 0;
+            }
+            else if (p == Phase.HPThreshold)
+            {
+                t = -999;
+                currentPhase++;
+                LTSeq sq = LeanTween.sequence();
+                sq.append(1.0f);
+                sq.append(LeanTween.color(gameObject, phaseThreeColor, 2));
+                sq.append(() =>
+                {
+                    t = 0;
+                    bulletSpawnerThird.SetActive(true);
+                });
+            }
+        }
+
+        /* Phase Three
+         * Constant Spiral Attack
+         * Extra Fast Spiral Attack
+         * Missile same threshold
+         * Shotgun
+         */
+        if (currentPhase == 3)
+        {
+
+            Phase p = PhaseThree(t);
+            if (p == Phase.TimeReset)
+            {
+                t = 0;
+            }
+            else if (p == Phase.HPThreshold)
+            {
+                bulletSpawner.SetActive(false);
+                bulletSpawnerThird.SetActive(false);
                 t = 0;
                 currentPhase++;
             }
         }
 
-        //if(PhaseOne(t)) t =0;
+        /* Phase Four
+         * Death
+         * Plays animation then destroys
+         */
+        if (currentPhase == 4)
+        {
+            Phase p = PhaseFour(t);
+            if (p == Phase.HPThreshold)
+            {
+                t = -9999;
+                //gameManager.GetComponent<GameManager>().FinishFight();
+            }
+        }
 
         // Move if needed independent
         if (moveT > moveTime)
@@ -180,7 +269,7 @@ public class BossOne : Enemy
             sq.append(LeanTween.color(gameObject, Color.blue, 1));
             sq.append(LeanTween.color(gameObject, Color.red, 1));
             sq.append(LeanTween.color(gameObject, Color.blue, 1));
-            sq.append(LeanTween.color(gameObject, bossColor, 1));
+            sq.append(LeanTween.color(gameObject, phaseOneColor, 1));
             sq.append(() => Tween());
             return Phase.TimeReset;
         }
@@ -190,7 +279,13 @@ public class BossOne : Enemy
     private Phase PhaseOne(float t)
     {
 
-        float heightThreshold = -7.0f;
+        float heightThreshold = 7.0f;
+        if (hp / maxHp <= 0.75)
+        {
+            bulletSpawner.SetActive(false);
+            return Phase.HPThreshold;
+        }
+
         if (t > 6)
         {
             if (!bulletSpawner.activeSelf)
@@ -201,22 +296,106 @@ public class BossOne : Enemy
             sq.append(1.0f);
             sq.append(() => ProjectileAttack());
             
-            if (thePlayer.transform.position.y <= heightThreshold)
+            if (thePlayer.transform.position.y <= -heightThreshold || thePlayer.transform.position.y >= heightThreshold)
             {
-                sq.append(LeanTween.color(gameObject, Color.blue, 1));
-                sq.append(() => SpawnMissiles(5, thePlayer.transform));
-                sq.append(LeanTween.color(gameObject, bossColor, 1));
+                sq.append(LeanTween.color(gameObject, missileColor, 1));
+                sq.append(() => SpawnMissiles(totalMissiles, thePlayer.transform));
+                sq.append(LeanTween.color(gameObject, phaseOneColor, 1));
             }
 
             return Phase.TimeReset;
         }
 
-        if (hp / totalHP <= 0.75)
+
+        return Phase.Nothing;
+    }
+
+    private Phase PhaseTwo(float t)
+    {
+        if (hp / maxHp <= 0.5f)
         {
-            bulletSpawner.SetActive(false);
             return Phase.HPThreshold;
         }
 
+        float heightThreshold = 6.0f;
+        if (t > 5)
+        {
+            LTSeq sq = LeanTween.sequence();
+            sq.append(1.0f);
+
+            if (thePlayer.transform.position.y <= -heightThreshold || thePlayer.transform.position.y >= heightThreshold)
+            {
+                sq.append(LeanTween.color(gameObject, missileColor, 1));
+                sq.append(() => SpawnMissiles(totalMissiles, thePlayer.transform));
+                sq.append(LeanTween.color(gameObject, phaseTwoColor, 1));
+            }
+
+            sq.append(LeanTween.color(gameObject, shotgunColor, 0.3f));
+            sq.append(() => MultipleShotgun());
+            sq.append(LeanTween.color(gameObject, phaseTwoColor, 1));
+
+            return Phase.TimeReset;
+        }
+        return Phase.Nothing;
+    }
+
+    private Phase PhaseThree(float t)
+    {
+        if (hp / maxHp <= 0.0f)
+        {
+            return Phase.HPThreshold;
+        }
+
+        float heightThreshold = 6.0f;
+        if (t > 5)
+        {
+            LTSeq sq = LeanTween.sequence();
+            sq.append(1.0f);
+
+            if (thePlayer.transform.position.y <= -heightThreshold || thePlayer.transform.position.y >= heightThreshold)
+            {
+                sq.append(LeanTween.color(gameObject, missileColor, 1));
+                sq.append(() => SpawnMissiles(5, thePlayer.transform));
+                sq.append(LeanTween.color(gameObject, phaseThreeColor, 1));
+            }
+
+            sq.append(LeanTween.color(gameObject, shotgunColor, 0.3f));
+            sq.append(() => MultipleShotgun());
+            sq.append(LeanTween.color(gameObject, phaseThreeColor, 1));
+
+            return Phase.TimeReset;
+        }
+        return Phase.Nothing;
+    }
+
+    private Phase PhaseFour(float t)
+    {
+
+        if (t > 2)
+        {
+            LeanTween.cancel(gameObject);
+            Tween();
+            LTSeq sq = LeanTween.sequence();
+            Vector3 scale = gameObject.transform.localScale;
+            Color low = phaseThreeColor * 0.25f;
+            low.a = 1.0f;
+            Color high = phaseThreeColor * -0.25f;
+            high.a = 1.0f;
+            sq.append(0.5f);
+            sq.append(LeanTween.scale(gameObject, scale * 0.5f, 1));
+            sq.append(LeanTween.scale(gameObject, scale, 1));
+            sq.append(LeanTween.scale(gameObject, scale * 0.3f, 1));
+            sq.append(LeanTween.scale(gameObject, scale, 1));
+            sq.append(LeanTween.scale(gameObject, scale * 0.1f, 1));
+            sq.append(LeanTween.scale(gameObject, scale, 0));
+            sq.append(() => Destroy(gameObject));
+            LTSeq sc = LeanTween.sequence();
+            sc.append(LeanTween.color(gameObject, low, 0.5f));
+            sc.append(LeanTween.color(gameObject, high, 0.5f));
+            sc.append(LeanTween.color(gameObject, low, 0.5f));
+            sc.append(LeanTween.color(gameObject, high, 0.5f));
+            return Phase.HPThreshold;
+        }
         return Phase.Nothing;
     }
 
@@ -325,26 +504,25 @@ public class BossOne : Enemy
     public void MultipleShotgun()
     {
         float angle = AngleTowardsPlayer();
-        //ShotgunBullet temp = shotgunBulletVars.Copy();
-        //temp.rotation = angle;
-        //StartCoroutine(BulletHellFuncs.ShotgunBullet(temp, shotgun, transform));
-        ShotgunBullet temp1 = shotgunBulletVars.Copy();
-        temp1.rotation = angle - 25.0f;
-        StartCoroutine(BulletHellFuncs.ShotgunBullet(temp1, shotgun, transform));
-        //shb.rotation = temp - 50.0f;
-        //StartCoroutine(BulletHellFuncs.ShotgunBullet(shb, shotgun, transform));
-        ShotgunBullet temp2 = shotgunBulletVars.Copy();
-        temp2.rotation = angle + 25.0f;
-        StartCoroutine(BulletHellFuncs.ShotgunBullet(temp2, shotgun, transform));
+        ShotgunBullet temp = shotgunBulletVars.Copy();
+        temp.rotation = angle;
+        StartCoroutine(BulletHellFuncs.ShotgunBullet(temp, shotgun, transform));
+        //ShotgunBullet temp1 = shotgunBulletVars.Copy();
+        //temp1.rotation = angle - 25.0f;
+        //StartCoroutine(BulletHellFuncs.ShotgunBullet(temp1, shotgun, transform));
+        ////shb.rotation = temp - 50.0f;
+        ////StartCoroutine(BulletHellFuncs.ShotgunBullet(shb, shotgun, transform));
+        //ShotgunBullet temp2 = shotgunBulletVars.Copy();
+        //temp2.rotation = angle + 25.0f;
+        //StartCoroutine(BulletHellFuncs.ShotgunBullet(temp2, shotgun, transform));
         //shb.rotation = temp + 50;
         //StartCoroutine(BulletHellFuncs.ShotgunBullet(shb, shotgun, transform));
-        LeanTween.color(gameObject, Color.green, 2.0f);
     }
 
     private float AngleTowardsPlayer()
     {
-        Vector3 dir = transform.InverseTransformPoint(thePlayer.transform.position);
-        return Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        Vector3 dir = (thePlayer.transform.position);
+        return Mathf.Atan2(dir.y - transform.position.y, dir.x - transform.position.x) * Mathf.Rad2Deg;
     }
 }
 public class BossOneConstants

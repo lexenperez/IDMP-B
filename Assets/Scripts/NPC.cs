@@ -17,11 +17,14 @@ public abstract class NPC : MonoBehaviour
     // Find some more similar stuff
     //public Sprite[] spriteArray;
     public float hp;
+    public GameObject healthBar;
+    public float maxHp;
     public float speed;
     public GameObject thePlayer;
 
     protected void Init()
     {
+        maxHp = hp;
         sprite = GetComponent<SpriteRenderer>();
         rb2d = GetComponent<Rigidbody2D>();
         baseCollider = GetComponent<BoxCollider2D>();
@@ -41,6 +44,11 @@ public abstract class NPC : MonoBehaviour
     protected void FlipSprite()
     {
         sprite.flipX = !sprite.flipX;
+    }
+
+    protected void UpdateHealthBar()
+    {
+        healthBar.GetComponent<HPBossBar>().UpdateHealthBar();
     }
 
     // Assuming npcs either teleports to a location

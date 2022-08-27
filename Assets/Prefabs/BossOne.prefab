@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 7410747864657933847}
   m_Layer: 0
   m_Name: BossOne
-  m_TagString: Untagged
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -178,7 +178,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 5c8c308ca37b425478d567ce2446dc1e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -198,7 +198,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Sprite: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -222,7 +222,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e938752eb6f52684d97354526af8f094, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 0
+  hp: 100
+  healthBar: {fileID: 0}
+  maxHp: 0
   speed: 5
   thePlayer: {fileID: 0}
   colliders:
@@ -241,6 +243,7 @@ MonoBehaviour:
   allowSelfHitbox: 0
   horizontalProjectile: {fileID: 9214626414121310495, guid: fd3465d0ec75e084489fa0b439a27ecb, type: 3}
   missile: {fileID: 4951526269001340950, guid: 29cf2771fc6eb424cae2938fe4ad1abb, type: 3}
+  totalMissiles: 5
   bullet: {fileID: 7021123897600641175, guid: 991a51cf6e195cb4287c7a89713ca8b4, type: 3}
   bulletLog: {fileID: 7288028448534652705, guid: 3b6508db9f9306e47abc6f1f5cc897c6, type: 3}
   shotgun: {fileID: 7596809050977703109, guid: 5a33cd8dfc04997418ae14b83eabbef8, type: 3}
@@ -264,18 +267,17 @@ MonoBehaviour:
       b: 0.05
       gf: 0
   shotgunBulletVars:
-    totalLeft: 3
-    totalRight: 3
-    spawnInterval: 0.35
+    totalLeft: 2
+    totalRight: 2
+    spawnInterval: 0.45
     repeats: 5
     speed: 300
     rotation: 0
-    distanceBetweenBullets: 0
+    distanceBetweenBullets: 15
     circle:
       a: 0
       b: 0
       r: 2
-  totalMissiles: 5
   waypoints:
   - {fileID: 0}
   - {fileID: 0}
@@ -283,20 +285,17 @@ MonoBehaviour:
   higherReactTime: 5
   playerDistanceThreshold: 1
   moveTime: 15
-  projectileChance: 0.25
-  missileChance: 0.15
-  tweenTime: 0
-  ProjectileInterval: 0
-  PhaseOneCircleVariables:
-    stepSize: 0
-    spawnInterval: 0
-    repeats: 0
-    speed: 0
-    rotation: 0
-    circle:
-      a: 0
-      b: 0
-      r: 0
+  projectileChance: 0.07
+  missileChance: 0.1
+  phaseOneColor: {r: 0.7763973, g: 0.6525454, b: 0.9811321, a: 1}
+  phaseTwoColor: {r: 0.9150943, g: 0.07338022, b: 0.2528177, a: 1}
+  phaseThreeColor: {r: 0.6792453, g: 0.03524386, b: 0.03524386, a: 1}
+  missileColor: {r: 0.023985408, g: 0.069343135, b: 0.46226418, a: 1}
+  shotgunColor: {r: 0.9339623, g: 0.2957284, b: 0.039649326, a: 1}
+  tweenTime: 5
+  projectileInterval: 0
+  bulletSpawner: {fileID: 0}
+  bulletSpawnerThird: {fileID: 0}
 --- !u!61 &7410747864657933847
 BoxCollider2D:
   m_ObjectHideFlags: 0
