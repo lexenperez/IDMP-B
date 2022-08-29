@@ -4,8 +4,6 @@ using UnityEngine;
 
 public abstract class Enemy : NPC
 {
-    public BoxCollider2D[] colliders;
-    public SpriteRenderer[] sprites;
     public Transform[] projectileSpawnPlacements;
     public bool allowSelfHitbox;
     // Abstract class should handle all general animation changes and hitboxes to enable (at least, for general melee attacks)
@@ -45,16 +43,6 @@ public abstract class Enemy : NPC
         go.transform.position = projectileSpawnPlacements[projectileIndex].position;
         return go;
         
-    }
-
-    public void TakeDamage(int damage)
-    {
-        hp -= damage;
-    }
-
-    public bool IsDead()
-    {
-        return hp <= 0;
     }
 
 }

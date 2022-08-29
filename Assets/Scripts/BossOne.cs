@@ -3,65 +3,30 @@ using UnityEngine.InputSystem;
 
 public class BossOne : Enemy
 {
+    /* Controls First Boss animations, projectile handling and health */
 
-    // Individual scripts should contain its state machine and handle all calls for activating hitboxes, animations and spawning
-    // For this boss, it doesnt move
-    // Idle - Boss stands still
-    // Attack - Do Randomised pattern of attacks (figure out patterns later)
-    // Move - Boss moves to a certain location (animation for walking or teleporting)
-    // Death - Boss dies (animation trigger)
-
-    // Patterns should be a function that calls the attacks in order
-    // Check how to check whether the duration for the previous attack is finished
-    // https://answers.unity.com/questions/362629/how-can-i-check-if-an-animation-is-being-played-or.html
-    // One way while in that pattern state, refresh in update whether we can do next attack
-
-    // Call Animations here
-
-    // Store projectiles in case need to change values when spawning them
-
-    // Maybe seperate this into classes for easier serialisation
+    // Projectile Vars
     public GameObject horizontalProjectile;
     public GameObject missile;
     public int totalMissiles;
-    public GameObject bullet;
-    public GameObject bulletLog;
     public GameObject shotgun;
-
-    public CircleBullet circleBulletVars;
-    public SpiralBullet spiralBulletVars;
     public ShotgunBullet shotgunBulletVars;
     public Transform[] waypoints;
-
-    public float lowerReactTime;
-    public float higherReactTime;
-    public float playerDistanceThreshold;
+    public GameObject bulletSpawner;
+    public GameObject bulletSpawnerThird;
     public float moveTime = 0;
-    public float projectileChance = 0.25f;
-    public float missileChance = 0.15f;
 
+    // Tween Vars
     public Color phaseOneColor;
     public Color phaseTwoColor;
     public Color phaseThreeColor;
     public Color missileColor;
     public Color shotgunColor;
+    public float rotateTime;
 
-    public float tweenTime;
     private int currentPhase = 0;
-
-    // Phase One Modifiers
-    public GameObject bulletSpawner;
-    //public CircleBullet PhaseOneCircleVariables;
-
-    public GameObject bulletSpawnerThird;
-
-    //public GameObject gameManager;
-
-    private float reactTime = 5;
     private float t = 0;
     private float moveT = 0;
-    //private int repeats = 0;
-    //private bool starth = true;
     private bool isMoving = false;
     private Vector3 waypoint;
     private Material material;
@@ -73,27 +38,16 @@ public class BossOne : Enemy
         Nothing
     }
 
-
     // Start is called before the first frame update
     void Start()
     {
         transform.localScale = Vector3.zero;
         material = GetComponent<SpriteRenderer>().material;
         material.EnableKeyword("_EMISSION");
-        
         base.Init();
-        //totalHP = this.hp;
-        //Tween();
 
-        // Probs set values of projectiles here
     }
 
-    public void Tween()
-    {
-        //LeanTween.cancel(gameObject);
-        LeanTween.rotateAround(gameObject, Vector3.forward, 360.0f, tweenTime)
-            .setRepeat(-1);
-    }
     // Update is called once per frame
     void Update()
     {
@@ -101,7 +55,7 @@ public class BossOne : Enemy
         if (Keyboard.current[Key.Q].wasPressedThisFrame)
         {
             hp -= 10;
-            Debug.Log("HP: "+ hp);
+            Debug.Log("HP: " + hp);
             UpdateHealthBar();
         }
         // Stop React State when moving
@@ -141,7 +95,7 @@ public class BossOne : Enemy
             else if (p == Phase.HPThreshold)
             {
                 t = -999;
-                tweenTime -= 1;
+                rotateTime -= 1;
                 currentPhase++;
                 LTSeq sq = LeanTween.sequence();
                 sq.append(1.0f);
@@ -270,7 +224,7 @@ public class BossOne : Enemy
             sq.append(LeanTween.color(gameObject, Color.red, 1));
             sq.append(LeanTween.color(gameObject, Color.blue, 1));
             sq.append(LeanTween.color(gameObject, phaseOneColor, 1));
-            sq.append(() => Tween());
+            sq.append(() => BaseRotationTween());
             return Phase.TimeReset;
         }
         return Phase.Nothing;
@@ -374,7 +328,7 @@ public class BossOne : Enemy
         if (t > 2)
         {
             LeanTween.cancel(gameObject);
-            Tween();
+            BaseRotationTween();
             LTSeq sq = LeanTween.sequence();
             Vector3 scale = gameObject.transform.localScale;
             Color low = phaseThreeColor * 0.25f;
@@ -388,7 +342,7 @@ public class BossOne : Enemy
             sq.append(LeanTween.scale(gameObject, scale, 1));
             sq.append(LeanTween.scale(gameObject, scale * 0.1f, 1));
             sq.append(LeanTween.scale(gameObject, scale, 0));
-            sq.append(() => Destroy(gameObject));
+            sq.append(() => Death());
             LTSeq sc = LeanTween.sequence();
             sc.append(LeanTween.color(gameObject, low, 0.5f));
             sc.append(LeanTween.color(gameObject, high, 0.5f));
@@ -398,10 +352,13 @@ public class BossOne : Enemy
         }
         return Phase.Nothing;
     }
-
-    private void MeleeAttack(string trigger)
+    
+    private void Death()
     {
-        animator.SetTrigger(trigger);
+        if (gameObject != null)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void ProjectileAttack()
@@ -444,7 +401,6 @@ public class BossOne : Enemy
         }
     }
 
-    // Probs do similar to projectiles and find certain points to spawn at, or just spawn at parent center
     private void SpawnMissiles(int total, Transform target)
     {
         missile.GetComponent<Missile>().target = thePlayer.transform;
@@ -456,67 +412,12 @@ public class BossOne : Enemy
         }
     }
 
-    // Melee Attack up down alternatively
-    private int AlternateMeleeAttack(int repeats, bool startHigh)
-    {
-        if (startHigh)
-        {
-            MeleeAttack(BossOneConstants.highAttack);
-        }
-        else
-        {
-            MeleeAttack(BossOneConstants.lowAttack);
-        }
-        return repeats - 1;
-    }
-
-    private void FireMissiles()
-    {
-        SpawnMissiles(totalMissiles, thePlayer.transform);
-    }
-
-    // EDIT THESE TO FIT GAMEPLAY
-    // P1
-    public void SpiralWithShotgun()
-    {
-        ShotgunBullet temp = shotgunBulletVars.Copy();
-        temp.repeats = 3;
-        temp.spawnInterval = 3.0f;
-        temp.rotation = AngleTowardsPlayer();
-        temp.totalLeft = 5;
-        temp.totalRight = 5;
-        temp.distanceBetweenBullets = 15;
-        StartCoroutine(BulletHellFuncs.ShotgunBullet(temp, shotgun, transform));
-        StartCoroutine(BulletHellFuncs.CircularBullet(circleBulletVars, bullet, transform));
-        LeanTween.color(gameObject, Color.red, 2.0f);
-
-    }
-
-    // P2
-    public void TwoSpirals()
-    {
-        StartCoroutine(BulletHellFuncs.CircularBullet(circleBulletVars, bullet, transform));
-        StartCoroutine(BulletHellFuncs.CircularBullet(circleBulletVars, bullet, transform));
-        LeanTween.color(gameObject, Color.blue, 2.0f);
-    }
-
-    // P3
     public void MultipleShotgun()
     {
         float angle = AngleTowardsPlayer();
         ShotgunBullet temp = shotgunBulletVars.Copy();
         temp.rotation = angle;
         StartCoroutine(BulletHellFuncs.ShotgunBullet(temp, shotgun, transform));
-        //ShotgunBullet temp1 = shotgunBulletVars.Copy();
-        //temp1.rotation = angle - 25.0f;
-        //StartCoroutine(BulletHellFuncs.ShotgunBullet(temp1, shotgun, transform));
-        ////shb.rotation = temp - 50.0f;
-        ////StartCoroutine(BulletHellFuncs.ShotgunBullet(shb, shotgun, transform));
-        //ShotgunBullet temp2 = shotgunBulletVars.Copy();
-        //temp2.rotation = angle + 25.0f;
-        //StartCoroutine(BulletHellFuncs.ShotgunBullet(temp2, shotgun, transform));
-        //shb.rotation = temp + 50;
-        //StartCoroutine(BulletHellFuncs.ShotgunBullet(shb, shotgun, transform));
     }
 
     private float AngleTowardsPlayer()
@@ -524,10 +425,10 @@ public class BossOne : Enemy
         Vector3 dir = (thePlayer.transform.position);
         return Mathf.Atan2(dir.y - transform.position.y, dir.x - transform.position.x) * Mathf.Rad2Deg;
     }
-}
-public class BossOneConstants
-{
-    public const string highAttack = "HighAttack";
-    public const string lowAttack = "LowAttack";
-    public const int totalBossPatterns = 3;
+
+    public void BaseRotationTween()
+    {
+        LeanTween.rotateAround(gameObject, Vector3.forward, 360.0f, rotateTime)
+            .setRepeat(-1);
+    }
 }

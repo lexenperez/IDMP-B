@@ -17,6 +17,11 @@ public class GameManager : MonoBehaviour
     public GameObject endCanvas;
     public GameObject endText;
     private TextAsset recordText;
+    public string timerTag;
+    public string endCanvasTag;
+    public string endTextTag;
+    public string bossTag;
+    private string recordPath = "/Resources/records.txt";
 
     private int currentBoss = 0;
     public GameObject[] bosses;
@@ -34,10 +39,11 @@ public class GameManager : MonoBehaviour
                 records.Add(TimeSpan.FromSeconds(0));
             }
         }
-        recordText = Resources.Load("records") as TextAsset;
+        recordText = Resources.Load<TextAsset>("records");
         if (recordText == null)
         {
-            File.Create(Application.dataPath + "/Resources/records.txt");
+            Debug.Log("Create new");
+            File.Create(Application.dataPath + recordPath);
         }
         else
         {
@@ -56,6 +62,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("Loaded " + scene.name);
             Setup();
+            if (endCanvas) endCanvas.SetActive(false);
         }
 
     }
@@ -68,11 +75,10 @@ public class GameManager : MonoBehaviour
 
     void Setup()
     {
-        endCanvas = GameObject.FindGameObjectWithTag("EndCanvas");
-        timerText = GameObject.FindGameObjectWithTag("Timer");
-        endText = GameObject.FindGameObjectWithTag("EndText");
-        bosses = GameObject.FindGameObjectsWithTag("Boss");
-        if (endCanvas) endCanvas.SetActive(false);
+        endCanvas = GameObject.FindGameObjectWithTag(endCanvasTag);
+        timerText = GameObject.FindGameObjectWithTag(timerTag);
+        endText = GameObject.FindGameObjectWithTag(endTextTag);
+        bosses = GameObject.FindGameObjectsWithTag(bossTag);
         
     }
 
@@ -98,7 +104,7 @@ public class GameManager : MonoBehaviour
         foreach(TimeSpan ts in records)
         {
             string toSet = ts.ToString("mm':'ss':'ff");
-            Debug.Log(ts);
+            //Debug.Log(ts);
             if (ts.TotalSeconds == 0) toSet = "Not yet tried";
             s += string.Format("Boss {0}: ", c) + toSet + "\n";
             c++;
@@ -109,7 +115,7 @@ public class GameManager : MonoBehaviour
     void SaveRecords()
     {
         
-        string path = Application.dataPath + "/Resources/records.txt";
+        string path = Application.dataPath + recordPath;
         Debug.Log("saving to " + path);
         StreamWriter writer = new StreamWriter(path, false);
         foreach(TimeSpan record in records)
@@ -178,7 +184,7 @@ public class GameManager : MonoBehaviour
         if (boss <= records.Count)
         {
             TimeSpan ts = records[boss];
-            Debug.Log(TimeSpan.Compare(TimeSpan.FromSeconds(currentBossTime), ts));
+            //Debug.Log(TimeSpan.Compare(TimeSpan.FromSeconds(currentBossTime), ts));
             if (TimeSpan.Compare(TimeSpan.FromSeconds(currentBossTime), ts) == -1 || ts.TotalSeconds == 0)
             {
                 records[boss] = TimeSpan.FromSeconds(currentBossTime);
