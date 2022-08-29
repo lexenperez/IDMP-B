@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class menubuttons : MonoBehaviour
 {
+    public string firstScene; 
     public void Quit()
     {
         Application.Quit();
@@ -12,6 +13,6 @@ public class menubuttons : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("Scene 1");
+        SceneManager.LoadScene(firstScene);
     }
 }

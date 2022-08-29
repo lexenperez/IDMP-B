@@ -44,6 +44,7 @@ public class Missile : LifeTimer
                 launched = true;
                 time = 0;
                 transform.rotation = Quaternion.Euler(0.0f, 0.0f, rotationZ);
+                line.transform.rotation = transform.rotation;
                 //line.useWorldSpace = true;
 
                 StartCoroutine(Fade());

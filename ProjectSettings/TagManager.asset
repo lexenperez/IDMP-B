@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Scene
   - Boss2
+  - Boss
+  - Timer
+  - EndText
+  - EndCanvas
   layers:
   - Default
   - TransparentFX
@@ -14,31 +18,31 @@ TagManager:
   - Water
   - UI
   - Ground
-  - 
+  -
   - PostProcessing
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
   m_SortingLayers:
   - name: Default
     uniqueID: 0
