@@ -438,10 +438,10 @@ MonoBehaviour:
   editorData:
     _bezierPath:
       points:
-      - {x: -0.03462982, y: 0.8930275, z: 0}
-      - {x: 0.63734245, y: 0.73930323, z: 0}
-      - {x: 1.1881771, y: -0.33718312, z: 0}
-      - {x: 0.08167744, y: -0.8596406, z: 0}
+      - {x: 1.0065031, y: 2.1839192, z: 0}
+      - {x: 5.409853, y: 1.9011353, z: 0}
+      - {x: 4.3595123, y: -1.8289196, z: 0}
+      - {x: 0.64292336, y: -1.7885219, z: 0}
       isClosed: 0
       space: 1
       controlMode: 0
@@ -455,7 +455,7 @@ MonoBehaviour:
       - 0
       globalNormalsAngle: 0
       flipNormals: 0
-    vertexPathUpToDate: 0
+    vertexPathUpToDate: 1
     vertexPathMaxAngleError: 0.3
     vertexPathMinVertexSpacing: 0.01
     showTransformTool: 1
@@ -464,12 +464,12 @@ MonoBehaviour:
     displayAnchorPoints: 1
     displayControlPoints: 1
     bezierHandleScale: 1
-    globalDisplaySettingsFoldout: 0
+    globalDisplaySettingsFoldout: 1
     keepConstantHandleSize: 1
     showNormalsInVertexMode: 0
     showBezierPathInVertexMode: 0
     showDisplayOptions: 1
-    showPathOptions: 0
+    showPathOptions: 1
     showVertexPathDisplayOptions: 0
     showVertexPathOptions: 1
     showNormals: 0
@@ -673,15 +673,16 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 1.2864197, y: -1.150989}
-      - {x: 1.9824343, y: -0.43669844}
-      - {x: 1.8306646, y: 0.9465297}
-      - {x: -0.52348715, y: 1.5751377}
-      - {x: -0.5245294, y: 0.86336696}
+    - - {x: 2.9532568, y: -2.2952986}
+      - {x: 7.730054, y: -1.0595505}
+      - {x: 7.9030404, y: 1.251164}
+      - {x: 5.5760174, y: 2.4361403}
+      - {x: 0.97322845, y: 2.9228964}
+      - {x: -0.13292074, y: 0.844228}
       - {x: 0.6557835, y: 0.53567636}
       - {x: 0.6452529, y: -0.60585535}
       - {x: -0.40170607, y: -0.8078889}
-      - {x: -0.13194883, y: -1.3843771}
+      - {x: 0.81826174, y: -2.2824426}
 --- !u!114 &5622422038985009466
 MonoBehaviour:
   m_ObjectHideFlags: 0

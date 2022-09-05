@@ -53,12 +53,12 @@ public class BossOne : Enemy
     void Update()
     {
         material.SetColor("_EmissionColor", gameObject.GetComponent<SpriteRenderer>().color);
-        if (Keyboard.current[Key.Q].wasPressedThisFrame)
-        {
-            hp -= 10;
-            Debug.Log("HP: " + hp);
-            UpdateHealthBar();
-        }
+        //if (Keyboard.current[Key.Q].wasPressedThisFrame)
+        //{
+        //    hp -= 10;
+        //    Debug.Log("HP: " + hp);
+        //    UpdateHealthBar();
+        //}
         // Stop React State when moving
         if (!isMoving)
         {
