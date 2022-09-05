@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class menubuttons : MonoBehaviour
+public class MainMenu : MonoBehaviour
 {
     [SerializeField] private GameObject mainMenu;
     [SerializeField] private GameObject controls;
     [SerializeField] private GameObject records;
-
-    public string firstScene; 
+    [SerializeField] private string gameScene;
     public void Exit()
     {
         Application.Quit();
@@ -17,7 +16,7 @@ public class menubuttons : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene(firstScene);
+        SceneManager.LoadScene(gameScene);
     }
 
     public void ViewRecords()
