@@ -10,6 +10,8 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public static bool gameEnded = false;
+
     private List<TimeSpan> records = new List<TimeSpan>();
     private float currentBossTime = 0;
 
@@ -81,7 +83,6 @@ public class GameManager : MonoBehaviour
         timerText = GameObject.FindGameObjectWithTag(timerTag);
         endText = GameObject.FindGameObjectWithTag(endTextTag);
         bosses = GameObject.FindGameObjectsWithTag(bossTag);
-        
     }
 
     void LoadRecords()
@@ -140,6 +141,7 @@ public class GameManager : MonoBehaviour
                 {
                     FinishFight();
                     endScreenShown = true;
+                    gameEnded = true;
                     Debug.Log("Bosses all dead");
 
                 }

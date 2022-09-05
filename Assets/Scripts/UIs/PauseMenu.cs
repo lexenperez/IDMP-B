@@ -9,15 +9,15 @@ public class PauseMenu : MonoBehaviour
 
     private bool inControlsMenu = false;
 
-    [SerializeField] private GameObject pauseMenuCanvas;
-    [SerializeField] private GameObject pauseMenuUI;
+    [SerializeField] private GameObject mainPauseMenuUI;
+    [SerializeField] private GameObject subPauseMenuUI;
     [SerializeField] private GameObject controlsMenuUI;
 
     [SerializeField] private string mainMenuScene;
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !GameManager.gameEnded)
         {
             if (inControlsMenu)
                 GoBack();
@@ -33,14 +33,14 @@ public class PauseMenu : MonoBehaviour
 
     public void Resume()
     {
-        pauseMenuCanvas.SetActive(false);
+        mainPauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
         gameIsPaused = false;
     }
 
     private void Pause()
     {
-        pauseMenuCanvas.SetActive(true);
+        mainPauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         gameIsPaused = true;
     }
@@ -54,13 +54,13 @@ public class PauseMenu : MonoBehaviour
     {
         inControlsMenu = true;
         controlsMenuUI.SetActive(true);
-        pauseMenuUI.SetActive(false);
+        subPauseMenuUI.SetActive(false);
     }
 
     public void GoBack()
     {
         inControlsMenu = false;
         controlsMenuUI.SetActive(false);
-        pauseMenuUI.SetActive(true);
+        subPauseMenuUI.SetActive(true);
     }
 }
