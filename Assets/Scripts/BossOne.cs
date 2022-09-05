@@ -6,6 +6,7 @@ public class BossOne : Enemy
     /* Controls First Boss animations, projectile handling and health */
 
     // Projectile Vars
+    public Transform[] projectileSpawnPlacements;
     public GameObject horizontalProjectile;
     public GameObject missile;
     public int totalMissiles;
@@ -399,6 +400,14 @@ public class BossOne : Enemy
             GameObject go = SpawnProjectile(i, horizontalProjectile);
             go.SetActive(true);
         }
+    }
+
+    private GameObject SpawnProjectile(int projectileIndex, GameObject prefab)
+    {
+        GameObject go = Instantiate(prefab);
+        go.transform.position = projectileSpawnPlacements[projectileIndex].position;
+        return go;
+
     }
 
     private void SpawnMissiles(int total, Transform target)

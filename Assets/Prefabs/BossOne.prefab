@@ -300,6 +300,7 @@ GameObject:
   - component: {fileID: 2268581522071123243}
   - component: {fileID: 2268581522145415090}
   - component: {fileID: 2268581522071123242}
+  - component: {fileID: 1511377735464412298}
   m_Layer: 0
   m_Name: BossOne
   m_TagString: Boss
@@ -397,6 +398,9 @@ MonoBehaviour:
   maxHp: 100
   speed: 5
   thePlayer: {fileID: 0}
+  invincibilityTime: 0.5
+  damageTags: []
+  allowSelfHitbox: 0
   projectileSpawnPlacements:
   - {fileID: 2268581520802270587}
   - {fileID: 2268581520508196255}
@@ -404,7 +408,6 @@ MonoBehaviour:
   - {fileID: 2268581521268368127}
   - {fileID: 2268581520626159843}
   - {fileID: 2268581521504473061}
-  allowSelfHitbox: 0
   horizontalProjectile: {fileID: 9214626414121310495, guid: fd3465d0ec75e084489fa0b439a27ecb, type: 3}
   missile: {fileID: 4951526269001340950, guid: 29cf2771fc6eb424cae2938fe4ad1abb, type: 3}
   totalMissiles: 5
@@ -443,7 +446,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -459,3 +462,16 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &1511377735464412298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2268581522071123241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18bf9b6b633d674488b03c9ece575b01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 1.5

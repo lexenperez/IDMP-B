@@ -10,6 +10,8 @@ TagManager:
   - Timer
   - EndText
   - EndCanvas
+  - Bullet
+  - PlayerAttack
   layers:
   - Default
   - TransparentFX
@@ -18,31 +20,31 @@ TagManager:
   - Water
   - UI
   - Ground
-  -
-  - PostProcessing
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
-  -
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   m_SortingLayers:
   - name: Default
     uniqueID: 0

@@ -12,7 +12,6 @@ public abstract class NPC : MonoBehaviour
     protected SpriteRenderer sprite;
     protected BoxCollider2D baseCollider;
     protected Rigidbody2D rb2d;
-    protected Animator animator;
 
     // Find some more similar stuff
     //public Sprite[] spriteArray;
@@ -28,7 +27,6 @@ public abstract class NPC : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         rb2d = GetComponent<Rigidbody2D>();
         baseCollider = GetComponent<BoxCollider2D>();
-        animator = GetComponent<Animator>();
     }
 
     // For animation change (simple sprites)
@@ -46,6 +44,8 @@ public abstract class NPC : MonoBehaviour
         sprite.flipX = !sprite.flipX;
     }
 
+
+    // TODO move this somewhere, this is related to bosses
     protected void UpdateHealthBar()
     {
         healthBar.GetComponent<HPBossBar>().UpdateHealthBar();

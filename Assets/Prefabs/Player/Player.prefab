@@ -611,6 +611,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75a9464cf35455f4f99e3eb3948e4d23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageTags:
+  - Bullet
+  - Boss
   maxHealth: 100
   invincibilityTime: 0.5
 --- !u!1 &1902642045498300754
@@ -623,9 +626,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4190081242514955501}
   - component: {fileID: 4915424162230074962}
+  - component: {fileID: 5622422038985009466}
   m_Layer: 0
   m_Name: Attack Collider
-  m_TagString: Untagged
+  m_TagString: PlayerAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -678,6 +682,19 @@ PolygonCollider2D:
       - {x: 0.6452529, y: -0.60585535}
       - {x: -0.40170607, y: -0.8078889}
       - {x: -0.13194883, y: -1.3843771}
+--- !u!114 &5622422038985009466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1902642045498300754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18bf9b6b633d674488b03c9ece575b01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 0
 --- !u!1 &6575307288353219756
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,10 +4,17 @@ using UnityEngine;
 
 public abstract class Enemy : NPC
 {
-    public Transform[] projectileSpawnPlacements;
+    // Abstract class should handle all general animation changes and hitboxes to enable
+
+    // Same as playerHealth
+    [SerializeField] private float invincibilityTime = 0.5f;
+    private const float TOTAL_FLICKER_TIME = 0.2f;
+    private bool isInvincible = false;
+    [SerializeField] private string[] damageTags;
+    private Color ogColor;
+
     public bool allowSelfHitbox;
-    // Abstract class should handle all general animation changes and hitboxes to enable (at least, for general melee attacks)
-    
+
     protected void Init()
     {
         base.Init();
@@ -17,32 +24,47 @@ public abstract class Enemy : NPC
         }
     }
 
-    // For any melee attack, it's simply just an animation followed by a collider enabled somewhere near the unit for a certain duration
-    // For ranged or any other special attacks, probably need to be its own gameobject that handles itself
-
-    //protected void PerformAttack(int animationIndex, int colliderIndex, float duration)
-    //{
-
-    //}
-
-    //protected void ToggleHitbox(int colliderIndex)
-    //{
-    //    Debug.Log("Toggling Hitbox");
-    //    colliders[colliderIndex].enabled = !colliders[colliderIndex].enabled;
-    //}
-
-    //protected void ToggleSprite(int spriteIndex)
-    //{
-    //    Debug.Log("Toggling Sprite");
-    //    sprites[spriteIndex].enabled = !sprites[spriteIndex].enabled;
-    //}
-
-    protected GameObject SpawnProjectile(int projectileIndex, GameObject prefab)
+    public void TakeDamage(float damage)
     {
-        GameObject go = Instantiate(prefab);
-        go.transform.position = projectileSpawnPlacements[projectileIndex].position;
-        return go;
-        
+        ogColor = sprite.color;
+        if (isInvincible)
+            return;
+
+        hp -= damage;
+        UpdateHealthBar();
+
+        StartCoroutine(DamageFlicker());
     }
 
+    private IEnumerator DamageFlicker()
+    {
+        isInvincible = true;
+
+        for (int i = 0; i < invincibilityTime / TOTAL_FLICKER_TIME; i++)
+        {
+            Color c = sprite.color / 2.0f;
+            sprite.color = c;
+
+            yield return new WaitForSeconds(TOTAL_FLICKER_TIME / 2f);
+
+            sprite.color = ogColor;
+
+            yield return new WaitForSeconds(TOTAL_FLICKER_TIME / 2f);
+
+        }
+
+        isInvincible = false;
+    }
+
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        foreach (string tag in damageTags)
+        {
+            if (collision.CompareTag(tag))
+            {
+                //Debug.Log("Boss taking dmg");
+                TakeDamage(collision.GetComponent<DamageDealer>().GetDamage());
+            }
+        }
+    }
 }
