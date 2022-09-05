@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     private List<TimeSpan> records = new List<TimeSpan>();
     private float currentBossTime = 0;
 
+    [SerializeField] private GameObject recordsObj;
+
     public GameObject timerText;
     public GameObject endCanvas;
     public GameObject endText;
@@ -31,7 +33,7 @@ public class GameManager : MonoBehaviour
     {
         DontDestroyOnLoad(this);
         SceneManager.sceneLoaded += OnSceneLoaded;
-        
+
         foreach (string t in Directory.GetFiles(Application.dataPath + "/Scenes/Bosses"))
         {
             if (t.EndsWith(".unity"))
@@ -109,7 +111,7 @@ public class GameManager : MonoBehaviour
             s += string.Format("Boss {0}: ", c) + toSet + "\n";
             c++;
         }
-        GameObject.Find("Records").GetComponent<TextMeshProUGUI>().text = s;
+        recordsObj.GetComponent<TextMeshProUGUI>().text = s;
     }
 
     void SaveRecords()
