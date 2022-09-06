@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(SpriteRenderer))]
@@ -15,6 +16,7 @@ public class PlayerHealth : MonoBehaviour
     // References
     private SpriteRenderer spriteRenderer;
     private bool isInvincible = false;
+    [SerializeField] private Image healthBarImg;
 
     [Header("Health Configurations")]
     [SerializeField] private float maxHealth = 100f;
@@ -48,6 +50,9 @@ public class PlayerHealth : MonoBehaviour
 
         // Damage the player
         currentHealth -= damage;
+
+        // Update health bar
+        healthBarImg.fillAmount = Mathf.Clamp(currentHealth / maxHealth, 0, 1f);
 
         // Run flicker animation
         StartCoroutine(DamageFlicker());
