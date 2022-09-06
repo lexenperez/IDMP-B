@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1046444749176229136}
   m_Layer: 0
   m_Name: GameManager
-  m_TagString: Untagged
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43,6 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19ffc8bde74d1a649a3f9f816a084634, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  recordsObj: {fileID: 0}
   timerText: {fileID: 0}
   endCanvas: {fileID: 0}
   endText: {fileID: 0}
@@ -50,4 +51,5 @@ MonoBehaviour:
   endCanvasTag: EndCanvas
   endTextTag: EndText
   bossTag: Boss
+  recordTextTag: RecordText
   bosses: []

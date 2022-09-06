@@ -12,6 +12,7 @@ TagManager:
   - EndCanvas
   - Bullet
   - PlayerAttack
+  - RecordText
   layers:
   - Default
   - TransparentFX

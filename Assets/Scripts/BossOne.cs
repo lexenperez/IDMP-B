@@ -1,9 +1,11 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class BossOne : Enemy
 {
     /* Controls First Boss animations, projectile handling and health */
+
 
     // Projectile Vars
     public Transform[] projectileSpawnPlacements;
@@ -25,6 +27,7 @@ public class BossOne : Enemy
     public Color shotgunColor;
     public float rotateTime;
 
+    [SerializeField] private float startingGraceTime = 5;
     private int currentPhase = 0;
     private float t = 0;
     private float moveT = 0;
@@ -71,13 +74,15 @@ public class BossOne : Enemy
          */
         if (currentPhase == 0)
         {
-            Phase p = PhaseZero(t);
+            if (allowSelfHitbox && baseCollider.isActiveAndEnabled)
+            {
+                baseCollider.enabled = false;
+            }
 
+            Phase p = PhaseZero(t);
             if (p == Phase.TimeReset)
             {
                 t = 0;
-                currentPhase++;
-                //gameManager.GetComponent<GameManager>().StartCurrentTime();
             }
         }
 
@@ -88,6 +93,10 @@ public class BossOne : Enemy
          */
         if (currentPhase == 1)
         {
+            if (allowSelfHitbox)
+            {
+                baseCollider.enabled = true;
+            }
             Phase p = PhaseOne(t);
             if (p == Phase.TimeReset)
             {
@@ -95,16 +104,12 @@ public class BossOne : Enemy
             }
             else if (p == Phase.HPThreshold)
             {
-                t = -999;
+                t = 0;
                 rotateTime -= 1;
                 currentPhase++;
                 LTSeq sq = LeanTween.sequence();
                 sq.append(1.0f);
                 sq.append(LeanTween.color(gameObject, phaseTwoColor, 2));
-                sq.append(() =>
-                {
-                    t = 0;
-                });
             }
         }
 
@@ -155,7 +160,9 @@ public class BossOne : Enemy
                 bulletSpawner.SetActive(false);
                 bulletSpawnerThird.SetActive(false);
                 t = 0;
+                moveTime = 9999;
                 currentPhase++;
+                baseCollider.enabled = false;
             }
         }
 
@@ -165,6 +172,13 @@ public class BossOne : Enemy
          */
         if (currentPhase == 4)
         {
+            // Inefficient but this only happens if you manage to skip 3rd phase which most likely wont happen
+            if (bulletSpawner.activeSelf || bulletSpawnerThird.activeSelf || baseCollider.enabled)
+            {
+                bulletSpawner.SetActive(false);
+                bulletSpawnerThird.SetActive(false);
+                baseCollider.enabled = false;
+            }
             Phase p = PhaseFour(t);
             if (p == Phase.HPThreshold)
             {
@@ -215,8 +229,9 @@ public class BossOne : Enemy
 
     private Phase PhaseZero(float t)
     {
-        if (t > 5)
+        if (t > startingGraceTime)
         {
+            startingGraceTime = 9999;
             LeanTween.scale(gameObject, new Vector3(8, 8, 1), 5);
             LTSeq sq = LeanTween.sequence();
             sq.append(1.0f);
@@ -226,6 +241,8 @@ public class BossOne : Enemy
             sq.append(LeanTween.color(gameObject, Color.blue, 1));
             sq.append(LeanTween.color(gameObject, phaseOneColor, 1));
             sq.append(() => BaseRotationTween());
+
+            sq.append(() => currentPhase++);
             return Phase.TimeReset;
         }
         return Phase.Nothing;
@@ -237,7 +254,6 @@ public class BossOne : Enemy
         float heightThreshold = 7.0f;
         if (hp / maxHp <= 0.75)
         {
-            bulletSpawner.SetActive(false);
             return Phase.HPThreshold;
         }
 

@@ -8,7 +8,16 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private GameObject mainMenu;
     [SerializeField] private GameObject controls;
     [SerializeField] private GameObject records;
+    [SerializeField] private GameObject recordTxt;
     [SerializeField] private string gameScene;
+    [SerializeField] private GameObject gameManager;
+    private string gmTag;
+    private void Start()
+    {
+        // Setup tag at the start since you need a GM
+        gmTag = gameManager.tag;
+    }
+
     public void Exit()
     {
         Application.Quit();
@@ -16,11 +25,18 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
+        
         SceneManager.LoadScene(gameScene);
     }
 
     public void ViewRecords()
     {
+        GameObject gm = GameObject.FindGameObjectWithTag(gmTag);
+        if (gm)
+        {
+            gm.GetComponent<GameManager>().recordsObj = recordTxt;
+            gm.GetComponent<GameManager>().SetRecords();
+        }
         records.SetActive(true);
         mainMenu.SetActive(false);
     }

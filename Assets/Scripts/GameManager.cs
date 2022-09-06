@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     private List<TimeSpan> records = new List<TimeSpan>();
     private float currentBossTime = 0;
 
-    [SerializeField] private GameObject recordsObj;
+    public GameObject recordsObj;
 
     public GameObject timerText;
     public GameObject endCanvas;
@@ -25,15 +25,23 @@ public class GameManager : MonoBehaviour
     public string endCanvasTag;
     public string endTextTag;
     public string bossTag;
+    public string recordTextTag;
     private string recordPath = "/Resources/records.txt";
 
     private int currentBoss = 0;
-    public GameObject[] bosses;
+    public GameObject[] bosses = new GameObject[0];
     private bool endScreenShown = false;
     // Start is called before the first frame update
     void Start()
     {
-        DontDestroyOnLoad(this);
+        if (GameObject.FindGameObjectsWithTag("GameController").Length > 1)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            DontDestroyOnLoad(this);
+        }
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         foreach (string t in Directory.GetFiles(Application.dataPath + "/Scenes/Bosses"))
@@ -61,6 +69,7 @@ public class GameManager : MonoBehaviour
         if (scene.name.Equals("Menu"))
         {
             SetRecords();
+            ResetValues();
         }
         else
         {
@@ -75,6 +84,15 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
         SaveRecords();
+    }
+
+    void ResetValues()
+    {
+        bosses = new GameObject[0];
+        currentBoss = 0;
+        gameEnded = false;
+        ResetCurrentTimer();
+        endScreenShown = false;
     }
 
     void Setup()
@@ -100,19 +118,23 @@ public class GameManager : MonoBehaviour
 
     }
 
-    void SetRecords()
+    public void SetRecords()
     {
-        string s = "";
-        int c = 1;
-        foreach(TimeSpan ts in records)
+        if (recordsObj)
         {
-            string toSet = ts.ToString("mm':'ss':'ff");
-            //Debug.Log(ts);
-            if (ts.TotalSeconds == 0) toSet = "Not yet tried";
-            s += string.Format("Boss {0}: ", c) + toSet + "\n";
-            c++;
+            string s = "";
+            int c = 1;
+            foreach (TimeSpan ts in records)
+            {
+                string toSet = ts.ToString("mm':'ss':'ff");
+                //Debug.Log(ts);
+                if (ts.TotalSeconds == 0) toSet = "Not yet tried";
+                s += string.Format("Boss {0}: ", c) + toSet + "\n";
+                c++;
+            }
+            recordsObj.GetComponent<TextMeshProUGUI>().text = s;
         }
-        recordsObj.GetComponent<TextMeshProUGUI>().text = s;
+
     }
 
     void SaveRecords()

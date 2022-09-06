@@ -182,7 +182,9 @@ MonoBehaviour:
   mainMenu: {fileID: 0}
   controls: {fileID: 0}
   records: {fileID: 0}
+  recordTxt: {fileID: 0}
   gameScene: 
+  gameManager: {fileID: 0}
 --- !u!114 &20944221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59028,9 +59030,13 @@ PrefabInstance:
       propertyPath: editorData.showPathOptions
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4705838633256273049, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
+      propertyPath: editorData.vertexPathUpToDate
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5622422038985009466, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
       propertyPath: damage
-      value: 25
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
@@ -60094,6 +60100,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2268581522145415090, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
+      propertyPath: phasetxt
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2268581522145415090, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
       propertyPath: healthBar
       value: 
       objectReference: {fileID: 1739367099}
@@ -60136,19 +60146,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2395546427070267188, guid: fd86cbfbeed7b534c9a6671b0d1a75d6, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2395546427070267188, guid: fd86cbfbeed7b534c9a6671b0d1a75d6, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2395546427070267188, guid: fd86cbfbeed7b534c9a6671b0d1a75d6, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 256.312
       objectReference: {fileID: 0}
     - target: {fileID: 2395546427070267188, guid: fd86cbfbeed7b534c9a6671b0d1a75d6, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -57.63675
       objectReference: {fileID: 0}
     - target: {fileID: 2395546427070267191, guid: fd86cbfbeed7b534c9a6671b0d1a75d6, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -60176,19 +60186,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2395546427389181217, guid: fd86cbfbeed7b534c9a6671b0d1a75d6, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2395546427389181217, guid: fd86cbfbeed7b534c9a6671b0d1a75d6, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2395546427389181217, guid: fd86cbfbeed7b534c9a6671b0d1a75d6, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 256.312
       objectReference: {fileID: 0}
     - target: {fileID: 2395546427389181217, guid: fd86cbfbeed7b534c9a6671b0d1a75d6, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -172.91025
       objectReference: {fileID: 0}
     - target: {fileID: 2395546428578377276, guid: fd86cbfbeed7b534c9a6671b0d1a75d6, type: 3}
       propertyPath: m_Name
@@ -60196,7 +60206,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2395546428578377276, guid: fd86cbfbeed7b534c9a6671b0d1a75d6, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2395546428578377279, guid: fd86cbfbeed7b534c9a6671b0d1a75d6, type: 3}
       propertyPath: m_Pivot.x
