@@ -6,6 +6,7 @@ public class BossOne : Enemy
 {
     /* Controls First Boss animations, projectile handling and health */
 
+    public TextMeshProUGUI phasetxt;
 
     // Projectile Vars
     public Transform[] projectileSpawnPlacements;
@@ -27,7 +28,13 @@ public class BossOne : Enemy
     public Color shotgunColor;
     public float rotateTime;
 
+    // Phase Vars
     [SerializeField] private float startingGraceTime = 5;
+    [SerializeField] private float phaseOneGrace = 6;
+    [SerializeField] private float phaseTwoGrace = 5;
+    [SerializeField] private float phaseThreeGrace = 5;
+    [SerializeField] private float deathGraceTime = 2;
+
     private int currentPhase = 0;
     private float t = 0;
     private float moveT = 0;
@@ -49,6 +56,7 @@ public class BossOne : Enemy
         material = GetComponent<SpriteRenderer>().material;
         material.EnableKeyword("_EMISSION");
         base.Init();
+        phasetxt.text = string.Format("PHASE {0}", currentPhase);
 
     }
 
@@ -79,13 +87,14 @@ public class BossOne : Enemy
                 baseCollider.enabled = false;
             }
 
-            Phase p = PhaseZero(t);
+            Phase p = PhaseZero(t, startingGraceTime);
             if (p == Phase.TimeReset)
             {
                 t = 0;
             }
         }
 
+        phasetxt.text = string.Format("PHASE {0}", currentPhase);
         /* Phase One
          * Constant Spiral Attack
          * Projectile Attacks on centre
@@ -97,7 +106,7 @@ public class BossOne : Enemy
             {
                 baseCollider.enabled = true;
             }
-            Phase p = PhaseOne(t);
+            Phase p = PhaseOne(t, phaseOneGrace);
             if (p == Phase.TimeReset)
             {
                 t = 0;
@@ -107,6 +116,7 @@ public class BossOne : Enemy
                 t = 0;
                 rotateTime -= 1;
                 currentPhase++;
+                phasetxt.text = string.Format("PHASE {0}", currentPhase);
                 LTSeq sq = LeanTween.sequence();
                 sq.append(1.0f);
                 sq.append(LeanTween.color(gameObject, phaseTwoColor, 2));
@@ -121,23 +131,20 @@ public class BossOne : Enemy
         if (currentPhase == 2)
         {
 
-            Phase p = PhaseTwo(t);
+            Phase p = PhaseTwo(t, phaseTwoGrace);
             if (p == Phase.TimeReset)
             {
                 t = 0;
             }
             else if (p == Phase.HPThreshold)
             {
-                t = -999;
+                t = -1;
+                rotateTime -= 1.2f;
                 currentPhase++;
+                phasetxt.text = string.Format("PHASE {0}", currentPhase);
                 LTSeq sq = LeanTween.sequence();
                 sq.append(1.0f);
                 sq.append(LeanTween.color(gameObject, phaseThreeColor, 2));
-                sq.append(() =>
-                {
-                    t = 0;
-                    bulletSpawnerThird.SetActive(true);
-                });
             }
         }
 
@@ -149,8 +156,12 @@ public class BossOne : Enemy
          */
         if (currentPhase == 3)
         {
-
-            Phase p = PhaseThree(t);
+            if (!bulletSpawnerThird.activeSelf)
+            {
+                bulletSpawnerThird.SetActive(true);
+            }
+            
+            Phase p = PhaseThree(t, phaseThreeGrace);
             if (p == Phase.TimeReset)
             {
                 t = 0;
@@ -162,7 +173,9 @@ public class BossOne : Enemy
                 t = 0;
                 moveTime = 9999;
                 currentPhase++;
+                phasetxt.text = string.Format("PHASE {0}", currentPhase);
                 baseCollider.enabled = false;
+                CancelAllProjectiles();
             }
         }
 
@@ -179,7 +192,7 @@ public class BossOne : Enemy
                 bulletSpawnerThird.SetActive(false);
                 baseCollider.enabled = false;
             }
-            Phase p = PhaseFour(t);
+            Phase p = PhaseFour(t, deathGraceTime);
             if (p == Phase.HPThreshold)
             {
                 t = -9999;
@@ -227,9 +240,9 @@ public class BossOne : Enemy
         }
     }
 
-    private Phase PhaseZero(float t)
+    private Phase PhaseZero(float t, float graceTime)
     {
-        if (t > startingGraceTime)
+        if (t > graceTime)
         {
             startingGraceTime = 9999;
             LeanTween.scale(gameObject, new Vector3(8, 8, 1), 5);
@@ -248,7 +261,7 @@ public class BossOne : Enemy
         return Phase.Nothing;
     }
 
-    private Phase PhaseOne(float t)
+    private Phase PhaseOne(float t, float graceTime)
     {
 
         float heightThreshold = 7.0f;
@@ -257,7 +270,7 @@ public class BossOne : Enemy
             return Phase.HPThreshold;
         }
 
-        if (t > 6)
+        if (t > graceTime)
         {
             if (!bulletSpawner.activeSelf)
             {
@@ -281,15 +294,15 @@ public class BossOne : Enemy
         return Phase.Nothing;
     }
 
-    private Phase PhaseTwo(float t)
+    private Phase PhaseTwo(float t, float graceTime)
     {
-        if (hp / maxHp <= 0.5f)
+        if (hp / maxHp <= 0.35f)
         {
             return Phase.HPThreshold;
         }
 
         float heightThreshold = 6.0f;
-        if (t > 5)
+        if (t > graceTime)
         {
             LTSeq sq = LeanTween.sequence();
             sq.append(1.0f);
@@ -310,7 +323,7 @@ public class BossOne : Enemy
         return Phase.Nothing;
     }
 
-    private Phase PhaseThree(float t)
+    private Phase PhaseThree(float t, float graceTime)
     {
         if (hp / maxHp <= 0.0f)
         {
@@ -318,7 +331,7 @@ public class BossOne : Enemy
         }
 
         float heightThreshold = 6.0f;
-        if (t > 5)
+        if (t > graceTime)
         {
             LTSeq sq = LeanTween.sequence();
             sq.append(1.0f);
@@ -339,10 +352,10 @@ public class BossOne : Enemy
         return Phase.Nothing;
     }
 
-    private Phase PhaseFour(float t)
+    private Phase PhaseFour(float t, float graceTime)
     {
 
-        if (t > 2)
+        if (t > graceTime)
         {
             LeanTween.cancel(gameObject);
             BaseRotationTween();
@@ -455,5 +468,13 @@ public class BossOne : Enemy
     {
         LeanTween.rotateAround(gameObject, Vector3.forward, 360.0f, rotateTime)
             .setRepeat(-1);
+    }
+
+    private void CancelAllProjectiles()
+    {
+        foreach (GameObject pj in GameObject.FindGameObjectsWithTag("Bullet"))
+        {
+            Destroy(pj);
+        }
     }
 }

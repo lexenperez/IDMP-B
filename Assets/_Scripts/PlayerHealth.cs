@@ -86,7 +86,7 @@ public class PlayerHealth : MonoBehaviour
         {
             if (collision.CompareTag(tag))
             {
-                //Debug.Log("Player taking dmg");
+                Debug.Log("Player taking dmg");
                 TakeDamage(collision.GetComponent<DamageDealer>().GetDamage());
             }
         }
