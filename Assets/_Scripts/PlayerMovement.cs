@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     private TrailRenderer trailRenderer;
     private PlayerWallSlide playerWallSlideScript;
     private PlayerJump playerJumpScript;
+    [SerializeField] private Image energyBarImg;
 
     // Input
     private PlayerInput playerInput;
@@ -23,16 +25,23 @@ public class PlayerMovement : MonoBehaviour
     private float directionX;
     private Vector2 desiredVelocity;
 
-    [Header("Configurations")]
+    [Header("Movement & Dash Configurations")]
     [SerializeField, Range(2f, 20f)] private float maxSpeed = 5f;
     [SerializeField, Range(0.01f, 1f)] private float dashTime = 0.8f;
     [SerializeField, Range(1f, 20f)] private float dashDistance = 5f;
     [SerializeField, Range(0.1f, 5f)] private float dashCooldown = 1f;
 
+    [Header("Stamina Configurations")]
+    [SerializeField, Range(1f, 500f)] private float maxStamina = 100f;
+    [SerializeField, Range(1f, 100f)] private float staminaConsumption = 33f;
+    [SerializeField, Range(0.01f, 1f)] private float staminaRefill = 1f;
+    private float currentStamina;
+
     // Dash
     [Header("Dash States")]
     [SerializeField] private bool currentlyDashing;
     [SerializeField] private bool dashOnCooldown;
+
     private float dashSpeed;
 
     // Get - Setters
@@ -46,6 +55,7 @@ public class PlayerMovement : MonoBehaviour
         trailRenderer = GetComponent<TrailRenderer>();
         playerWallSlideScript = GetComponent<PlayerWallSlide>();
         playerJumpScript = GetComponent<PlayerJump>();
+        currentStamina = maxStamina;
 
         // Inputs
         playerInput = GetComponent<PlayerInput>();
@@ -57,8 +67,16 @@ public class PlayerMovement : MonoBehaviour
     {
         FaceDirection();
 
+        // Set dash velocity
         if (currentlyDashing)
             rigidBody.velocity = new Vector2(dashSpeed, 0);
+
+        // Refill Stamina
+        if (currentStamina < maxStamina)
+        {
+            currentStamina = Mathf.Clamp(currentStamina + staminaRefill, 0, maxStamina);
+            energyBarImg.fillAmount = Mathf.Clamp(currentStamina / maxStamina, 0, 1f);
+        }
     }
 
     private void FaceDirection()
@@ -81,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
     public void OnDash(InputAction.CallbackContext context)
     {
         if (context.started)
-            if (!dashOnCooldown)
+            if (!dashOnCooldown && (currentStamina >= staminaConsumption))
                 StartCoroutine(Dash());
     }
 
@@ -89,6 +107,10 @@ public class PlayerMovement : MonoBehaviour
     {
         currentlyDashing = true;
         dashOnCooldown = true;
+
+        // Stamina Consumption
+        currentStamina = Mathf.Clamp(currentStamina - staminaConsumption, 0, maxStamina);
+        energyBarImg.fillAmount = Mathf.Clamp(currentStamina / maxStamina, 0, 1f);
 
         // Store Gravity Scale
         float origGravScale = rigidBody.gravityScale;

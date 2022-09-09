@@ -176,6 +176,9 @@ MonoBehaviour:
   dashTime: 0.105
   dashDistance: 4
   dashCooldown: 0.3
+  maxStamina: 100
+  staminaConsumption: 33
+  staminaRefill: 0.1
   currentlyDashing: 0
   dashOnCooldown: 0
 --- !u!114 &36325881200039104
