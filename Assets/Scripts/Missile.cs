@@ -37,7 +37,6 @@ public class Missile : LifeTimer
         {
             if (time >= timeToActivate)
             {
-                Debug.Log("launching");
                 // Activate missile by giving it a burst of velocity
                 rb2d.velocity = Vector2.zero;
                 rb2d.AddForce(transform.up * speed);

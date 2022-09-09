@@ -10,8 +10,6 @@ public class PlayerHealth : MonoBehaviour
 {
     // Constants
     private const float TOTAL_FLICKER_TIME = 0.2f;
-    // Tags for which GameObject allows damage
-    [SerializeField] private string[] damageTags;
 
     // References
     private SpriteRenderer spriteRenderer;
@@ -42,7 +40,7 @@ public class PlayerHealth : MonoBehaviour
     //    TakeDamage(10);
     //}
 
-    protected void TakeDamage(float damage)
+    public void TakeDamage(float damage)
     {
         // Prevent player taking damage
         if (isInvincible)
@@ -83,17 +81,5 @@ public class PlayerHealth : MonoBehaviour
         }
 
         isInvincible = false;
-    }
-
-    public void OnTriggerEnter2D(Collider2D collision)
-    {
-        foreach (string tag in damageTags)
-        {
-            if (collision.CompareTag(tag))
-            {
-                Debug.Log("Player taking dmg");
-                TakeDamage(collision.GetComponent<DamageDealer>().GetDamage());
-            }
-        }
     }
 }

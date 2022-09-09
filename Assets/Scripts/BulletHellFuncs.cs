@@ -7,20 +7,7 @@ public class BulletHellFuncs : MonoBehaviour
     // Coroutines for spawning bullets
     public static IEnumerator CircularBullet(CircleBullet cb, GameObject obj, Transform parent)
     {
-        // Calculate points on circle first
-        List<Vector2> points = new List<Vector2>();
-        int step = 0;
-        // Find all positions from stepSize (initial positions) + repeats (initial positions rotated a bit) possibly more efficient than 2 for loops at the end
-        for (int t = 0; t < (cb.stepSize * cb.repeats); t++)
-        {
-            float angle = ((Mathf.PI * 2.0f / cb.stepSize) * t) + (Mathf.Deg2Rad * cb.rotation * (float)step);
-            Vector2 x = MathFuncs.PositionOnCircle(cb.circle, angle);
-            points.Add(x);
-            if (t % cb.stepSize == 0 && t != 0)
-            {
-                step++;
-            }
-        }
+        List<Vector2> points = GetPointsInCircle(cb);
 
         // Now that we have the points, repeat each spawn at each location per "repeats" with at each spawnInterval
         for (int i = 0; i < points.Count; i++)
@@ -38,7 +25,27 @@ public class BulletHellFuncs : MonoBehaviour
                 yield return new WaitForSeconds(cb.spawnInterval);
             }
         }
-        
+
+    }
+
+    public static IEnumerator CircularBullet(CircleBullet cb, List<Vector2> points, GameObject obj, Transform parent)
+    {
+        // Pre-calculated option to reduce lag when spawning in circle spawners that might freeze the game when playing
+        for (int i = 0; i < points.Count; i++)
+        {
+            Vector2 p = points[i];
+            // Create objects and push it away from parent
+            GameObject go = Instantiate(obj);
+            Vector3 conversion = p;
+            go.transform.position = parent.position + conversion;
+            Vector3 dir = (go.transform.position - parent.position).normalized;
+            go.GetComponent<Rigidbody2D>().AddForce(dir * cb.speed);
+            go.SetActive(true);
+            if (i % cb.stepSize == 0 && i != 0)
+            {
+                yield return new WaitForSeconds(cb.spawnInterval);
+            }
+        }
     }
 
     // This might be super expensive to use
@@ -87,6 +94,26 @@ public class BulletHellFuncs : MonoBehaviour
             yield return new WaitForSeconds(sb.spawnInterval);
         }
 
+    }
+
+    public static List<Vector2> GetPointsInCircle(CircleBullet cb)
+    {
+        // Calculate points on circle first
+        List<Vector2> points = new List<Vector2>();
+        int step = 0;
+        // Find all positions from stepSize (initial positions) + repeats (initial positions rotated a bit) possibly more efficient than 2 for loops at the end
+        for (int t = 0; t < (cb.stepSize * cb.repeats); t++)
+        {
+            float angle = ((Mathf.PI * 2.0f / cb.stepSize) * t) + (Mathf.Deg2Rad * cb.rotation * (float)step);
+            Vector2 x = MathFuncs.PositionOnCircle(cb.circle, angle);
+            points.Add(x);
+            if (t % cb.stepSize == 0 && t != 0)
+            {
+                step++;
+            }
+        }
+
+        return points;
     }
 }
 

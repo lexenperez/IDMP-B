@@ -175,6 +175,7 @@ public class BossOne : Enemy
                 currentPhase++;
                 phasetxt.text = string.Format("PHASE {0}", currentPhase);
                 baseCollider.enabled = false;
+                StopAllCoroutines();
                 CancelAllProjectiles();
             }
         }
@@ -361,7 +362,7 @@ public class BossOne : Enemy
             BaseRotationTween();
             LTSeq sq = LeanTween.sequence();
             Vector3 scale = gameObject.transform.localScale;
-            Color low = phaseThreeColor * 0.25f;
+            Color low = phaseThreeColor * 0.5f;
             low.a = 1.0f;
             Color high = phaseThreeColor * -0.25f;
             high.a = 1.0f;
