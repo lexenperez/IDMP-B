@@ -12,6 +12,8 @@ public class BossOne : Enemy
     public Transform[] projectileSpawnPlacements;
     public GameObject horizontalProjectile;
     public GameObject missile;
+    public Transform missileCeiling;
+    public Transform missileFloor;
     public int totalMissiles;
     public GameObject shotgun;
     public ShotgunBullet shotgunBulletVars;
@@ -76,6 +78,13 @@ public class BossOne : Enemy
             t += Time.deltaTime;
             moveT += Time.deltaTime;
         }
+
+        if (thePlayer == null)
+        {
+            t = -999;
+            return;
+        }
+        
 
         /* Phase Zero
          * Spawn in animation
@@ -264,8 +273,6 @@ public class BossOne : Enemy
 
     private Phase PhaseOne(float t, float graceTime)
     {
-
-        float heightThreshold = 7.0f;
         if (hp / maxHp <= 0.75)
         {
             return Phase.HPThreshold;
@@ -281,7 +288,7 @@ public class BossOne : Enemy
             sq.append(1.0f);
             sq.append(() => ProjectileAttack());
             
-            if (thePlayer.transform.position.y <= -heightThreshold || thePlayer.transform.position.y >= heightThreshold)
+            if (thePlayer.transform.position.y <= missileFloor.transform.position.y || thePlayer.transform.position.y >= missileCeiling.transform.position.y)
             {
                 sq.append(LeanTween.color(gameObject, missileColor, 1));
                 sq.append(() => SpawnMissiles(totalMissiles, thePlayer.transform));
@@ -302,13 +309,14 @@ public class BossOne : Enemy
             return Phase.HPThreshold;
         }
 
-        float heightThreshold = 6.0f;
+        float heightCeiling = missileCeiling.transform.position.y - 1.0f;
+        float heightFloor = missileFloor.transform.position.y + 1.0f;
         if (t > graceTime)
         {
             LTSeq sq = LeanTween.sequence();
             sq.append(1.0f);
 
-            if (thePlayer.transform.position.y <= -heightThreshold || thePlayer.transform.position.y >= heightThreshold)
+            if (thePlayer.transform.position.y <= heightFloor || thePlayer.transform.position.y >= heightCeiling)
             {
                 sq.append(LeanTween.color(gameObject, missileColor, 1));
                 sq.append(() => SpawnMissiles(totalMissiles, thePlayer.transform));
@@ -331,13 +339,14 @@ public class BossOne : Enemy
             return Phase.HPThreshold;
         }
 
-        float heightThreshold = 6.0f;
+        float heightCeiling = missileCeiling.transform.position.y - 1.0f;
+        float heightFloor = missileFloor.transform.position.y + 1.0f;
         if (t > graceTime)
         {
             LTSeq sq = LeanTween.sequence();
             sq.append(1.0f);
 
-            if (thePlayer.transform.position.y <= -heightThreshold || thePlayer.transform.position.y >= heightThreshold)
+            if (thePlayer.transform.position.y <= heightFloor || thePlayer.transform.position.y >= heightFloor)
             {
                 sq.append(LeanTween.color(gameObject, missileColor, 1));
                 sq.append(() => SpawnMissiles(5, thePlayer.transform));

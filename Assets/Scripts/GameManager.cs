@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static bool gameEnded = false;
+    public static Scene currScene;
 
     private List<TimeSpan> records = new List<TimeSpan>();
     private float currentBossTime = 0;
@@ -25,11 +26,13 @@ public class GameManager : MonoBehaviour
     public string endCanvasTag;
     public string endTextTag;
     public string bossTag;
+    public string playerTag;
     public string recordTextTag;
     private string recordPath = "/Resources/records.txt";
 
     private int currentBoss = 0;
     public GameObject[] bosses = new GameObject[0];
+    public GameObject[] players = new GameObject[0];
     private bool endScreenShown = false;
     // Start is called before the first frame update
     void Start()
@@ -66,6 +69,7 @@ public class GameManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        currScene = scene;
         if (scene.name.Equals("Menu"))
         {
             SetRecords();
@@ -73,6 +77,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            ResetValues();
             Debug.Log("Loaded " + scene.name);
             Setup();
             if (endCanvas) endCanvas.SetActive(false);
@@ -89,6 +94,7 @@ public class GameManager : MonoBehaviour
     void ResetValues()
     {
         bosses = new GameObject[0];
+        players = new GameObject[0];
         currentBoss = 0;
         gameEnded = false;
         ResetCurrentTimer();
@@ -101,6 +107,7 @@ public class GameManager : MonoBehaviour
         timerText = GameObject.FindGameObjectWithTag(timerTag);
         endText = GameObject.FindGameObjectWithTag(endTextTag);
         bosses = GameObject.FindGameObjectsWithTag(bossTag);
+        players = GameObject.FindGameObjectsWithTag(playerTag);
     }
 
     void LoadRecords()
@@ -159,7 +166,7 @@ public class GameManager : MonoBehaviour
         {
             if (bosses.Length != 0)
             {
-                if (AllBossesDead())
+                if (AllObjectsDeleted(bosses))
                 {
                     FinishFight();
                     endScreenShown = true;
@@ -174,14 +181,25 @@ public class GameManager : MonoBehaviour
                 }
             }
 
+            if (players.Length != 0)
+            {
+                if (AllObjectsDeleted(players))
+                {
+                    LoseFight();
+                    Debug.Log("All players dead");
+                    endScreenShown = true;
+                    gameEnded = true;
+                }
+            }
+
         }
 
     }
     
-    bool AllBossesDead()
+    bool AllObjectsDeleted(GameObject[] objects)
     {
         //if (bosses.Length == 0) return false;
-        foreach (GameObject ob in bosses)
+        foreach (GameObject ob in objects)
         {
             if (ob != null) return false;
         }
@@ -201,8 +219,14 @@ public class GameManager : MonoBehaviour
         bool newRec = UpdateRecord(currentBoss);
         endText.GetComponent<TextMeshProUGUI>().text = EndText(TimeSpan.FromSeconds(currentBossTime).ToString("mm':'ss':'ff"), currentBoss, newRec);
         //endText.GetComponent<TextMeshProUGUI>().text = "This Time: " + TimeSpan.FromSeconds(currentBossTime).ToString("mm':'ss':'ff") + "\n";
+    }
 
+    public void LoseFight()
+    {
+        timerText.GetComponent<TextMeshProUGUI>().text = "";
+        endCanvas.SetActive(true);
 
+        endText.GetComponent<TextMeshProUGUI>().text = LoseText();
     }
 
     private bool UpdateRecord(int boss)
@@ -230,6 +254,13 @@ public class GameManager : MonoBehaviour
             s += "New Record!\n";
         }
         s += "Best Time: " + records[boss].ToString("mm':'ss':'ff");
+        return s;
+    }
+
+    private string LoseText()
+    {
+        string s = "";
+        s += "You Died!\n";
         return s;
     }
 }

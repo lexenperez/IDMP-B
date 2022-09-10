@@ -30,30 +30,38 @@ public class Missile : LifeTimer
 
     private void FixedUpdate()
     {
-        // Slerp angle towards target then dont after launching
-        Vector3 direction = target.position - transform.position;
-        float rotationZ = (Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg) - 90.0f;
-        if (!launched)
+        if (target == null)
         {
-            if (time >= timeToActivate)
+            time = 999;
+        }
+        else
+        {
+            // Slerp angle towards target then dont after launching
+            Vector3 direction = target.position - transform.position;
+            float rotationZ = (Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg) - 90.0f;
+            if (!launched)
             {
-                // Activate missile by giving it a burst of velocity
-                rb2d.velocity = Vector2.zero;
-                rb2d.AddForce(transform.up * speed);
-                launched = true;
-                time = 0;
-                transform.rotation = Quaternion.Euler(0.0f, 0.0f, rotationZ);
-                line.transform.rotation = transform.rotation;
-                //line.useWorldSpace = true;
+                if (time >= timeToActivate)
+                {
+                    // Activate missile by giving it a burst of velocity
+                    rb2d.velocity = Vector2.zero;
+                    rb2d.AddForce(transform.up * speed);
+                    launched = true;
+                    time = 0;
+                    transform.rotation = Quaternion.Euler(0.0f, 0.0f, rotationZ);
+                    line.transform.rotation = transform.rotation;
+                    //line.useWorldSpace = true;
 
-                StartCoroutine(Fade());
-                line.transform.parent = null;
-            }
-            else
-            {
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0.0f, 0.0f, rotationZ), Time.deltaTime * rotationSpeed);
+                    StartCoroutine(Fade());
+                    line.transform.parent = null;
+                }
+                else
+                {
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0.0f, 0.0f, rotationZ), Time.deltaTime * rotationSpeed);
+                }
             }
         }
+
     }
 
     // Update is called once per frame

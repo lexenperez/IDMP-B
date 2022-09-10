@@ -9,8 +9,7 @@ public class EndGame : MonoBehaviour
 
     public void Restart()
     {
-        // TODO: Restart Game
-        Debug.Log("TODO - Restart Game");
+        SceneManager.LoadScene(GameManager.currScene.name);
     }
 
     public void ToMainMenu()

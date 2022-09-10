@@ -61,6 +61,8 @@ public class PlayerHealth : MonoBehaviour
             // Play death animation (if we add one)
             // Then game over screen
             Debug.Log("Game Over! Player has died!");
+            // Could add a explosion here
+            Destroy(gameObject);
         }
     }
 
