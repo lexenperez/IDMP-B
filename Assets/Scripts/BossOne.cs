@@ -37,6 +37,9 @@ public class BossOne : Enemy
     [SerializeField] private float phaseThreeGrace = 5;
     [SerializeField] private float deathGraceTime = 2;
 
+    [SerializeField] private GameObject cam;
+
+    private ParticleSystem ps;
     private int currentPhase = 0;
     private float t = 0;
     private float moveT = 0;
@@ -54,6 +57,8 @@ public class BossOne : Enemy
     // Start is called before the first frame update
     void Start()
     {
+        ps = GetComponent<ParticleSystem>();
+        ps.Stop();
         transform.localScale = Vector3.zero;
         material = GetComponent<SpriteRenderer>().material;
         material.EnableKeyword("_EMISSION");
@@ -258,12 +263,17 @@ public class BossOne : Enemy
             LeanTween.scale(gameObject, new Vector3(8, 8, 1), 5);
             LTSeq sq = LeanTween.sequence();
             sq.append(1.0f);
+            sq.append(() => ps.Play());
             sq.append(LeanTween.color(gameObject, Color.red, 1));
             sq.append(LeanTween.color(gameObject, Color.blue, 1));
             sq.append(LeanTween.color(gameObject, Color.red, 1));
             sq.append(LeanTween.color(gameObject, Color.blue, 1));
             sq.append(LeanTween.color(gameObject, phaseOneColor, 1));
             sq.append(() => BaseRotationTween());
+            sq.append(() => ps.Emit(100));
+            sq.append(() => ps.Stop());
+            sq.append(() => cam.GetComponent<CameraShake>().ScreenShake(2.0f));
+
 
             sq.append(() => currentPhase++);
             return Phase.TimeReset;
@@ -275,6 +285,7 @@ public class BossOne : Enemy
     {
         if (hp / maxHp <= 0.75)
         {
+            cam.GetComponent<CameraShake>().ScreenShake(2.0f);
             return Phase.HPThreshold;
         }
 
@@ -306,6 +317,7 @@ public class BossOne : Enemy
     {
         if (hp / maxHp <= 0.35f)
         {
+            cam.GetComponent<CameraShake>().ScreenShake(2.0f);
             return Phase.HPThreshold;
         }
 
@@ -336,6 +348,7 @@ public class BossOne : Enemy
     {
         if (hp / maxHp <= 0.0f)
         {
+            cam.GetComponent<CameraShake>().ScreenShake(2.0f);
             return Phase.HPThreshold;
         }
 
@@ -367,6 +380,7 @@ public class BossOne : Enemy
 
         if (t > graceTime)
         {
+            cam.GetComponent<CameraShake>().ScreenShake(10.0f);
             LeanTween.cancel(gameObject);
             BaseRotationTween();
             LTSeq sq = LeanTween.sequence();
@@ -375,13 +389,19 @@ public class BossOne : Enemy
             low.a = 1.0f;
             Color high = phaseThreeColor * -0.25f;
             high.a = 1.0f;
+            sq.append(() => ps.Play());
             sq.append(0.5f);
             sq.append(LeanTween.scale(gameObject, scale * 0.5f, 1));
+            sq.append(() => ps.Emit(100));
             sq.append(LeanTween.scale(gameObject, scale, 1));
             sq.append(LeanTween.scale(gameObject, scale * 0.3f, 1));
+            sq.append(() => ps.Emit(100));
             sq.append(LeanTween.scale(gameObject, scale, 1));
             sq.append(LeanTween.scale(gameObject, scale * 0.1f, 1));
+            sq.append(() => ps.Emit(100));
             sq.append(LeanTween.scale(gameObject, scale, 0));
+            sq.append(() => ps.Emit(100));
+            sq.append(() => ps.Stop());
             sq.append(() => Death());
             LTSeq sc = LeanTween.sequence();
             sc.append(LeanTween.color(gameObject, low, 0.5f));
