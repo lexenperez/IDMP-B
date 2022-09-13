@@ -5,7 +5,7 @@ using UnityEngine;
 public class BossGetStuckInWall : MonoBehaviour
 {
     //Raycast infront of the boss so they can get the spears stuck in the wall 
-    private float distance = 0.1f;
+    private float distance = 0.3f;
     private Rigidbody2D rb2d;
     void Start()
     {
@@ -13,11 +13,11 @@ public class BossGetStuckInWall : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        Debug.DrawRay(transform.position + transform.TransformDirection(Vector3.left) * 4.01f, transform.TransformDirection(Vector3.left) * distance, Color.red);
+        Debug.DrawRay(transform.position + transform.TransformDirection(Vector3.left) * 3.2f, transform.TransformDirection(Vector3.left) * distance, Color.red);
 
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position + transform.TransformDirection(Vector3.left) * 4.01f, transform.TransformDirection(Vector3.left), distance);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position + transform.TransformDirection(Vector3.left) * 3.2f, transform.TransformDirection(Vector3.left), distance);
         foreach (RaycastHit2D hit in hits)
         {
             if (hit.transform.name.Equals("Tilemap"))

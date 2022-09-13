@@ -7,7 +7,7 @@ public class ManageBoss2 : MonoBehaviour
     [SerializeField] GameObject boss1, boss2;
     private GameObject player;
     [SerializeField] bool phase1 = true;
-    private float timer = 0;
+    private float timer = 0, grace = 1.5f;
     public float boss1Health = 100, boss2Health = 100;
     public float totalHealth = 100;
     private Vector3 home1 = new Vector3(-30, 7, 0), home2 = new Vector3(-30, 10, 0);
@@ -47,18 +47,25 @@ public class ManageBoss2 : MonoBehaviour
     #region FSM
     private void FixedUpdate()
     {
-        if (boss1Health <= 0 || boss2Health <= 0)
+        if (boss1Health <= 0)
         {
             if (phase1)
             {
-                Phase2();
+                Phase2(boss1);
+            }
+        }
+        else if (boss2Health <= 0)
+        {
+            if (phase1)
+            {
+                Phase2(boss2);
             }
         }
         timer += Time.deltaTime;
         if (!busy)
         {
             //small grace window between attacks
-            if (timer < 1)
+            if (timer < grace)
             {
                 //do nothing
             }
@@ -70,7 +77,7 @@ public class ManageBoss2 : MonoBehaviour
                 //dont repeat last choice
                 while (choice == lastchoice)
                 {
-                    choice = Random.Range(1, 5);
+                    choice = Random.Range(1,5);
                 }
                 switch (choice)
                 {
@@ -275,19 +282,22 @@ public class ManageBoss2 : MonoBehaviour
         boss1.transform.position = home1;
         boss1.transform.parent = null;
         boss1.transform.eulerAngles = new Vector3(0, 0, 0);
+        boss1.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         boss2.transform.position = home2;
         boss2.transform.parent = null;
         boss2.transform.eulerAngles = new Vector3(0, 0, 0);
+        boss2.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         timer = 0;
         v = new Vector3(-13, 0, 0);
         busy = false;
     }
 
-    private void Phase2()
+    private void Phase2(GameObject survivor)
     {
         ResetAll();
         NoOfBosses = 1;
-        boss2 = boss1;
+        boss2 = survivor;
+        boss1 = survivor;
         //speed up charge and double charge
         totalChargeTime = 3.5f;
         totalDoubleTime = 3;
@@ -296,6 +306,7 @@ public class ManageBoss2 : MonoBehaviour
         totalCircleTime = 5;
         //make changes only once
         phase1 = false;
+        grace = 1;
     }
     #endregion
 }
