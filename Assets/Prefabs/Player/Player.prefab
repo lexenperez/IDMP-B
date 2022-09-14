@@ -37,8 +37,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 36325881200039167}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -13, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.8, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4190081242514955501}
   - {fileID: 3931964345093034410}
@@ -86,7 +86,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+  m_Sprite: {fileID: -8970084971467632713, guid: df3475dd0a121ef4babb164007c0a609, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -96,7 +96,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!61 &36325881200039105
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -110,10 +110,10 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.0155618}
+  m_Offset: {x: 0, y: -0.015474588}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
+    pivot: {x: 0.53, y: 0.47}
     oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
@@ -121,7 +121,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.9, y: 0.9311236}
+  m_Size: {x: 0.6554835, y: 0.6538089}
   m_EdgeRadius: 0
 --- !u!50 &36325881200039166
 Rigidbody2D:
@@ -172,6 +172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c0db8f98a5df8048914afb450130172, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  energyBarImg: {fileID: 0}
   maxSpeed: 4
   dashTime: 0.105
   dashDistance: 4
@@ -458,7 +459,7 @@ MonoBehaviour:
       - 0
       globalNormalsAngle: 0
       flipNormals: 0
-    vertexPathUpToDate: 1
+    vertexPathUpToDate: 0
     vertexPathMaxAngleError: 0.3
     vertexPathMinVertexSpacing: 0.01
     showTransformTool: 1
@@ -617,6 +618,7 @@ MonoBehaviour:
   damageTags:
   - Bullet
   - Boss
+  healthBarImg: {fileID: 0}
   maxHealth: 100
   invincibilityTime: 0.5
 --- !u!1 &1902642045498300754
@@ -676,16 +678,16 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 2.9532568, y: -2.2952986}
-      - {x: 7.730054, y: -1.0595505}
-      - {x: 7.9030404, y: 1.251164}
-      - {x: 5.5760174, y: 2.4361403}
+    - - {x: 2.8428624, y: -2.0712805}
+      - {x: 3.8752527, y: -1.5077978}
+      - {x: 4.6089287, y: 0.19221234}
+      - {x: 3.8944068, y: 2.0388587}
       - {x: 0.97322845, y: 2.9228964}
       - {x: -0.13292074, y: 0.844228}
       - {x: 0.6557835, y: 0.53567636}
-      - {x: 0.6452529, y: -0.60585535}
+      - {x: 0.64615506, y: -0.5594394}
       - {x: -0.40170607, y: -0.8078889}
-      - {x: 0.81826174, y: -2.2824426}
+      - {x: 0.617561, y: -2.2338915}
 --- !u!114 &5622422038985009466
 MonoBehaviour:
   m_ObjectHideFlags: 0
