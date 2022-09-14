@@ -26,10 +26,9 @@ public abstract class Enemy : NPC
 
     public void TakeDamage(float damage)
     {
-        ogColor = sprite.color;
         if (isInvincible)
             return;
-
+        ogColor = sprite.color;
         hp -= damage;
         UpdateHealthBar();
 

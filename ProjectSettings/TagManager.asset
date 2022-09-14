@@ -14,6 +14,7 @@ TagManager:
   - PlayerAttack
   - RecordText
   - ArrowHead
+  - Walls
   layers:
   - Default
   - TransparentFX

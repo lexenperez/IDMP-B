@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 18739972}
   - component: {fileID: 18739974}
   - component: {fileID: 18739973}
+  - component: {fileID: 18739975}
   m_Layer: 0
   m_Name: Point
   m_TagString: ArrowHead
@@ -180,7 +181,7 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.9579277, y: 2.3201125}
+    - - {x: 0.94540787, y: 2.3305457}
       - {x: -1.8456373, y: 0.011282831}
       - {x: 0.9569435, y: -2.3321562}
 --- !u!114 &18739974
@@ -196,6 +197,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
+--- !u!114 &18739975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 18739971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34340f6acea85784f86e1eb2721ee623, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb2d: {fileID: 486773715}
 --- !u!1001 &201988356
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -475,7 +489,7 @@ GameObject:
   - component: {fileID: 389713097}
   m_Layer: 6
   m_Name: rightCollision
-  m_TagString: Untagged
+  m_TagString: Walls
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -720,7 +734,6 @@ GameObject:
   - component: {fileID: 486773717}
   - component: {fileID: 486773716}
   - component: {fileID: 486773715}
-  - component: {fileID: 486773719}
   - component: {fileID: 486773720}
   - component: {fileID: 486773721}
   m_Layer: 0
@@ -764,7 +777,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 1.3932686, y: 0.0000004172325}
+  m_Offset: {x: 1.4311428, y: 0.00000047683716}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -775,7 +788,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 8.044998, y: 2.98769}
+  m_Size: {x: 7.9692497, y: 2.98769}
   m_EdgeRadius: 0
 --- !u!212 &486773717
 SpriteRenderer:
@@ -843,18 +856,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &486773719
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 486773714}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34340f6acea85784f86e1eb2721ee623, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &486773720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5420,6 +5421,7 @@ GameObject:
   - component: {fileID: 1011659534}
   - component: {fileID: 1011659536}
   - component: {fileID: 1011659535}
+  - component: {fileID: 1011659537}
   m_Layer: 0
   m_Name: Point
   m_TagString: ArrowHead
@@ -5482,6 +5484,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
+--- !u!114 &1011659537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011659533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34340f6acea85784f86e1eb2721ee623, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb2d: {fileID: 1891465350}
 --- !u!114 &1060253224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5685,7 +5700,7 @@ GameObject:
   - component: {fileID: 1284837815}
   m_Layer: 6
   m_Name: leftCollision
-  m_TagString: Untagged
+  m_TagString: Walls
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5742,7 +5757,7 @@ GameObject:
   - component: {fileID: 1369145444}
   m_Layer: 6
   m_Name: topCollision
-  m_TagString: Untagged
+  m_TagString: Walls
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6656,7 +6671,6 @@ GameObject:
   - component: {fileID: 1891465352}
   - component: {fileID: 1891465351}
   - component: {fileID: 1891465350}
-  - component: {fileID: 1891465354}
   - component: {fileID: 1891465355}
   - component: {fileID: 1891465356}
   m_Layer: 0
@@ -6700,7 +6714,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 1.4033661, y: -0.016827464}
+  m_Offset: {x: 1.4260559, y: -0.016827464}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -6711,7 +6725,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 8.065193, y: 2.9540398}
+  m_Size: {x: 8.019814, y: 2.9540398}
   m_EdgeRadius: 0
 --- !u!212 &1891465352
 SpriteRenderer:
@@ -6779,18 +6793,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1891465354
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1891465349}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34340f6acea85784f86e1eb2721ee623, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1891465355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6837,7 +6839,7 @@ GameObject:
   - component: {fileID: 1989157036}
   m_Layer: 6
   m_Name: botCollision
-  m_TagString: Untagged
+  m_TagString: Walls
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
