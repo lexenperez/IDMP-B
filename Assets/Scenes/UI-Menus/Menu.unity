@@ -2594,7 +2594,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Game Name
+  m_text: polysseum
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c9d2e712527b2c42b3f9149cd75c96a, type: 2}
   m_sharedMaterial: {fileID: 1550067617819492735, guid: 4c9d2e712527b2c42b3f9149cd75c96a, type: 2}
