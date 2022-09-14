@@ -10,8 +10,6 @@ public class PlayerHealth : MonoBehaviour
 {
     // Constants
     private const float TOTAL_FLICKER_TIME = 0.2f;
-    // Tags for which GameObject allows damage
-    [SerializeField] private string[] damageTags;
 
     // References
     private SpriteRenderer spriteRenderer;
@@ -31,16 +29,23 @@ public class PlayerHealth : MonoBehaviour
         get { return isInvincible; }
         set { isInvincible = value; }
     }
- 
+
+    [SerializeField] private GameObject particleSpawner;
+    private AudioSource audioSource;
+
+
     // Start is called before the first frame update
     void Start()
     {
         // Set current health
         currentHealth = maxHealth;
-        
+
         // Store sprite color
         spriteRenderer = GetComponent<SpriteRenderer>();
         originalColor = spriteRenderer.color;
+
+        // Store take damage sfx
+        audioSource = GetComponent<AudioSource>();
     }
 
     protected void TakeDamage(float damage)
@@ -57,13 +62,20 @@ public class PlayerHealth : MonoBehaviour
 
         // Run flicker animation
         StartCoroutine(DamageFlicker());
-        
+
+        // Play sfx
+        audioSource.Play();
+
         // Game Over
         if (currentHealth <= 0)
         {
+            // Have particle spawner have the death sfx
+            Instantiate(particleSpawner).transform.position = transform.position;
             // Play death animation (if we add one)
             // Then game over screen
             Debug.Log("Game Over! Player has died!");
+            // Could add a explosion here
+            Destroy(gameObject);
         }
     }
 
@@ -84,17 +96,5 @@ public class PlayerHealth : MonoBehaviour
         }
 
         isInvincible = false;
-    }
-
-    public void OnTriggerEnter2D(Collider2D collision)
-    {
-        foreach (string tag in damageTags)
-        {
-            if (collision.CompareTag(tag))
-            {
-                //Debug.Log("Player taking dmg");
-                TakeDamage(collision.GetComponent<DamageDealer>().GetDamage());
-            }
-        }
     }
 }

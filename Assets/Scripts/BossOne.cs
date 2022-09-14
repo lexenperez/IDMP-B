@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,11 +7,15 @@ public class BossOne : Enemy
 {
     /* Controls First Boss animations, projectile handling and health */
 
+    public TextMeshProUGUI phasetxt;
 
     // Projectile Vars
     public Transform[] projectileSpawnPlacements;
     public GameObject horizontalProjectile;
     public GameObject missile;
+    public GameObject missileSfx;
+    public Transform missileCeiling;
+    public Transform missileFloor;
     public int totalMissiles;
     public GameObject shotgun;
     public ShotgunBullet shotgunBulletVars;
@@ -27,13 +32,27 @@ public class BossOne : Enemy
     public Color shotgunColor;
     public float rotateTime;
 
+    // Phase Vars
     [SerializeField] private float startingGraceTime = 5;
+    [SerializeField] private float phaseOneGrace = 6;
+    [SerializeField] private float phaseTwoGrace = 5;
+    [SerializeField] private float phaseThreeGrace = 5;
+    [SerializeField] private float deathGraceTime = 2;
+
+    [SerializeField] private GameObject cam;
+
+    private ParticleSystem ps;
     private int currentPhase = 0;
     private float t = 0;
     private float moveT = 0;
     private bool isMoving = false;
     private Vector3 waypoint;
     private Material material;
+
+    [SerializeField] private AudioClip shotgunSfx;
+    [SerializeField] private AudioClip spawnInSfx;
+    [SerializeField] private AudioClip phaseChangeSfx;
+    [SerializeField] private AudioClip deathSfx;
 
     enum Phase
     {
@@ -45,10 +64,13 @@ public class BossOne : Enemy
     // Start is called before the first frame update
     void Start()
     {
+        ps = GetComponent<ParticleSystem>();
+        ps.Stop();
         transform.localScale = Vector3.zero;
         material = GetComponent<SpriteRenderer>().material;
         material.EnableKeyword("_EMISSION");
         base.Init();
+        phasetxt.text = string.Format("PHASE {0}", currentPhase);
 
     }
 
@@ -69,6 +91,13 @@ public class BossOne : Enemy
             moveT += Time.deltaTime;
         }
 
+        if (thePlayer == null)
+        {
+            t = -999;
+            return;
+        }
+        
+
         /* Phase Zero
          * Spawn in animation
          */
@@ -79,13 +108,14 @@ public class BossOne : Enemy
                 baseCollider.enabled = false;
             }
 
-            Phase p = PhaseZero(t);
+            Phase p = PhaseZero(t, startingGraceTime);
             if (p == Phase.TimeReset)
             {
                 t = 0;
             }
         }
 
+        phasetxt.text = string.Format("PHASE {0}", currentPhase);
         /* Phase One
          * Constant Spiral Attack
          * Projectile Attacks on centre
@@ -97,7 +127,7 @@ public class BossOne : Enemy
             {
                 baseCollider.enabled = true;
             }
-            Phase p = PhaseOne(t);
+            Phase p = PhaseOne(t, phaseOneGrace);
             if (p == Phase.TimeReset)
             {
                 t = 0;
@@ -107,6 +137,7 @@ public class BossOne : Enemy
                 t = 0;
                 rotateTime -= 1;
                 currentPhase++;
+                phasetxt.text = string.Format("PHASE {0}", currentPhase);
                 LTSeq sq = LeanTween.sequence();
                 sq.append(1.0f);
                 sq.append(LeanTween.color(gameObject, phaseTwoColor, 2));
@@ -121,23 +152,20 @@ public class BossOne : Enemy
         if (currentPhase == 2)
         {
 
-            Phase p = PhaseTwo(t);
+            Phase p = PhaseTwo(t, phaseTwoGrace);
             if (p == Phase.TimeReset)
             {
                 t = 0;
             }
             else if (p == Phase.HPThreshold)
             {
-                t = -999;
+                t = -1;
+                rotateTime -= 1.2f;
                 currentPhase++;
+                phasetxt.text = string.Format("PHASE {0}", currentPhase);
                 LTSeq sq = LeanTween.sequence();
                 sq.append(1.0f);
                 sq.append(LeanTween.color(gameObject, phaseThreeColor, 2));
-                sq.append(() =>
-                {
-                    t = 0;
-                    bulletSpawnerThird.SetActive(true);
-                });
             }
         }
 
@@ -149,8 +177,12 @@ public class BossOne : Enemy
          */
         if (currentPhase == 3)
         {
-
-            Phase p = PhaseThree(t);
+            if (!bulletSpawnerThird.activeSelf)
+            {
+                bulletSpawnerThird.SetActive(true);
+            }
+            
+            Phase p = PhaseThree(t, phaseThreeGrace);
             if (p == Phase.TimeReset)
             {
                 t = 0;
@@ -162,7 +194,10 @@ public class BossOne : Enemy
                 t = 0;
                 moveTime = 9999;
                 currentPhase++;
+                phasetxt.text = string.Format("PHASE {0}", currentPhase);
                 baseCollider.enabled = false;
+                StopAllCoroutines();
+                CancelAllProjectiles();
             }
         }
 
@@ -179,7 +214,7 @@ public class BossOne : Enemy
                 bulletSpawnerThird.SetActive(false);
                 baseCollider.enabled = false;
             }
-            Phase p = PhaseFour(t);
+            Phase p = PhaseFour(t, deathGraceTime);
             if (p == Phase.HPThreshold)
             {
                 t = -9999;
@@ -227,20 +262,26 @@ public class BossOne : Enemy
         }
     }
 
-    private Phase PhaseZero(float t)
+    private Phase PhaseZero(float t, float graceTime)
     {
-        if (t > startingGraceTime)
+        if (t > graceTime)
         {
             startingGraceTime = 9999;
             LeanTween.scale(gameObject, new Vector3(8, 8, 1), 5);
             LTSeq sq = LeanTween.sequence();
             sq.append(1.0f);
+            sq.append(() => ps.Play());
             sq.append(LeanTween.color(gameObject, Color.red, 1));
             sq.append(LeanTween.color(gameObject, Color.blue, 1));
             sq.append(LeanTween.color(gameObject, Color.red, 1));
             sq.append(LeanTween.color(gameObject, Color.blue, 1));
             sq.append(LeanTween.color(gameObject, phaseOneColor, 1));
             sq.append(() => BaseRotationTween());
+            sq.append(() => ps.Emit(100));
+            sq.append(() => ps.Stop());
+            sq.append(() => cam.GetComponent<CameraShake>().ScreenShake(2.0f));
+            sq.append(() => audioSource.PlayOneShot(spawnInSfx));
+
 
             sq.append(() => currentPhase++);
             return Phase.TimeReset;
@@ -248,16 +289,16 @@ public class BossOne : Enemy
         return Phase.Nothing;
     }
 
-    private Phase PhaseOne(float t)
+    private Phase PhaseOne(float t, float graceTime)
     {
-
-        float heightThreshold = 7.0f;
         if (hp / maxHp <= 0.75)
         {
+            cam.GetComponent<CameraShake>().ScreenShake(2.0f);
+            audioSource.PlayOneShot(phaseChangeSfx);
             return Phase.HPThreshold;
         }
 
-        if (t > 6)
+        if (t > graceTime)
         {
             if (!bulletSpawner.activeSelf)
             {
@@ -267,7 +308,7 @@ public class BossOne : Enemy
             sq.append(1.0f);
             sq.append(() => ProjectileAttack());
             
-            if (thePlayer.transform.position.y <= -heightThreshold || thePlayer.transform.position.y >= heightThreshold)
+            if (thePlayer.transform.position.y <= missileFloor.transform.position.y || thePlayer.transform.position.y >= missileCeiling.transform.position.y)
             {
                 sq.append(LeanTween.color(gameObject, missileColor, 1));
                 sq.append(() => SpawnMissiles(totalMissiles, thePlayer.transform));
@@ -281,20 +322,23 @@ public class BossOne : Enemy
         return Phase.Nothing;
     }
 
-    private Phase PhaseTwo(float t)
+    private Phase PhaseTwo(float t, float graceTime)
     {
-        if (hp / maxHp <= 0.5f)
+        if (hp / maxHp <= 0.35f)
         {
+            cam.GetComponent<CameraShake>().ScreenShake(2.0f);
+            audioSource.PlayOneShot(phaseChangeSfx);
             return Phase.HPThreshold;
         }
 
-        float heightThreshold = 6.0f;
-        if (t > 5)
+        float heightCeiling = missileCeiling.transform.position.y - 1.0f;
+        float heightFloor = missileFloor.transform.position.y + 1.0f;
+        if (t > graceTime)
         {
             LTSeq sq = LeanTween.sequence();
             sq.append(1.0f);
 
-            if (thePlayer.transform.position.y <= -heightThreshold || thePlayer.transform.position.y >= heightThreshold)
+            if (thePlayer.transform.position.y <= heightFloor || thePlayer.transform.position.y >= heightCeiling)
             {
                 sq.append(LeanTween.color(gameObject, missileColor, 1));
                 sq.append(() => SpawnMissiles(totalMissiles, thePlayer.transform));
@@ -310,20 +354,23 @@ public class BossOne : Enemy
         return Phase.Nothing;
     }
 
-    private Phase PhaseThree(float t)
+    private Phase PhaseThree(float t, float graceTime)
     {
         if (hp / maxHp <= 0.0f)
         {
+            cam.GetComponent<CameraShake>().ScreenShake(2.0f);
+            audioSource.PlayOneShot(phaseChangeSfx);
             return Phase.HPThreshold;
         }
 
-        float heightThreshold = 6.0f;
-        if (t > 5)
+        float heightCeiling = missileCeiling.transform.position.y - 1.0f;
+        float heightFloor = missileFloor.transform.position.y + 1.0f;
+        if (t > graceTime)
         {
             LTSeq sq = LeanTween.sequence();
             sq.append(1.0f);
 
-            if (thePlayer.transform.position.y <= -heightThreshold || thePlayer.transform.position.y >= heightThreshold)
+            if (thePlayer.transform.position.y <= heightFloor || thePlayer.transform.position.y >= heightFloor)
             {
                 sq.append(LeanTween.color(gameObject, missileColor, 1));
                 sq.append(() => SpawnMissiles(5, thePlayer.transform));
@@ -339,26 +386,34 @@ public class BossOne : Enemy
         return Phase.Nothing;
     }
 
-    private Phase PhaseFour(float t)
+    private Phase PhaseFour(float t, float graceTime)
     {
 
-        if (t > 2)
+        if (t > graceTime)
         {
+            cam.GetComponent<CameraShake>().ScreenShake(10.0f);
+            audioSource.PlayOneShot(deathSfx);
             LeanTween.cancel(gameObject);
             BaseRotationTween();
             LTSeq sq = LeanTween.sequence();
             Vector3 scale = gameObject.transform.localScale;
-            Color low = phaseThreeColor * 0.25f;
+            Color low = phaseThreeColor * 0.5f;
             low.a = 1.0f;
             Color high = phaseThreeColor * -0.25f;
             high.a = 1.0f;
+            sq.append(() => ps.Play());
             sq.append(0.5f);
             sq.append(LeanTween.scale(gameObject, scale * 0.5f, 1));
+            sq.append(() => ps.Emit(100));
             sq.append(LeanTween.scale(gameObject, scale, 1));
             sq.append(LeanTween.scale(gameObject, scale * 0.3f, 1));
+            sq.append(() => ps.Emit(100));
             sq.append(LeanTween.scale(gameObject, scale, 1));
             sq.append(LeanTween.scale(gameObject, scale * 0.1f, 1));
+            sq.append(() => ps.Emit(100));
             sq.append(LeanTween.scale(gameObject, scale, 0));
+            sq.append(() => ps.Emit(100));
+            sq.append(() => ps.Stop());
             sq.append(() => Death());
             LTSeq sc = LeanTween.sequence();
             sc.append(LeanTween.color(gameObject, low, 0.5f));
@@ -435,6 +490,7 @@ public class BossOne : Enemy
             go.transform.position = transform.position;
             go.SetActive(true);
         }
+        Instantiate(missileSfx).GetComponent<MissileSfx>().timeToActivate = missile.GetComponent<Missile>().timeToActivate;
     }
 
     public void MultipleShotgun()
@@ -443,6 +499,7 @@ public class BossOne : Enemy
         ShotgunBullet temp = shotgunBulletVars.Copy();
         temp.rotation = angle;
         StartCoroutine(BulletHellFuncs.ShotgunBullet(temp, shotgun, transform));
+        StartCoroutine(DelayedSfx(shotgunSfx, temp.spawnInterval, temp.repeats));
     }
 
     private float AngleTowardsPlayer()
@@ -455,5 +512,22 @@ public class BossOne : Enemy
     {
         LeanTween.rotateAround(gameObject, Vector3.forward, 360.0f, rotateTime)
             .setRepeat(-1);
+    }
+
+    private void CancelAllProjectiles()
+    {
+        foreach (GameObject pj in GameObject.FindGameObjectsWithTag("Bullet"))
+        {
+            Destroy(pj);
+        }
+    }
+    private IEnumerator DelayedSfx(AudioClip clip, float delay, int iterations)
+    {
+        for (int i = 0; i < iterations; i++)
+        {
+            audioSource.PlayOneShot(clip);
+            yield return new WaitForSeconds(delay);
+        }
+        
     }
 }

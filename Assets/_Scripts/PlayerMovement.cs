@@ -16,7 +16,9 @@ public class PlayerMovement : MonoBehaviour
     private PlayerWallSlide playerWallSlideScript;
     private PlayerJump playerJumpScript;
     private PlayerHealth playerHealthScript;
+    private AudioSource audioSource;
     [SerializeField] private Image energyBarImg;
+    [SerializeField] private AudioClip dashSfx;
 
     // Input
     private PlayerInput playerInput;
@@ -58,6 +60,7 @@ public class PlayerMovement : MonoBehaviour
         playerWallSlideScript = GetComponent<PlayerWallSlide>();
         playerJumpScript = GetComponent<PlayerJump>();
         playerHealthScript = GetComponent<PlayerHealth>();
+        audioSource = GetComponent<AudioSource>();
         currentStamina = maxStamina;
 
         // Inputs
@@ -93,7 +96,7 @@ public class PlayerMovement : MonoBehaviour
         if (directionX > 0)
         {
             spriteRenderer.flipX = false;
-        }    
+        }
         else if (directionX < 0)
         {
             spriteRenderer.flipX = true;
@@ -110,7 +113,10 @@ public class PlayerMovement : MonoBehaviour
         if (context.started)
             if (!PauseMenu.gameIsPaused)
                 if (!dashOnCooldown && (currentStamina >= staminaConsumption))
-                    StartCoroutine(Dash());
+                {
+                  StartCoroutine(Dash());
+                  audioSource.PlayOneShot(dashSfx, 0.2f);
+                }
     }
 
     private IEnumerator Dash()
@@ -173,7 +179,7 @@ public class PlayerMovement : MonoBehaviour
             if (!playerJumpScript.GetLimitPlayerMovement)
             {
                 // Player jumps off a wall, holding down jump and not pressing any directional inputs. Prevents setting the wall jump velocity.x to 0
-                if (playerJumpScript.GetCurrentJumpType == PlayerJump.CurrentJumpType.Wall && playerJumpScript.IsPressingJump && directionX == 0)                    
+                if (playerJumpScript.GetCurrentJumpType == PlayerJump.CurrentJumpType.Wall && playerJumpScript.IsPressingJump && directionX == 0)
                     desiredVelocity.x = rigidBody.velocity.x;
 
                 rigidBody.velocity = new Vector2(desiredVelocity.x, rigidBody.velocity.y);
