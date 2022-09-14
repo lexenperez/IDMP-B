@@ -66,3 +66,4 @@ crashlytics-build.properties
 # Ignore records
 /records.txt
 Assets/Resources/records.txt
+Assets/Resources/records.txt.meta
