@@ -13,6 +13,7 @@ TagManager:
   - Bullet
   - PlayerAttack
   - RecordText
+  - ArrowHead
   layers:
   - Default
   - TransparentFX

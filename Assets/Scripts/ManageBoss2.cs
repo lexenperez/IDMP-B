@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class ManageBoss2 : MonoBehaviour
 {
-    [SerializeField] GameObject boss1, boss2;
+    [SerializeField] Boss2 boss1, boss2;
     private GameObject player;
     [SerializeField] bool phase1 = true;
     private float timer = 0, grace = 1.5f;
-    public float boss1Health = 100, boss2Health = 100;
-    public float totalHealth = 100;
     private Vector3 home1 = new Vector3(-30, 7, 0), home2 = new Vector3(-30, 10, 0);
     private int NoOfBosses = 2;
     private bool busy = false;
@@ -42,19 +40,20 @@ public class ManageBoss2 : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         v = new Vector3(-13, 0, 0);
+
     }
 
     #region FSM
     private void FixedUpdate()
     {
-        if (boss1Health <= 0)
+        if (boss1.hp <= 0)
         {
             if (phase1)
             {
                 Phase2(boss1);
             }
         }
-        else if (boss2Health <= 0)
+        else if (boss2.hp <= 0)
         {
             if (phase1)
             {
@@ -73,24 +72,33 @@ public class ManageBoss2 : MonoBehaviour
             {
                 timer = 0;
                 //pick attack
-                choice = Random.Range(1, 5);
+                choice = Random.Range(1, 6);
                 //dont repeat last choice
                 while (choice == lastchoice)
                 {
-                    choice = Random.Range(1,5);
+                    choice = Random.Range(1,6);
+                }
+                //dont double charge on phase 2
+                if (!phase1)
+                {
+                    while (choice == 3)
+                    {
+                        choice = Random.Range(1, 6);
+                    }
                 }
                 switch (choice)
                 {
                     case 1:
+                    case 2:
                         charge = true;
                         break;
-                    case 2:
+                    case 3:
                         doublecharge = true;
                         break;
-                    case 3:
+                    case 4:
                         beyblade = true;
                         break;
-                    case 4:
+                    case 5:
                         circle = true;
                         break;
                 }
@@ -142,7 +150,7 @@ public class ManageBoss2 : MonoBehaviour
             else if (timer > (totalChargeTime / 5) * 3)
             {
                 boss2.transform.eulerAngles = new Vector3(0,180,0);
-                boss2.transform.position = new Vector3(-13, player.transform.position.y, 0);
+                boss2.transform.position = new Vector3(-15, player.transform.position.y, 0);
                 boss1.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
             }
             //only accelerate for 0.1 sec
@@ -159,7 +167,7 @@ public class ManageBoss2 : MonoBehaviour
             //position
             else if(timer > totalChargeTime / 5)
             {
-                boss1.transform.position = new Vector3(13, player.transform.position.y, 0);
+                boss1.transform.position = new Vector3(15, player.transform.position.y, 0);
                 boss1.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
             }
         }
@@ -187,10 +195,10 @@ public class ManageBoss2 : MonoBehaviour
             //position
             else if (timer > totalDoubleTime / 5)
             {
-                boss1.transform.position = new Vector3(13, player.transform.position.y, 0);
+                boss1.transform.position = new Vector3(15, player.transform.position.y, 0);
                 boss1.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
                 boss2.transform.eulerAngles = new Vector3(0, 180, 0);
-                boss2.transform.position = new Vector3(-13, player.transform.position.y, 0);
+                boss2.transform.position = new Vector3(-15, player.transform.position.y, 0);
                 boss2.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
             }
         }
@@ -292,7 +300,7 @@ public class ManageBoss2 : MonoBehaviour
         busy = false;
     }
 
-    private void Phase2(GameObject survivor)
+    private void Phase2(Boss2 survivor)
     {
         ResetAll();
         NoOfBosses = 1;
