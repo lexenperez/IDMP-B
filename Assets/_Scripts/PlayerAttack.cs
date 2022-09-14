@@ -45,7 +45,7 @@ public class PlayerAttack : MonoBehaviour
     }
     public void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.started && canAttack)
+        if (context.started && canAttack && !PauseMenu.gameIsPaused)
             StartCoroutine(Attack());
     }
 

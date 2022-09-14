@@ -114,7 +114,7 @@ public class PlayerJump : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && !PauseMenu.gameIsPaused)
         {
             desiredJump = true;
             pressingJump = true;

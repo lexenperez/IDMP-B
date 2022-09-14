@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     private TrailRenderer trailRenderer;
     private PlayerWallSlide playerWallSlideScript;
     private PlayerJump playerJumpScript;
+    private PlayerHealth playerHealthScript;
     [SerializeField] private Image energyBarImg;
 
     // Input
@@ -30,6 +31,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField, Range(0.01f, 1f)] private float dashTime = 0.8f;
     [SerializeField, Range(1f, 20f)] private float dashDistance = 5f;
     [SerializeField, Range(0.1f, 5f)] private float dashCooldown = 1f;
+    [SerializeField, Range(0.01f, 1f)] private float dashInvincibilityFrame = 0.8f;
 
     [Header("Stamina Configurations")]
     [SerializeField, Range(1f, 500f)] private float maxStamina = 100f;
@@ -55,11 +57,18 @@ public class PlayerMovement : MonoBehaviour
         trailRenderer = GetComponent<TrailRenderer>();
         playerWallSlideScript = GetComponent<PlayerWallSlide>();
         playerJumpScript = GetComponent<PlayerJump>();
+        playerHealthScript = GetComponent<PlayerHealth>();
         currentStamina = maxStamina;
 
         // Inputs
         playerInput = GetComponent<PlayerInput>();
         moveAction = playerInput.actions["Move"];
+
+        if (dashInvincibilityFrame > dashTime)
+        {
+            dashInvincibilityFrame = dashTime;
+            Debug.LogWarning("Dash Invincibility Time cannot be greater than Dash Time. Setting Dash Invincibility Time to Dash Time");
+        }
     }
 
     // Update is called once per frame
@@ -99,8 +108,9 @@ public class PlayerMovement : MonoBehaviour
     public void OnDash(InputAction.CallbackContext context)
     {
         if (context.started)
-            if (!dashOnCooldown && (currentStamina >= staminaConsumption))
-                StartCoroutine(Dash());
+            if (!PauseMenu.gameIsPaused)
+                if (!dashOnCooldown && (currentStamina >= staminaConsumption))
+                    StartCoroutine(Dash());
     }
 
     private IEnumerator Dash()
@@ -121,9 +131,17 @@ public class PlayerMovement : MonoBehaviour
         if (spriteRenderer.flipX)
             dashSpeed = -dashSpeed;
 
+        // Dashing
+        playerHealthScript.IsInvincible = true;
         trailRenderer.emitting = true;
+
+        // Turn off invincibility
+        yield return new WaitForSeconds(dashInvincibilityFrame);
+        playerHealthScript.IsInvincible = false;
+
         // Finish Dashing
-        yield return new WaitForSeconds(dashTime);
+        if (dashTime != dashInvincibilityFrame)
+            yield return new WaitForSeconds(dashTime - dashInvincibilityFrame);
         currentlyDashing = false;
         trailRenderer.emitting = false;
 

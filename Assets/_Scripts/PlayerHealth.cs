@@ -25,6 +25,12 @@ public class PlayerHealth : MonoBehaviour
 
     // Other
     private Color originalColor;
+
+    // Get - Setter
+    public bool IsInvincible {
+        get { return isInvincible; }
+        set { isInvincible = value; }
+    }
  
     // Start is called before the first frame update
     void Start()
@@ -37,15 +43,10 @@ public class PlayerHealth : MonoBehaviour
         originalColor = spriteRenderer.color;
     }
 
-    //private void OnMouseDown()
-    //{
-    //    TakeDamage(10);
-    //}
-
     protected void TakeDamage(float damage)
     {
         // Prevent player taking damage
-        if (isInvincible)
+        if (isInvincible || GameManager.gameEnded)
             return;
 
         // Damage the player

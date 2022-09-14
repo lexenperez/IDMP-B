@@ -100,6 +100,17 @@
                 },
                 {
                     "name": "",
+                    "id": "596346ee-cee1-453a-856e-d69bbadb90a3",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "daa3643b-13fb-49bb-9fbe-419e7694b0c7",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
