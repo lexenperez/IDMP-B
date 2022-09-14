@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,6 +13,7 @@ public class BossOne : Enemy
     public Transform[] projectileSpawnPlacements;
     public GameObject horizontalProjectile;
     public GameObject missile;
+    public GameObject missileSfx;
     public Transform missileCeiling;
     public Transform missileFloor;
     public int totalMissiles;
@@ -46,6 +48,11 @@ public class BossOne : Enemy
     private bool isMoving = false;
     private Vector3 waypoint;
     private Material material;
+
+    [SerializeField] private AudioClip shotgunSfx;
+    [SerializeField] private AudioClip spawnInSfx;
+    [SerializeField] private AudioClip phaseChangeSfx;
+    [SerializeField] private AudioClip deathSfx;
 
     enum Phase
     {
@@ -273,6 +280,7 @@ public class BossOne : Enemy
             sq.append(() => ps.Emit(100));
             sq.append(() => ps.Stop());
             sq.append(() => cam.GetComponent<CameraShake>().ScreenShake(2.0f));
+            sq.append(() => audioSource.PlayOneShot(spawnInSfx));
 
 
             sq.append(() => currentPhase++);
@@ -286,6 +294,7 @@ public class BossOne : Enemy
         if (hp / maxHp <= 0.75)
         {
             cam.GetComponent<CameraShake>().ScreenShake(2.0f);
+            audioSource.PlayOneShot(phaseChangeSfx);
             return Phase.HPThreshold;
         }
 
@@ -318,6 +327,7 @@ public class BossOne : Enemy
         if (hp / maxHp <= 0.35f)
         {
             cam.GetComponent<CameraShake>().ScreenShake(2.0f);
+            audioSource.PlayOneShot(phaseChangeSfx);
             return Phase.HPThreshold;
         }
 
@@ -349,6 +359,7 @@ public class BossOne : Enemy
         if (hp / maxHp <= 0.0f)
         {
             cam.GetComponent<CameraShake>().ScreenShake(2.0f);
+            audioSource.PlayOneShot(phaseChangeSfx);
             return Phase.HPThreshold;
         }
 
@@ -381,6 +392,7 @@ public class BossOne : Enemy
         if (t > graceTime)
         {
             cam.GetComponent<CameraShake>().ScreenShake(10.0f);
+            audioSource.PlayOneShot(deathSfx);
             LeanTween.cancel(gameObject);
             BaseRotationTween();
             LTSeq sq = LeanTween.sequence();
@@ -478,6 +490,7 @@ public class BossOne : Enemy
             go.transform.position = transform.position;
             go.SetActive(true);
         }
+        Instantiate(missileSfx).GetComponent<MissileSfx>().timeToActivate = missile.GetComponent<Missile>().timeToActivate;
     }
 
     public void MultipleShotgun()
@@ -486,6 +499,7 @@ public class BossOne : Enemy
         ShotgunBullet temp = shotgunBulletVars.Copy();
         temp.rotation = angle;
         StartCoroutine(BulletHellFuncs.ShotgunBullet(temp, shotgun, transform));
+        StartCoroutine(DelayedSfx(shotgunSfx, temp.spawnInterval, temp.repeats));
     }
 
     private float AngleTowardsPlayer()
@@ -506,5 +520,14 @@ public class BossOne : Enemy
         {
             Destroy(pj);
         }
+    }
+    private IEnumerator DelayedSfx(AudioClip clip, float delay, int iterations)
+    {
+        for (int i = 0; i < iterations; i++)
+        {
+            audioSource.PlayOneShot(clip);
+            yield return new WaitForSeconds(delay);
+        }
+        
     }
 }

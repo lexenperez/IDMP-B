@@ -18,6 +18,10 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField, Range(0.01f, 5f)] private float attackTime = 1f;
     [SerializeField, Range(0.01f, 5f)] private float attackCooldown = 1f;
 
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip[] attackSfxs;
+    private int currSfx = 0;
+
     // Attack
     private bool canAttack = true;
 
@@ -27,6 +31,7 @@ public class PlayerAttack : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         pathCreator = GetComponent<PathCreator>();
         trailRendererLocalScript = GetComponent<TrailRendererLocal>();
+        audioSource = GetComponent<AudioSource>();
         
         polyCollider.enabled = false;
 
@@ -83,6 +88,13 @@ public class PlayerAttack : MonoBehaviour
 
             trailTransform.rotation = pathCreator.path.GetRotationAtDistance(distanceTravelled, EndOfPathInstruction.Stop);
             yield return null; // Continue to run until next frame
+        }
+
+        if (attackSfxs.Length > 0)
+        {
+            audioSource.PlayOneShot(attackSfxs[currSfx], 0.2f);
+            currSfx++;
+            if (currSfx >= attackSfxs.Length) currSfx = 0;
         }
 
         // Finshed Attacking

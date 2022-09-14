@@ -23,7 +23,8 @@ public class PlayerHealth : MonoBehaviour
 
     // Other
     private Color originalColor;
-    [SerializeField] GameObject particleSpawner;
+    [SerializeField] private GameObject particleSpawner;
+    private AudioSource audioSource;
  
     // Start is called before the first frame update
     void Start()
@@ -34,6 +35,9 @@ public class PlayerHealth : MonoBehaviour
         // Store sprite color
         spriteRenderer = GetComponent<SpriteRenderer>();
         originalColor = spriteRenderer.color;
+
+        // Store take damage sfx
+        audioSource = GetComponent<AudioSource>();
     }
 
     //private void OnMouseDown()
@@ -55,10 +59,14 @@ public class PlayerHealth : MonoBehaviour
 
         // Run flicker animation
         StartCoroutine(DamageFlicker());
-        
+
+        // Play sfx
+        audioSource.Play();
+
         // Game Over
         if (currentHealth <= 0)
         {
+            // Have particle spawner have the death sfx
             Instantiate(particleSpawner).transform.position = transform.position;
             // Play death animation (if we add one)
             // Then game over screen

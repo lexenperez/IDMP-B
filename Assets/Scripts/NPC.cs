@@ -12,6 +12,7 @@ public abstract class NPC : MonoBehaviour
     protected SpriteRenderer sprite;
     protected BoxCollider2D baseCollider;
     protected Rigidbody2D rb2d;
+    protected AudioSource audioSource;
 
     // Find some more similar stuff
     //public Sprite[] spriteArray;
@@ -27,6 +28,7 @@ public abstract class NPC : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         rb2d = GetComponent<Rigidbody2D>();
         baseCollider = GetComponent<BoxCollider2D>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // For animation change (simple sprites)

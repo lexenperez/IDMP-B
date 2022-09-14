@@ -8,12 +8,16 @@ public abstract class Enemy : NPC
 
     // Same as playerHealth
     [SerializeField] private float invincibilityTime = 0.5f;
+    [SerializeField] private string[] damageTags;
+
+    private Color ogColor;
     private const float TOTAL_FLICKER_TIME = 0.2f;
     private bool isInvincible = false;
-    [SerializeField] private string[] damageTags;
-    private Color ogColor;
 
     public bool allowSelfHitbox;
+
+    // Parent class possibly too messy
+    [SerializeField] private AudioClip takeDamageSfx;
 
     protected void Init()
     {
@@ -34,6 +38,12 @@ public abstract class Enemy : NPC
         UpdateHealthBar();
 
         StartCoroutine(DamageFlicker());
+
+        if (audioSource)
+        {
+            audioSource.PlayOneShot(takeDamageSfx);
+        }
+
     }
 
     private IEnumerator DamageFlicker()
