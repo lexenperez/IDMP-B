@@ -100155,6 +100155,10 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 36325881200039107, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
+      propertyPath: dashSfx
+      value: 
+      objectReference: {fileID: 8300000, guid: 8c956a5fe7fb4ee4e935df17700140e6, type: 3}
+    - target: {fileID: 36325881200039107, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
       propertyPath: maxSpeed
       value: 7
       objectReference: {fileID: 0}
@@ -100213,6 +100217,10 @@ PrefabInstance:
     - target: {fileID: 36325881200039167, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
       propertyPath: m_TagString
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3648840885662753810, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
+      propertyPath: attackCooldown
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3648840885662753810, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
       propertyPath: attackSfxs.Array.size
@@ -101298,7 +101306,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2268581522145415090, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
       propertyPath: hp
-      value: 10
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 2268581522145415090, guid: 8ab2ccdac2e5a3246896205d61f6da6e, type: 3}
       propertyPath: cam

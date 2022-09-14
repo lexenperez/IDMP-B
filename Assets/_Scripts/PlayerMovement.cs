@@ -15,7 +15,9 @@ public class PlayerMovement : MonoBehaviour
     private TrailRenderer trailRenderer;
     private PlayerWallSlide playerWallSlideScript;
     private PlayerJump playerJumpScript;
+    private AudioSource audioSource;
     [SerializeField] private Image energyBarImg;
+    [SerializeField] private AudioClip dashSfx;
 
     // Input
     private PlayerInput playerInput;
@@ -55,6 +57,7 @@ public class PlayerMovement : MonoBehaviour
         trailRenderer = GetComponent<TrailRenderer>();
         playerWallSlideScript = GetComponent<PlayerWallSlide>();
         playerJumpScript = GetComponent<PlayerJump>();
+        audioSource = GetComponent<AudioSource>();
         currentStamina = maxStamina;
 
         // Inputs
@@ -100,7 +103,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if (context.started)
             if (!dashOnCooldown && (currentStamina >= staminaConsumption))
+            {
                 StartCoroutine(Dash());
+                audioSource.PlayOneShot(dashSfx, 0.2f);
+            }
+                
     }
 
     private IEnumerator Dash()
