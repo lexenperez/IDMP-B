@@ -48,7 +48,7 @@ public class PlayerHealth : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
-    protected void TakeDamage(float damage)
+    public void TakeDamage(float damage)
     {
         // Prevent player taking damage
         if (isInvincible || GameManager.gameEnded)

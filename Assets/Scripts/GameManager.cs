@@ -168,6 +168,7 @@ public class GameManager : MonoBehaviour
             {
                 if (AllObjectsDeleted(bosses))
                 {
+                    LeanTween.cancelAll();
                     FinishFight();
                     endScreenShown = true;
                     gameEnded = true;
@@ -185,6 +186,7 @@ public class GameManager : MonoBehaviour
             {
                 if (AllObjectsDeleted(players))
                 {
+                    LeanTween.cancelAll();
                     LoseFight();
                     Debug.Log("All players dead");
                     endScreenShown = true;
