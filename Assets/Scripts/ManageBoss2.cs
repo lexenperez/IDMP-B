@@ -81,7 +81,7 @@ public class ManageBoss2 : MonoBehaviour
                 grace = 1.5f;
                 timer = 0;
                 //pick attack
-                choice = 3;
+                choice = Random.Range(1, 5);
                 //dont repeat last choice
                 while (choice == lastchoice)
                 {
@@ -244,10 +244,10 @@ public class ManageBoss2 : MonoBehaviour
                 centre.GetComponent<circle>().Pause();
                 spawnOnce = false;
             }
-            boss1.transform.position = centre.transform.position + new Vector3(-4.1f, 0, 0);
+            boss1.transform.position = centre.transform.position + new Vector3(-3.8f, 0, 0);
             boss1.transform.parent = centre.transform;
             boss2.transform.eulerAngles = new Vector3(0, 180, 0);
-            boss2.transform.position = centre.transform.position + new Vector3(4.1f, 0, 0);
+            boss2.transform.position = centre.transform.position + new Vector3(3.8f, 0, 0);
             boss2.transform.parent = centre.transform;
         }
         else if (timer < totalBeybladeTime)
