@@ -13,7 +13,7 @@ public class PlayerHitbox : MonoBehaviour
         {
             if (collision.CompareTag(tag))
             {
-                Debug.Log("Player taking dmg");
+                //Debug.Log("Player taking dmg");
                 health.TakeDamage(collision.GetComponent<DamageDealer>().GetDamage());
             }
         }

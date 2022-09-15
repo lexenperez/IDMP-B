@@ -9,7 +9,8 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private GameObject controls;
     [SerializeField] private GameObject records;
     [SerializeField] private GameObject recordTxt;
-    [SerializeField] private string gameScene;
+    [SerializeField] private int boss1;
+    [SerializeField] private int boss2;
     [SerializeField] private GameObject gameManager;
     private string gmTag;
     private void Start()
@@ -23,10 +24,16 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
     }
 
-    public void StartGame()
+    public void StartBoss1()
     {
         
-        SceneManager.LoadScene(gameScene);
+        SceneManager.LoadScene(boss1);
+    }    
+    
+    public void StartBoss2()
+    {
+        
+        SceneManager.LoadScene(boss2);
     }
 
     public void ViewRecords()

@@ -418,6 +418,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 158.71698
       objectReference: {fileID: 0}
+    - target: {fileID: 3260189655675446436, guid: c7353fef8fda6204a90fad0413e74c8e, type: 3}
+      propertyPath: m_Color.b
+      value: 0.6723579
+      objectReference: {fileID: 0}
+    - target: {fileID: 3260189655675446436, guid: c7353fef8fda6204a90fad0413e74c8e, type: 3}
+      propertyPath: m_Color.g
+      value: 0.23050901
+      objectReference: {fileID: 0}
+    - target: {fileID: 3260189655675446436, guid: c7353fef8fda6204a90fad0413e74c8e, type: 3}
+      propertyPath: m_Color.r
+      value: 0.990566
+      objectReference: {fileID: 0}
     - target: {fileID: 3260189655675446437, guid: c7353fef8fda6204a90fad0413e74c8e, type: 3}
       propertyPath: m_SizeDelta.x
       value: 288.1976
@@ -839,7 +851,7 @@ GameObject:
   - component: {fileID: 486773721}
   m_Layer: 0
   m_Name: boss 1
-  m_TagString: Boss2
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6482,7 +6494,7 @@ GameObject:
   - component: {fileID: 1607806200}
   m_Layer: 0
   m_Name: boss manager
-  m_TagString: Boss2
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6687,11 +6699,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1238611556867835520, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
       propertyPath: damageTags.Array.data[0]
-      value: Boss2
+      value: Boss
       objectReference: {fileID: 0}
     - target: {fileID: 1238611556867835520, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
       propertyPath: damageTags.Array.data[2]
       value: ArrowHead
+      objectReference: {fileID: 0}
+    - target: {fileID: 3682552932505577669, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
+      propertyPath: maxHealth
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 3682552932505577669, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
       propertyPath: healthBarImg
@@ -7058,7 +7074,7 @@ GameObject:
   - component: {fileID: 1891465356}
   m_Layer: 0
   m_Name: boss 2
-  m_TagString: Boss2
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -48,24 +48,16 @@ public class ManageBoss2 : MonoBehaviour
     {
         if (boss1.hp <= 0)
         {
-            if (phase1)
-            {
-                Phase2(boss1);
-            }
+            Phase2(boss2, boss1);
         }
         else if (boss2.hp <= 0)
         {
-            if (phase1)
-            {
-                Phase2(boss2);
-            }
+            Phase2(boss1, boss2);
         }
-        if (boss1.hp <= 0)
+        if (boss1.hp <= 0 && boss2.hp <= 0)
         {
-            if (!phase1)
-            {
-                //end game here
-            }
+            Destroy(boss1);
+            Destroy(boss2);
         }
         timer += Time.deltaTime;
         if (!busy)
@@ -331,7 +323,7 @@ public class ManageBoss2 : MonoBehaviour
         busy = false;
     }
 
-    private void Phase2(Boss2 survivor)
+    private void Phase2(Boss2 survivor, Boss2 dead)
     {
         ResetAll();
         NoOfBosses = 1;
