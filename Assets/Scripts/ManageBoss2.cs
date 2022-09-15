@@ -7,7 +7,7 @@ public class ManageBoss2 : MonoBehaviour
     [SerializeField] Boss2 boss1, boss2;
     private GameObject player;
     [SerializeField] bool phase1 = true;
-    private float timer = 0, grace = 1.5f;
+    private float timer = 0, grace = 4.5f;
     private Vector3 home1 = new Vector3(-30, 7, 0), home2 = new Vector3(-30, 10, 0);
     private int NoOfBosses = 2;
     private bool busy = false;
@@ -60,6 +60,13 @@ public class ManageBoss2 : MonoBehaviour
                 Phase2(boss2);
             }
         }
+        if (boss1.hp <= 0)
+        {
+            if (!phase1)
+            {
+                //end game here
+            }
+        }
         timer += Time.deltaTime;
         if (!busy)
         {
@@ -70,13 +77,15 @@ public class ManageBoss2 : MonoBehaviour
             }
             else
             {
+                //intial grace period
+                grace = 1.5f;
                 timer = 0;
                 //pick attack
-                choice = Random.Range(1, 6);
+                choice = 3;
                 //dont repeat last choice
                 while (choice == lastchoice)
                 {
-                    choice = Random.Range(1,6);
+                    choice = Random.Range(1,5);
                 }
                 //dont double charge on phase 2
                 if (!phase1)
@@ -89,16 +98,15 @@ public class ManageBoss2 : MonoBehaviour
                 switch (choice)
                 {
                     case 1:
-                    case 2:
                         charge = true;
                         break;
-                    case 3:
+                    case 2:
                         doublecharge = true;
                         break;
-                    case 4:
+                    case 3:
                         beyblade = true;
                         break;
-                    case 5:
+                    case 4:
                         circle = true;
                         break;
                 }
@@ -133,13 +141,13 @@ public class ManageBoss2 : MonoBehaviour
     #region Attacks
     private void ChargeAttack()
     {
+        //ShootOutButt();
         if (timer < totalChargeTime)
         {
             //has to be in reverse order in order to not repeat actions
             //only accelerate for 0.1 sec
             if (timer > (totalChargeTime / 5) * 4.1f)
             {
-                //do nothing
             }
             //attack 2
             else if (timer > (totalChargeTime / 5) * 4)
@@ -149,23 +157,21 @@ public class ManageBoss2 : MonoBehaviour
             //position 2
             else if (timer > (totalChargeTime / 5) * 3)
             {
-                boss2.transform.eulerAngles = new Vector3(0,180,0);
+                boss2.transform.eulerAngles = new Vector3(0, 180, 0);
                 boss2.transform.position = new Vector3(-15, player.transform.position.y, 0);
                 boss1.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
             }
             //only accelerate for 0.1 sec
-            else if (timer > (totalChargeTime / 5) * 2.1f)
+            else if (timer > (totalChargeTime / 5) * 2.1f )
             {
-                //do nothing
             }
             //attack
-            else if(timer > (totalChargeTime / 5) * 2)
+            else if (timer > (totalChargeTime / 5) * 2)
             {
                 boss1.GetComponent<Rigidbody2D>().velocity = new Vector3(-1 * attackSpeed, 0, 0);
-
             }
             //position
-            else if(timer > totalChargeTime / 5)
+            else if (timer > totalChargeTime / 5)
             {
                 boss1.transform.position = new Vector3(15, player.transform.position.y, 0);
                 boss1.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
@@ -174,6 +180,25 @@ public class ManageBoss2 : MonoBehaviour
         else
         {
             ResetAll();
+        }
+    }
+
+    //might add later
+    private void ShootOutButt()
+    {
+        if (!phase1)
+        {
+            if (cooldown > 0.1f)
+            {
+                if ((float)Mathf.Floor(timer) % 2 == 0)
+                {
+                    GameObject currentBullet = Instantiate(bullet);
+                    currentBullet.transform.position = boss1.transform.position;
+                    currentBullet.GetComponent<Rigidbody2D>().velocity = Vector3.up * 3;
+                    cooldown = 0;
+                }
+            }
+            cooldown += Time.deltaTime;
         }
     }
     
@@ -237,16 +262,22 @@ public class ManageBoss2 : MonoBehaviour
 
     private void Circle()
     {
-        
-        if (timer < totalCircleTime)
+        if (timer < 1)
+        {
+            boss1.transform.position = new Vector3(-13, 0, 0);
+            boss1.transform.eulerAngles = new Vector3(0, 0, 90);
+            boss2.transform.position = new Vector3(13, 0, 0);
+            boss2.transform.eulerAngles = new Vector3(0, 0, -90);
+        }
+        else if (timer < totalCircleTime)
         {
             
             v = Quaternion.AngleAxis(360 / totalCircleTime*5 * Time.deltaTime, Vector3.forward) * v;
-            o = new Vector3(0, Mathf.Sin(2 * Mathf.PI / totalCircleTime*5 * timer), 0);
+            o = new Vector3(0, Mathf.Sin(2 * Mathf.PI / totalCircleTime*5 * (timer - 1)), 0);
             boss1.transform.position = new Vector3(0, 0, 0) + v + o * 6;
-            boss1.transform.eulerAngles = new Vector3(0, 0, 90 + 360 * timer/NoOfBosses);
+            boss1.transform.eulerAngles = new Vector3(0, 0, 90 + 360 * (timer - 1) / NoOfBosses);
             boss2.transform.position = new Vector3(0, 0, 0) - v - o * 6;
-            boss2.transform.eulerAngles = new Vector3(0, 0, 270 + 360 * timer/NoOfBosses);
+            boss2.transform.eulerAngles = new Vector3(0, 0, 270 + 360 * (timer - 1) / NoOfBosses);
             //shoot projectiles at player while moving
             if (cooldown > 0.4f)
             {

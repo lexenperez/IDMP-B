@@ -12,4 +12,9 @@ public class DamageDealer : MonoBehaviour
     {
         return damage;
     }
+
+    public void SetDamage(float dmg)
+    {
+        damage = dmg;
+    }
 }
