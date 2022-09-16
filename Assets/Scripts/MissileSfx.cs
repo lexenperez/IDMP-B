@@ -31,7 +31,6 @@ public class MissileSfx : MonoBehaviour
         {
             if (!chargeSfxSent)
             {
-                Debug.Log("Attacking at " + time);
                 audioSource.Play();
                 chargeSfxSent = true;
             }
@@ -40,7 +39,6 @@ public class MissileSfx : MonoBehaviour
 
         if (time >= timeToActivate)
         {
-            Debug.Log("Playing sfx at " + time);
             audioSource.PlayOneShot(onFireSfx);
             fireSfxSent = true;
             time = -100;

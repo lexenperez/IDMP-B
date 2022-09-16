@@ -48,8 +48,8 @@ public class Missile : LifeTimer
                     rb2d.AddForce(transform.up * speed);
                     launched = true;
                     time = 0;
-                    transform.rotation = Quaternion.Euler(0.0f, 0.0f, rotationZ);
-                    line.transform.rotation = transform.rotation;
+                    //transform.rotation = Quaternion.Euler(0.0f, 0.0f, rotationZ);
+                    //line.transform.rotation = transform.rotation;
                     //line.useWorldSpace = true;
 
                     StartCoroutine(Fade());

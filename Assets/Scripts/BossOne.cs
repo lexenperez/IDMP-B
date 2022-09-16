@@ -64,6 +64,7 @@ public class BossOne : Enemy
     // Start is called before the first frame update
     void Start()
     {
+        maxHp = hp;
         ps = GetComponent<ParticleSystem>();
         ps.Stop();
         transform.localScale = Vector3.zero;
@@ -189,15 +190,11 @@ public class BossOne : Enemy
             }
             else if (p == Phase.HPThreshold)
             {
-                bulletSpawner.SetActive(false);
-                bulletSpawnerThird.SetActive(false);
                 t = 0;
                 moveTime = 9999;
                 currentPhase++;
                 phasetxt.text = string.Format("PHASE {0}", currentPhase);
-                baseCollider.enabled = false;
-                StopAllCoroutines();
-                CancelAllProjectiles();
+                CancelAllAttacks();
             }
         }
 
@@ -207,13 +204,8 @@ public class BossOne : Enemy
          */
         if (currentPhase == 4)
         {
-            // Inefficient but this only happens if you manage to skip 3rd phase which most likely wont happen
-            if (bulletSpawner.activeSelf || bulletSpawnerThird.activeSelf || baseCollider.enabled)
-            {
-                bulletSpawner.SetActive(false);
-                bulletSpawnerThird.SetActive(false);
-                baseCollider.enabled = false;
-            }
+            // Inefficient but this does stop coroutines that manages to spawn in before the previous cancels
+            CancelAllAttacks();
             Phase p = PhaseFour(t, deathGraceTime);
             if (p == Phase.HPThreshold)
             {
@@ -504,8 +496,12 @@ public class BossOne : Enemy
 
     private float AngleTowardsPlayer()
     {
-        Vector3 dir = (thePlayer.transform.position);
-        return Mathf.Atan2(dir.y - transform.position.y, dir.x - transform.position.x) * Mathf.Rad2Deg;
+        if (thePlayer)
+        {
+            Vector3 dir = (thePlayer.transform.position);
+            return Mathf.Atan2(dir.y - transform.position.y, dir.x - transform.position.x) * Mathf.Rad2Deg;
+        }
+        return 0.0f;
     }
 
     public void BaseRotationTween()
@@ -518,7 +514,11 @@ public class BossOne : Enemy
     {
         foreach (GameObject pj in GameObject.FindGameObjectsWithTag("Bullet"))
         {
-            Destroy(pj);
+            if (pj.GetComponent<LifeTimer>() != null)
+            {
+                pj.GetComponent<LifeTimer>().Expire();
+            }
+            else Destroy(pj);
         }
     }
     private IEnumerator DelayedSfx(AudioClip clip, float delay, int iterations)
@@ -529,5 +529,17 @@ public class BossOne : Enemy
             yield return new WaitForSeconds(delay);
         }
         
+    }
+
+    private void CancelAllAttacks()
+    {
+        if (bulletSpawner.activeSelf || bulletSpawnerThird.activeSelf || baseCollider.enabled)
+        {
+            bulletSpawner.SetActive(false);
+            bulletSpawnerThird.SetActive(false);
+            baseCollider.enabled = false;
+        }
+        StopAllCoroutines();
+        CancelAllProjectiles();
     }
 }

@@ -11,7 +11,7 @@ public abstract class Enemy : NPC
     [SerializeField] private string[] damageTags;
 
     private Color ogColor;
-    private const float TOTAL_FLICKER_TIME = 0.2f;
+    private const float TOTAL_FLICKER_TIME = 0.5f;
     private bool isInvincible = false;
 
     public bool allowSelfHitbox;
@@ -51,7 +51,7 @@ public abstract class Enemy : NPC
 
         for (int i = 0; i < invincibilityTime / TOTAL_FLICKER_TIME; i++)
         {
-            Color c = sprite.color / 2.0f;
+            Color c = sprite.color / 1.2f;
             sprite.color = c;
 
             yield return new WaitForSeconds(TOTAL_FLICKER_TIME / 2f);
