@@ -161,8 +161,10 @@ MonoBehaviour:
   polyCollider: {fileID: 4915424162230074962}
   flipCollider: {fileID: 1902642045498300754}
   attackTime: 0.1
-  attackCooldown: 0.1
-  attackSfxs: []
+  attackCooldown: 0.5
+  attackSfxs:
+  - {fileID: 8300000, guid: 3b0173205009b15449d137d195f26cd9, type: 3}
+  - {fileID: 8300000, guid: ef3bff217509a994794dbeccf7795600, type: 3}
 --- !u!114 &36325881200039107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,15 +178,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   energyBarImg: {fileID: 0}
-  dashSfx: {fileID: 0}
-  maxSpeed: 4
+  dashSfx: {fileID: 8300000, guid: 8c956a5fe7fb4ee4e935df17700140e6, type: 3}
+  maxSpeed: 7
   dashTime: 0.105
   dashDistance: 4
   dashCooldown: 0.3
   dashInvincibilityFrame: 0.8
   maxStamina: 100
   staminaConsumption: 33
-  staminaRefill: 0.1
+  staminaRefill: 10
   currentlyDashing: 0
   dashOnCooldown: 0
 --- !u!114 &36325881200039104
@@ -203,7 +205,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  jumpHeight: 3.5
+  jumpHeight: 5
   minJumpHeight: 0.5
   maxFallSpeed: 10
   jumpBuffer: 0.15

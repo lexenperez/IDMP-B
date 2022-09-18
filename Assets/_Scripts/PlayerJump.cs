@@ -23,7 +23,7 @@ public class PlayerJump : MonoBehaviour
     };
 
     [Header("Jumping Configurations")]
-    [SerializeField, Range(1f, 5f),      Tooltip("Maximum jump height")]                                       private float jumpHeight = 2f;
+    [SerializeField, Range(1f, 10f),      Tooltip("Maximum jump height")]                                       private float jumpHeight = 2f;
     [SerializeField, Range(0f, 2f),      Tooltip("Minimum jump height")]                                       private float minJumpHeight = 0.2f;
     [SerializeField,                     Tooltip("Terminal Velocity")]                                         private float maxFallSpeed = 10f;
     [SerializeField, Range(0f, 0.3f),    Tooltip("How far from ground should we cache your jump?")]            private float jumpBuffer = 0.15f;

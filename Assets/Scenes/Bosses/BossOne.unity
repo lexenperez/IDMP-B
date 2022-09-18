@@ -99672,18 +99672,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 36325881200039104, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
-      propertyPath: jumpHeight
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 36325881200039107, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
-      propertyPath: dashSfx
-      value: 
-      objectReference: {fileID: 8300000, guid: 8c956a5fe7fb4ee4e935df17700140e6, type: 3}
-    - target: {fileID: 36325881200039107, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
-      propertyPath: maxSpeed
-      value: 7
-      objectReference: {fileID: 0}
     - target: {fileID: 36325881200039107, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
       propertyPath: energyBarImg
       value: 
@@ -99740,22 +99728,6 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 3648840885662753810, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
-      propertyPath: attackCooldown
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3648840885662753810, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
-      propertyPath: attackSfxs.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3648840885662753810, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
-      propertyPath: attackSfxs.Array.data[0]
-      value: 
-      objectReference: {fileID: 8300000, guid: 3b0173205009b15449d137d195f26cd9, type: 3}
-    - target: {fileID: 3648840885662753810, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
-      propertyPath: attackSfxs.Array.data[1]
-      value: 
-      objectReference: {fileID: 8300000, guid: ef3bff217509a994794dbeccf7795600, type: 3}
     - target: {fileID: 3682552932505577669, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
       propertyPath: m_Enabled
       value: 1

@@ -56,8 +56,8 @@ public class ManageBoss2 : MonoBehaviour
         }
         if (boss1.hp <= 0 && boss2.hp <= 0)
         {
-            Destroy(boss1);
-            Destroy(boss2);
+            //Destroy(boss1);
+            //Destroy(boss2);
         }
         timer += Time.deltaTime;
         if (!busy)

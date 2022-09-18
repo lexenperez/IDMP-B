@@ -38,7 +38,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Stamina Configurations")]
     [SerializeField, Range(1f, 500f)] private float maxStamina = 100f;
     [SerializeField, Range(1f, 100f)] private float staminaConsumption = 33f;
-    [SerializeField, Range(0.01f, 1f)] private float staminaRefill = 1f;
+    [SerializeField, Range(1f, 20f)] private float staminaRefill = 1f;
     private float currentStamina;
 
     // Dash
@@ -86,7 +86,7 @@ public class PlayerMovement : MonoBehaviour
         // Refill Stamina
         if (currentStamina < maxStamina)
         {
-            currentStamina = Mathf.Clamp(currentStamina + staminaRefill, 0, maxStamina);
+            currentStamina = Mathf.Clamp(currentStamina + (staminaRefill * Time.deltaTime), 0, maxStamina);
             energyBarImg.fillAmount = Mathf.Clamp(currentStamina / maxStamina, 0, 1f);
         }
     }

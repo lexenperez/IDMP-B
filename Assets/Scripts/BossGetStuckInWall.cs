@@ -24,18 +24,18 @@ public class BossGetStuckInWall : MonoBehaviour
         }
         //if attacked by player in the arrow point disable all colliders for short time. i.e deflect the attack
         //only works sometimes
-        if (collision.CompareTag("PlayerAttack"))
-        {
-            damage = attack.GetDamage();
-            attack.SetDamage(0);
-        }
+        //if (collision.CompareTag("PlayerAttack"))
+        //{
+        //    damage = attack.GetDamage();
+        //    attack.SetDamage(0);
+        //}
     }
 
-    public void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("PlayerAttack"))
-        {
-            attack.SetDamage(damage);
-        }
-    }
+    //public void OnTriggerExit2D(Collider2D collision)
+    //{
+    //    if (collision.CompareTag("PlayerAttack"))
+    //    {
+    //        attack.SetDamage(damage);
+    //    }
+    //}
 }

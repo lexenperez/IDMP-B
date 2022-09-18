@@ -24,7 +24,7 @@ public abstract class NPC : MonoBehaviour
 
     protected void Init()
     {
-        //maxHp = hp;
+        maxHp = hp;
         sprite = GetComponent<SpriteRenderer>();
         rb2d = GetComponent<Rigidbody2D>();
         baseCollider = GetComponent<BoxCollider2D>();
