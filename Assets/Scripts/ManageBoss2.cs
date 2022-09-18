@@ -46,6 +46,9 @@ public class ManageBoss2 : MonoBehaviour
     #region FSM
     private void FixedUpdate()
     {
+        if (boss1 == null && boss2 == null)
+            return;
+
         if (boss1.thePlayer == null || boss2.thePlayer == null)
         {
             timer = -999;
