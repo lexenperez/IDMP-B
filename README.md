@@ -12,11 +12,11 @@ A fast paced action platform fighting against a series of bosses.
 - Player (Move, Jump, Wall Slide & Jump, Dashing)
 
 ## Player Controls
-Move: A, D, Left Arrow, Right Arrow
-Jump: Space, W, Up Arrow
-Attack: Left Click, K
-Dask: Shift, Right Click, L
-Pause: Esc
+- Move: A, D, Left Arrow, Right Arrow
+- Jump: Space, W, Up Arrow
+- Attack: Left Click, K
+- Dask: Shift, Right Click, L
+- Pause: Esc
 
 # Sources / References:
 Game Maker’s Toolkit. (Jun, 2022). Platformer Toolkit by Game Maker’s Toolkit. [online] Available at: https://gmtk.itch.io/platformer-toolkit
