@@ -50,6 +50,11 @@ public class ManageBoss2 : MonoBehaviour
             return;
 
         if (boss1.thePlayer == null || boss2.thePlayer == null)
+        {
+            timer = -999;
+            return;
+
+        if (boss1.thePlayer == null || boss2.thePlayer == null)
             {
                 timer = -999;
                 return;
