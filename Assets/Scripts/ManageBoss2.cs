@@ -53,16 +53,12 @@ public class ManageBoss2 : MonoBehaviour
         {
             timer = -999;
             return;
-
-        if (boss1.thePlayer == null || boss2.thePlayer == null)
-            {
-                timer = -999;
-                return;
-            }
+        }
         if (boss1.hp <= 0 && boss2.hp <= 0)
         {
             //everything should be destroyed at this point because boss1 and 2 are the same thing.
-            Destroy(boss1.gameObject);
+            if (boss1 != null)
+                Destroy(boss1.gameObject);
             timer = -999;
         }
         else if (boss1.hp <= 0)
@@ -92,7 +88,7 @@ public class ManageBoss2 : MonoBehaviour
                 //dont repeat last choice
                 while (choice == lastchoice)
                 {
-                    choice = Random.Range(1,5);
+                    choice = Random.Range(1, 5);
                 }
                 //dont double charge on phase 2
                 if (!phase1)
@@ -169,7 +165,7 @@ public class ManageBoss2 : MonoBehaviour
                 boss1.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
             }
             //only accelerate for 0.1 sec
-            else if (timer > (totalChargeTime / 5) * 2.1f )
+            else if (timer > (totalChargeTime / 5) * 2.1f)
             {
             }
             //attack
@@ -208,7 +204,7 @@ public class ManageBoss2 : MonoBehaviour
             cooldown += Time.deltaTime;
         }
     }
-    
+
     private void DoubleCharge()
     {
         if (timer < totalDoubleTime)
@@ -278,9 +274,9 @@ public class ManageBoss2 : MonoBehaviour
         }
         else if (timer < totalCircleTime)
         {
-            
-            v = Quaternion.AngleAxis(360 / totalCircleTime*5 * Time.deltaTime, Vector3.forward) * v;
-            o = new Vector3(0, Mathf.Sin(2 * Mathf.PI / totalCircleTime*5 * (timer - 1)), 0);
+
+            v = Quaternion.AngleAxis(360 / totalCircleTime * 5 * Time.deltaTime, Vector3.forward) * v;
+            o = new Vector3(0, Mathf.Sin(2 * Mathf.PI / totalCircleTime * 5 * (timer - 1)), 0);
             boss1.transform.position = new Vector3(0, 0, 0) + v + o * 6;
             boss1.transform.eulerAngles = new Vector3(0, 0, 90 + 360 * (timer - 1) / NoOfBosses);
             boss2.transform.position = new Vector3(0, 0, 0) - v - o * 6;
@@ -311,7 +307,7 @@ public class ManageBoss2 : MonoBehaviour
         {
             ResetAll();
         }
-        
+
     }
     #endregion
 

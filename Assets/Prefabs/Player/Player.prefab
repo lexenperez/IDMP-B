@@ -183,7 +183,7 @@ MonoBehaviour:
   dashTime: 0.105
   dashDistance: 4
   dashCooldown: 0.3
-  dashInvincibilityFrame: 0.8
+  dashInvincibilityFrame: 0.105
   maxStamina: 100
   staminaConsumption: 33
   staminaRefill: 10
