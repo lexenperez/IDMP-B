@@ -15,6 +15,7 @@ public class PlayerHealth : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private bool isInvincible = false;
     [SerializeField] private Image healthBarImg;
+    [SerializeField] private bool takeNoDamage = false;
 
     [Header("Health Configurations")]
     [SerializeField] private float maxHealth = 100f;
@@ -50,6 +51,9 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        if (takeNoDamage)
+            damage = 0;        
+
         // Prevent player taking damage
         if (isInvincible || GameManager.gameEnded)
             return;

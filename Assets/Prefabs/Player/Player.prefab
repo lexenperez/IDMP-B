@@ -623,6 +623,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthBarImg: {fileID: 0}
+  takeNoDamage: 0
   maxHealth: 100
   invincibilityTime: 0.5
   particleSpawner: {fileID: 7973902632180363305, guid: cb3505310fec04046a3194f768277c6a, type: 3}
