@@ -46,11 +46,14 @@ public class ManageBoss2 : MonoBehaviour
     #region FSM
     private void FixedUpdate()
     {
-        if (boss1.thePlayer == null || boss2.thePlayer == null)
-        {
-            timer = -999;
+        if (boss1 == null && boss2 == null)
             return;
-        }
+
+        if (boss1.thePlayer == null || boss2.thePlayer == null)
+            {
+                timer = -999;
+                return;
+            }
         if (boss1.hp <= 0 && boss2.hp <= 0)
         {
             //everything should be destroyed at this point because boss1 and 2 are the same thing.
@@ -80,7 +83,7 @@ public class ManageBoss2 : MonoBehaviour
                 grace = 1.5f;
                 timer = 0;
                 //pick attack
-                choice = Random.Range(1, 5);
+                choice = 1;
                 //dont repeat last choice
                 while (choice == lastchoice)
                 {

@@ -14,11 +14,11 @@ public class BossGetStuckInWall : MonoBehaviour
     // Update is called once per frame
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Boss2"))
+        if (collision.CompareTag("Boss"))
         {
             rb2d.velocity = Vector3.zero;
         }
-        else if (collision.CompareTag("Walls"))
+        if (collision.CompareTag("Walls"))
         {
             rb2d.velocity = Vector3.zero;
         }
