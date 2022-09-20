@@ -61,6 +61,15 @@ public class MathFuncs : MonoBehaviour
     {
         return Random.value > (1.0f - percentage);
     }
+    public static float AngleTowardsObject(GameObject target, Transform origin)
+    {
+        if (target)
+        {
+            Vector3 dir = (target.transform.position);
+            return Mathf.Atan2(dir.y - origin.position.y, dir.x - origin.position.x) * Mathf.Rad2Deg;
+        }
+        return 0.0f;
+    }
 
 }
 

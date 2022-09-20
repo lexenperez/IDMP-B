@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static BossVars;
 
 public class BossOne : Enemy
 {
@@ -54,12 +55,7 @@ public class BossOne : Enemy
     [SerializeField] private AudioClip phaseChangeSfx;
     [SerializeField] private AudioClip deathSfx;
 
-    enum Phase
-    {
-        TimeReset,
-        HPThreshold,
-        Nothing
-    }
+
 
     // Start is called before the first frame update
     void Start()
@@ -487,21 +483,11 @@ public class BossOne : Enemy
 
     public void MultipleShotgun()
     {
-        float angle = AngleTowardsPlayer();
+        float angle = MathFuncs.AngleTowardsObject(thePlayer, transform);
         ShotgunBullet temp = shotgunBulletVars.Copy();
         temp.rotation = angle;
         StartCoroutine(BulletHellFuncs.ShotgunBullet(temp, shotgun, transform));
         StartCoroutine(DelayedSfx(shotgunSfx, temp.spawnInterval, temp.repeats));
-    }
-
-    private float AngleTowardsPlayer()
-    {
-        if (thePlayer)
-        {
-            Vector3 dir = (thePlayer.transform.position);
-            return Mathf.Atan2(dir.y - transform.position.y, dir.x - transform.position.x) * Mathf.Rad2Deg;
-        }
-        return 0.0f;
     }
 
     public void BaseRotationTween()
