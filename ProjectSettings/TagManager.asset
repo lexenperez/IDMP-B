@@ -15,6 +15,7 @@ TagManager:
   - RecordText
   - ArrowHead
   - Walls
+  - CurrentBoss
   layers:
   - Default
   - TransparentFX

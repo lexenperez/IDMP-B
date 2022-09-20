@@ -43,6 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19ffc8bde74d1a649a3f9f816a084634, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TOTAL_BOSSES: 0
   recordsObj: {fileID: 0}
   timerText: {fileID: 0}
   endCanvas: {fileID: 0}
@@ -51,5 +52,8 @@ MonoBehaviour:
   endCanvasTag: EndCanvas
   endTextTag: EndText
   bossTag: Boss
+  playerTag: Player
   recordTextTag: RecordText
+  currentBossTag: CurrentBoss
   bosses: []
+  players: []

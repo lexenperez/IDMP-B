@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     public static bool gameEnded = false;
     public static Scene currScene;
 
+    [SerializeField] private int TOTAL_BOSSES = 0;
+
     private List<TimeSpan> records = new List<TimeSpan>();
     private float currentBossTime = 0;
 
@@ -28,6 +30,7 @@ public class GameManager : MonoBehaviour
     public string bossTag;
     public string playerTag;
     public string recordTextTag;
+    public string currentBossTag;
     private string recordPath = "/Resources/records.txt";
 
     private int currentBoss = 0;
@@ -47,13 +50,11 @@ public class GameManager : MonoBehaviour
         }
         SceneManager.sceneLoaded += OnSceneLoaded;
 
-        foreach (string t in Directory.GetFiles(Application.dataPath + "/Scenes/Bosses"))
+        for (int i = 0; i < TOTAL_BOSSES; i++)
         {
-            if (t.EndsWith(".unity"))
-            {
-                records.Add(TimeSpan.FromSeconds(0));
-            }
+            records.Add(TimeSpan.FromSeconds(0));
         }
+
         recordText = Resources.Load<TextAsset>("records");
         if (recordText == null)
         {
@@ -108,6 +109,8 @@ public class GameManager : MonoBehaviour
         endText = GameObject.FindGameObjectWithTag(endTextTag);
         bosses = GameObject.FindGameObjectsWithTag(bossTag);
         players = GameObject.FindGameObjectsWithTag(playerTag);
+        // Use a dummy gameobjects positions as an indicator for what boss it is
+        currentBoss = (int)GameObject.FindGameObjectWithTag(currentBossTag).transform.position.x;
     }
 
     void LoadRecords()
@@ -219,7 +222,7 @@ public class GameManager : MonoBehaviour
         endCanvas.SetActive(true);
 
         bool newRec = UpdateRecord(currentBoss);
-        endText.GetComponent<TextMeshProUGUI>().text = EndText(TimeSpan.FromSeconds(currentBossTime).ToString("mm':'ss':'ff"), currentBoss, newRec);
+        endText.GetComponent<TextMeshProUGUI>().text = EndText(TimeSpan.FromSeconds(currentBossTime).ToString("mm':'ss':'ff"), currentBoss + 1, newRec);
         //endText.GetComponent<TextMeshProUGUI>().text = "This Time: " + TimeSpan.FromSeconds(currentBossTime).ToString("mm':'ss':'ff") + "\n";
     }
 
