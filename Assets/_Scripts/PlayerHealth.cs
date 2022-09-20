@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-[RequireComponent(typeof(SpriteRenderer))]
 public class PlayerHealth : MonoBehaviour
 {
     // Constants
@@ -42,7 +41,7 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = maxHealth;
 
         // Store sprite color
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         originalColor = spriteRenderer.color;
 
         // Store take damage sfx

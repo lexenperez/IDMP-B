@@ -10,6 +10,7 @@ public class PlayerJump : MonoBehaviour
     private BoxCollider2D boxCollider;
     private PlayerWallSlide playerWallSlideScript;
     private PlayerMovement playerMovementScript;
+    private Animator animator;
 
     [Header("Script Configurations")]
     [SerializeField] private bool debug = false;
@@ -66,6 +67,7 @@ public class PlayerJump : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         playerWallSlideScript = GetComponent<PlayerWallSlide>();
         playerMovementScript = GetComponent<PlayerMovement>();
+        animator = GetComponent<Animator>();
 
         colliderOffset = new Vector2(boxCollider.bounds.size.x / 2f, 0);
         groundOffset = (boxCollider.bounds.size.y / 2f);
@@ -141,6 +143,7 @@ public class PlayerJump : MonoBehaviour
             {
                 currentlyJumping = false;
                 currentJumpType = CurrentJumpType.None;
+                animator.SetBool("isJumping", false);
             }
         }
         else
@@ -159,6 +162,11 @@ public class PlayerJump : MonoBehaviour
                     }
                 }
             }
+            else if (rigidBody.velocity.y < 0.01f)
+            {
+                // Velocity going down
+                animator.SetBool("isJumping", true);
+            }
         }
 
         // Limit the speed the player will fall
@@ -176,6 +184,7 @@ public class PlayerJump : MonoBehaviour
             coyoteTimeCounter = 0;
             lastJumpPositionY = transform.position.y;
             currentJumpType = CurrentJumpType.Ground;
+            animator.SetTrigger("takeOff");
 
             // Calculate jump power
             float jumpVelocity = Mathf.Sqrt(-2f * Physics2D.gravity.y * rigidBody.gravityScale * jumpHeight);

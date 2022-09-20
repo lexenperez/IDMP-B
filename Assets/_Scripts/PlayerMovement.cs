@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     private PlayerJump playerJumpScript;
     private PlayerHealth playerHealthScript;
     private AudioSource audioSource;
+    private Animator animator;
     [SerializeField] private Image energyBarImg;
     [SerializeField] private AudioClip dashSfx;
 
@@ -55,13 +56,14 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rigidBody = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         trailRenderer = GetComponent<TrailRenderer>();
         playerWallSlideScript = GetComponent<PlayerWallSlide>();
         playerJumpScript = GetComponent<PlayerJump>();
         playerHealthScript = GetComponent<PlayerHealth>();
         audioSource = GetComponent<AudioSource>();
         currentStamina = maxStamina;
+        animator = GetComponent<Animator>();
 
         // Inputs
         playerInput = GetComponent<PlayerInput>();
@@ -161,13 +163,18 @@ public class PlayerMovement : MonoBehaviour
 
     private void MovePlayer()
     {
+        // Read Direction Input
+        directionX = moveAction.ReadValue<float>();
+
+        SetRunAnimation(directionX);
+
         if (!currentlyDashing)
         {
-            // Read Direction Input
-            directionX = moveAction.ReadValue<float>();
 
             // Get Input and Desired Velocity
             desiredVelocity = new Vector2(directionX, 0f) * maxSpeed;
+
+
 
             // Disable movement inputs if wall sliding
             if (playerWallSlideScript.IsTouchingLeftWall && directionX == -1 && !playerJumpScript.IsOnGround)
@@ -185,5 +192,13 @@ public class PlayerMovement : MonoBehaviour
                 rigidBody.velocity = new Vector2(desiredVelocity.x, rigidBody.velocity.y);
             }
         }
+    }
+
+    private void SetRunAnimation(float directionX)
+    {
+        if (directionX == 0)
+            animator.SetBool("isRunning", false);
+        else
+            animator.SetBool("isRunning", true);
     }
 }

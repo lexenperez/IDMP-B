@@ -28,7 +28,7 @@ public class PlayerAttack : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         pathCreator = GetComponent<PathCreator>();
         trailRendererLocalScript = GetComponent<TrailRendererLocal>();
         audioSource = GetComponent<AudioSource>();
