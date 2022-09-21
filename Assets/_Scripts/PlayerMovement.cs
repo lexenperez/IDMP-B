@@ -175,7 +175,6 @@ public class PlayerMovement : MonoBehaviour
             desiredVelocity = new Vector2(directionX, 0f) * maxSpeed;
 
 
-
             // Disable movement inputs if wall sliding
             if (playerWallSlideScript.IsTouchingLeftWall && directionX == -1 && !playerJumpScript.IsOnGround)
                 desiredVelocity.x = 0;

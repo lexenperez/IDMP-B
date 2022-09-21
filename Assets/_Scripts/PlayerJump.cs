@@ -28,7 +28,8 @@ public class PlayerJump : MonoBehaviour
     [SerializeField, Range(0f, 2f),      Tooltip("Minimum jump height")]                                       private float minJumpHeight = 0.2f;
     [SerializeField,                     Tooltip("Terminal Velocity")]                                         private float maxFallSpeed = 10f;
     [SerializeField, Range(0f, 0.3f),    Tooltip("How far from ground should we cache your jump?")]            private float jumpBuffer = 0.15f;
-    [SerializeField, Range(0f, 1f),    Tooltip("A buffer period allowing jump when off the wall")]             private float coyoteTime = 0.2f;
+    [SerializeField, Range(0f, 1f),    Tooltip("A buffer period allowing jump when off the ground")]           private float groundCoyoteTime = 0.2f;
+    [SerializeField, Range(0f, 1f),    Tooltip("A buffer period allowing jump when off the wall")]             private float wallCoyoteTime = 0.2f;
 
     [Header("Wall Jump Configurations")]
     [SerializeField, Range(0.5f, 5f),    Tooltip("Maximum wall jump height")]                                  private float wallJumpHeight = 1f;
@@ -46,7 +47,8 @@ public class PlayerJump : MonoBehaviour
     // Private
     private bool limitPlayerMovement;
     private float jumpBufferCounter;
-    private float coyoteTimeCounter;
+    private float groundCoyoteTimeCounter;
+    private float wallCoyoteTimeCounter;
     private float lastJumpPositionY = 0f;
 
     // Offset Raycasts for ground detection
@@ -83,11 +85,17 @@ public class PlayerJump : MonoBehaviour
 
     private void CalculateCoyoteTime()
     {
-        // Player not touching walls and is in the air
-        if (!(playerWallSlideScript.CanLeftWallSlide || playerWallSlideScript.CanRightWallSlide) && !onGround)
-            coyoteTimeCounter += Time.deltaTime;
+        // Is player touching walls?
+        if (!(playerWallSlideScript.CanLeftWallSlide || playerWallSlideScript.CanRightWallSlide))
+            wallCoyoteTimeCounter += Time.deltaTime;
         else
-            coyoteTimeCounter = 0;
+            wallCoyoteTimeCounter = 0;
+
+        // Is player in the air?
+        if (!onGround)
+            groundCoyoteTimeCounter += Time.deltaTime;
+        else
+            groundCoyoteTimeCounter = 0;
     }
 
     private void JumpBuffer()
@@ -143,7 +151,7 @@ public class PlayerJump : MonoBehaviour
             {
                 currentlyJumping = false;
                 currentJumpType = CurrentJumpType.None;
-                animator.SetBool("isJumping", false);
+                animator.SetBool("isFalling", false);
             }
         }
         else
@@ -165,7 +173,7 @@ public class PlayerJump : MonoBehaviour
             else if (rigidBody.velocity.y < 0.01f)
             {
                 // Velocity going down
-                animator.SetBool("isJumping", true);
+                animator.SetBool("isFalling", true);
             }
         }
 
@@ -176,12 +184,12 @@ public class PlayerJump : MonoBehaviour
     private void Jump()
     {
         // Normal Jump
-        if (onGround || coyoteTimeCounter < coyoteTime)
+        if (onGround || groundCoyoteTimeCounter < groundCoyoteTime)
         {
             // Set jump settings
             desiredJump = false;
             jumpBufferCounter = 0;
-            coyoteTimeCounter = 0;
+            groundCoyoteTimeCounter = 0;
             lastJumpPositionY = transform.position.y;
             currentJumpType = CurrentJumpType.Ground;
             animator.SetTrigger("takeOff");
@@ -196,12 +204,12 @@ public class PlayerJump : MonoBehaviour
 
         // Wall Jump
         if (!limitPlayerMovement && !onGround && playerWallSlideScript.PrevTouchState != PlayerWallSlide.TouchState.Ground)
-            if (playerWallSlideScript.CanLeftWallSlide || playerWallSlideScript.CanRightWallSlide || coyoteTimeCounter < coyoteTime)
+            if (playerWallSlideScript.CanLeftWallSlide || playerWallSlideScript.CanRightWallSlide || wallCoyoteTimeCounter < wallCoyoteTime)
             {
                 // Set wall jump settings
                 desiredJump = false;
                 jumpBufferCounter = 0;
-                coyoteTimeCounter = 0;
+                wallCoyoteTimeCounter = 0;
                 lastJumpPositionY = transform.position.y;
                 currentJumpType = CurrentJumpType.Wall;
                 playerWallSlideScript.CanSlide = false;
