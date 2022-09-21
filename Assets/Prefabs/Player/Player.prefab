@@ -159,7 +159,8 @@ MonoBehaviour:
   minJumpHeight: 0.5
   maxFallSpeed: 10
   jumpBuffer: 0.15
-  coyoteTime: 0.2
+  groundCoyoteTime: 0.2
+  wallCoyoteTime: 0.15
   wallJumpHeight: 3
   wallJumpPower: 6
   wallJumpTime: 0.15

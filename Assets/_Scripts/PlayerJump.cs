@@ -172,8 +172,13 @@ public class PlayerJump : MonoBehaviour
             }
             else if (rigidBody.velocity.y < 0.01f)
             {
-                // Velocity going down
-                animator.SetBool("isFalling", true);
+                // Is player animation not falling? - Prevent triggering animation multiple times
+                if (!animator.GetBool("isFalling"))
+                {
+                    // Velocity going down
+                    animator.SetTrigger("fall");
+                    animator.SetBool("isFalling", true);
+                }
             }
         }
 
@@ -192,6 +197,7 @@ public class PlayerJump : MonoBehaviour
             groundCoyoteTimeCounter = 0;
             lastJumpPositionY = transform.position.y;
             currentJumpType = CurrentJumpType.Ground;
+            animator.SetBool("isFalling", false);
             animator.SetTrigger("takeOff");
 
             // Calculate jump power
@@ -213,6 +219,8 @@ public class PlayerJump : MonoBehaviour
                 lastJumpPositionY = transform.position.y;
                 currentJumpType = CurrentJumpType.Wall;
                 playerWallSlideScript.CanSlide = false;
+                animator.SetBool("isFalling", false);
+                animator.SetTrigger("takeOff");
 
                 StartCoroutine(WallJump());
             }
