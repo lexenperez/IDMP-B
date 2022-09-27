@@ -10,7 +10,7 @@ public abstract class NPC : MonoBehaviour
      */
 
     protected SpriteRenderer sprite;
-    protected BoxCollider2D baseCollider;
+    protected Collider2D baseCollider;
     protected Rigidbody2D rb2d;
     protected AudioSource audioSource;
 
@@ -27,7 +27,7 @@ public abstract class NPC : MonoBehaviour
         maxHp = hp;
         sprite = GetComponent<SpriteRenderer>();
         rb2d = GetComponent<Rigidbody2D>();
-        baseCollider = GetComponent<BoxCollider2D>();
+        baseCollider = GetComponent<Collider2D>();
         audioSource = GetComponent<AudioSource>();
     }
 
@@ -50,9 +50,14 @@ public abstract class NPC : MonoBehaviour
     // TODO move this somewhere, this is related to bosses
     protected void UpdateHealthBar()
     {
+        if (healthBar)
         healthBar.GetComponent<HPBossBar>().UpdateHealthBar();
     }
 
+    public bool IsDead()
+    {
+        return hp <= 0;
+    }
     // Assuming npcs either teleports to a location
     //protected void MoveTowards(Vector2 position)
     //{

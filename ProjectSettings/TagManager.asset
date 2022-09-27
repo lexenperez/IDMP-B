@@ -16,6 +16,8 @@ TagManager:
   - ArrowHead
   - Walls
   - CurrentBoss
+  - Trap
+  - Platform
   layers:
   - Default
   - TransparentFX

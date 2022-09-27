@@ -9,7 +9,7 @@ public class Turret : Enemy
     [SerializeField] private GameObject bullet;
 
     // Remove collider, just using for radius debugging
-    private CircleCollider2D debugRadius;
+    //private CircleCollider2D debugRadius;
 
     [SerializeField] private float DistanceForTrigger;
 
@@ -18,8 +18,8 @@ public class Turret : Enemy
     void Start()
     {
         base.Init();
-        debugRadius = GetComponent<CircleCollider2D>();
-        List<Vector2> points = new List<Vector2>();
+        //debugRadius = GetComponent<CircleCollider2D>();
+        //List<Vector2> points = new List<Vector2>();
         
 
     }
@@ -27,7 +27,7 @@ public class Turret : Enemy
     // Update is called once per frame
     void Update()
     {
-        debugRadius.radius = DistanceForTrigger;
+        //debugRadius.radius = DistanceForTrigger;
         int step = -sb.totalRight;
         int total = sb.totalLeft + sb.totalRight;
 
@@ -48,5 +48,18 @@ public class Turret : Enemy
             if (Vector2.Distance(transform.position, thePlayer.transform.position) <= DistanceForTrigger)
             StartCoroutine(BulletHellFuncs.ShotgunBullet(sb, bullet, transform));
         }
+
+        if (IsDead())
+        {
+            StopAllCoroutines();
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, DistanceForTrigger);
     }
 }

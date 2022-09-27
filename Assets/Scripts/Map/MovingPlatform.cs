@@ -105,18 +105,38 @@ public class MovingPlatform : Platform
     // Lets object on top follow moving object
     void OnCollisionEnter2D(Collision2D col)
     {
-        col.gameObject.transform.SetParent(gameObject.transform, true);
+        //col.gameObject.transform.SetParent(gameObject.transform, true);
     }
     void OnCollisionExit2D(Collision2D col)
     {
-        col.gameObject.transform.parent = null;
+        //col.gameObject.transform.parent = null;
     }
 
     // Debug
     private void OnDrawGizmos()
     {
-        Gizmos.DrawLine(transform.position, upperEndpoint);
-        Gizmos.DrawLine(transform.position, lowerEndpoint);
+        Vector2 startingPosition = transform.position;
+        Vector2 upperE;
+        Vector2 lowerE;
+        if (horizontalMovement)
+        {
+            upperE = startingPosition;
+            upperE.x += upperBound;
+
+            lowerE = startingPosition;
+            lowerE.x -= lowerBound;
+        }
+        else
+        {
+            upperE = startingPosition;
+            upperE.y += upperBound;
+
+            lowerE = startingPosition;
+            lowerE.y -= lowerBound;
+        }
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(transform.position, upperE);
+        Gizmos.DrawLine(transform.position, lowerE);
     }
 
 
