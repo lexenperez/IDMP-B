@@ -14,6 +14,8 @@ public class PlayerWallSlide : MonoBehaviour
     // References
     private Rigidbody2D rigidBody;
     private BoxCollider2D boxCollider;
+    private Animator animator;
+    private PlayerJump playerJumpScript;
 
     [Header("Script Configurations")]
     [SerializeField] private bool debug = false;
@@ -56,6 +58,8 @@ public class PlayerWallSlide : MonoBehaviour
     {
         rigidBody = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
+        animator = GetComponent<Animator>();
+        playerJumpScript = GetComponent<PlayerJump>();
 
         leftRaycastOffset = new Vector2(-boxCollider.bounds.size.x / 2f, heightOffset);
         rightRaycastOffset = new Vector2(boxCollider.bounds.size.x / 2f, heightOffset);
@@ -68,6 +72,15 @@ public class PlayerWallSlide : MonoBehaviour
     void Update()
     {
         IsTouchingWall();
+
+        // Don't animate player (squash player) in takeOff when touching wall
+        if (!playerJumpScript.IsOnGround)
+        {
+            if ((touchingLeftWall || touchingRightWall) && !animator.GetBool("isFalling"))
+            {
+                animator.SetBool("isFalling", true);
+            }
+        }
     }
 
     private void IsTouchingWall()
