@@ -5,12 +5,14 @@ using UnityEngine.InputSystem;
 
 public class PlayerJump : MonoBehaviour
 {
-    // References
+    [Header("References")]
     private Rigidbody2D rigidBody;
     private BoxCollider2D boxCollider;
     private PlayerWallSlide playerWallSlideScript;
     private PlayerMovement playerMovementScript;
     private Animator animator;
+    [SerializeField] private GameObject jumpParticle;
+    [SerializeField] private GameObject landParticle;
 
     [Header("Script Configurations")]
     [SerializeField] private bool debug = false;
@@ -52,7 +54,7 @@ public class PlayerJump : MonoBehaviour
     private float lastJumpPositionY = 0f;
 
     // Offset Raycasts for ground detection
-    [SerializeField, Range(0.001f, 0.5f), Tooltip("Distance from bottom of collision box to ground layer")] private float groundLength = 0.05f;
+    [SerializeField, Range(0.001f, 0.5f), Tooltip("Distance from bottom of collision box to ground layer")] private float groundSize = 0.05f;
     private float groundOffset;
     private Vector2 colliderOffset;
 
@@ -114,9 +116,8 @@ public class PlayerJump : MonoBehaviour
 
     private void IsGrounded()
     {
-        // Shoots 2 raycasts downwards on either side of the collision box of the player
-        onGround = Physics2D.Raycast((Vector2) transform.position - colliderOffset, Vector2.down, groundLength + groundOffset, groundLayer) ||
-                   Physics2D.Raycast((Vector2) transform.position + colliderOffset, Vector2.down, groundLength + groundOffset, groundLayer);
+        // Uses an overlap box to detect ground
+        onGround = Physics2D.OverlapBox((Vector2)transform.position - new Vector2(0, groundOffset), new Vector2(boxCollider.bounds.size.x - 0.05f, groundSize), 0, groundLayer);
 
         if (onGround)
             playerWallSlideScript.PrevTouchState = PlayerWallSlide.TouchState.Ground;
@@ -149,9 +150,14 @@ public class PlayerJump : MonoBehaviour
             // Not moving vertically and is on ground
             if (rigidBody.velocity.y == 0f)
             {
-                currentlyJumping = false;
-                currentJumpType = CurrentJumpType.None;
-                animator.SetBool("isFalling", false);
+                if (animator.GetBool("isFalling"))
+                {
+                    currentlyJumping = false;
+                    currentJumpType = CurrentJumpType.None;
+                    animator.SetBool("isFalling", false);
+                    // Play Particle
+                    Instantiate(landParticle, transform.position - new Vector3(0, groundOffset), landParticle.transform.rotation);
+                }
             }
         }
         else
@@ -197,8 +203,13 @@ public class PlayerJump : MonoBehaviour
             groundCoyoteTimeCounter = 0;
             lastJumpPositionY = transform.position.y;
             currentJumpType = CurrentJumpType.Ground;
+
+            // Animate Player
             animator.SetBool("isFalling", false);
             animator.SetTrigger("takeOff");
+
+            // Play Particle
+            Instantiate(jumpParticle, transform.position - new Vector3(0, groundOffset), jumpParticle.transform.rotation);
 
             // Calculate jump power
             float jumpVelocity = Mathf.Sqrt(-2f * Physics2D.gravity.y * rigidBody.gravityScale * jumpHeight);
@@ -260,11 +271,10 @@ public class PlayerJump : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (debug)
+        if (debug && boxCollider != null)
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawLine((Vector2) transform.position - colliderOffset, (Vector2) transform.position - colliderOffset + Vector2.down * (groundLength + groundOffset));
-            Gizmos.DrawLine((Vector2) transform.position + colliderOffset, (Vector2) transform.position + colliderOffset + Vector2.down * (groundLength + groundOffset));
+            Gizmos.DrawCube((Vector2)transform.position - new Vector2(0, groundOffset), new Vector2(boxCollider.bounds.size.x, groundSize));
         }
     }
 }
