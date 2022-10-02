@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5663644149345327399}
   - component: {fileID: 5663644149345327392}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Crosshair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5663644149421456487}
   - component: {fileID: 5663644149421456480}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Crosshair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -174,7 +174,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5663644149464808732}
   - component: {fileID: 5663644149464808733}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Crosshair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -258,7 +258,7 @@ GameObject:
   - component: {fileID: 5663644149476422685}
   - component: {fileID: 5663644149476422684}
   - component: {fileID: 5663644149476422687}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ShotgunTurret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -372,6 +372,7 @@ MonoBehaviour:
   - {fileID: 5663644149345327399}
   - {fileID: 5663644149464808732}
   bullet: {fileID: 2543859719046070283, guid: c08115f29d26f5249a5ce9e844c1f9ae, type: 3}
+  playerTag: Player
   DistanceForTrigger: 10
 --- !u!58 &5663644149476422687
 CircleCollider2D:

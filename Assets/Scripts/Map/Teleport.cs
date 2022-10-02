@@ -15,6 +15,11 @@ public class Teleport : MonoBehaviour
             if (collision.CompareTag(tags))
             {
                 collision.transform.position = teleporter.position;
+                // This is dumb
+                if (GetComponent<MapPhaseChange>())
+                {
+                    GetComponent<MapPhaseChange>().ChangePhase();
+                }
             }
         }
     }

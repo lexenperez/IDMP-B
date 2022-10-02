@@ -7,11 +7,12 @@ public class Turret : Enemy
     [SerializeField] private ShotgunBullet sb;
     [SerializeField] private Transform[] crossHairs;
     [SerializeField] private GameObject bullet;
+    [SerializeField] private string playerTag;
 
     // Remove collider, just using for radius debugging
     //private CircleCollider2D debugRadius;
 
-    [SerializeField] private float DistanceForTrigger;
+    public float DistanceForTrigger;
 
     private float t = 0;
     // Start is called before the first frame update
@@ -20,7 +21,7 @@ public class Turret : Enemy
         base.Init();
         //debugRadius = GetComponent<CircleCollider2D>();
         //List<Vector2> points = new List<Vector2>();
-        
+        thePlayer = GameObject.FindGameObjectWithTag(playerTag);
 
     }
 
@@ -42,7 +43,7 @@ public class Turret : Enemy
             step++;
         }
         t += Time.deltaTime;
-        if (t > 2)
+        if (t > 2 && thePlayer)
         {
             t = 0;
             if (Vector2.Distance(transform.position, thePlayer.transform.position) <= DistanceForTrigger)

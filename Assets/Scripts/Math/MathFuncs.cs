@@ -71,6 +71,15 @@ public class MathFuncs : MonoBehaviour
         return 0.0f;
     }
 
+    // Gives a Vector2 point on a given circle
+    public static Vector2 GetVectorOnCircle(float xAngle, float yAngle, float radius)
+    {
+        float xRad = Mathf.Deg2Rad * xAngle;
+        float yRad = Mathf.Deg2Rad * yAngle;
+
+        return new Vector2(Mathf.Cos(xRad) * radius, Mathf.Sin(yRad) * radius);
+    }
+
 }
 
 [System.Serializable]

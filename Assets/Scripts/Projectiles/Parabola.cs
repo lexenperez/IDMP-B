@@ -40,18 +40,18 @@ public class Parabola : LifeTimer
 
     private void OnDrawGizmos()
     {
-        //LineRenderer lr = GetComponent<LineRenderer>();
-        //Rigidbody2D rg = GetComponent<Rigidbody2D>();
-        //lr.positionCount = debugLineLength;
+        LineRenderer lr = GetComponent<LineRenderer>();
+        Rigidbody2D rg = GetComponent<Rigidbody2D>();
+        lr.positionCount = debugLineLength;
 
-        //Vector2 pos = transform.position;
-        //Vector2 velocity = startingVelocity;
-        //for (int i = 0; i < debugLineLength; i++)
-        //{
-        //    lr.SetPosition(i, pos);
-        //    velocity += (Physics2D.gravity * rg.gravityScale) * Time.fixedDeltaTime;
-        //    pos += velocity * Time.fixedDeltaTime;
-        //}
+        Vector2 pos = transform.position;
+        Vector2 velocity = startingVelocity;
+        for (int i = 0; i < debugLineLength; i++)
+        {
+            lr.SetPosition(i, pos);
+            velocity += (Physics2D.gravity * rg.gravityScale) * Time.fixedDeltaTime;
+            pos += velocity * Time.fixedDeltaTime;
+        }
     }
 
     public override void Expire()
