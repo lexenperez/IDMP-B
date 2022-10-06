@@ -21,10 +21,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Image energyBarImg;
     [SerializeField] private AudioClip dashSfx;
 
-    // Input
-    private PlayerInput playerInput;
-    private InputAction moveAction;
-
     // Movement
     private float directionX;
     private Vector2 desiredVelocity;
@@ -47,6 +43,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool currentlyDashing;
     [SerializeField] private bool dashOnCooldown;
 
+    [Header("Movement States")]
+    [SerializeField] private bool pressingLeft;
+    [SerializeField] private bool pressingRight;
+
     private float dashSpeed;
 
     // Get - Setters
@@ -64,10 +64,6 @@ public class PlayerMovement : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         currentStamina = maxStamina;
         animator = GetComponent<Animator>();
-
-        // Inputs
-        playerInput = GetComponent<PlayerInput>();
-        moveAction = playerInput.actions["Move"];
 
         if (dashInvincibilityFrame > dashTime)
         {
@@ -161,10 +157,34 @@ public class PlayerMovement : MonoBehaviour
         dashOnCooldown = false;
     }
 
+    public void OnMoveLeft(InputAction.CallbackContext context)
+    {
+        if (context.started && !PauseMenu.gameIsPaused)
+        {
+            pressingLeft = true;
+        }
+
+        if (context.canceled)
+            pressingLeft = false;
+    }
+
+    public void OnMoveRight(InputAction.CallbackContext context)
+    {
+        if (context.started && !PauseMenu.gameIsPaused)
+        {
+            pressingRight = true;
+        }
+
+        if (context.canceled)
+            pressingRight = false;
+    }
+
     private void MovePlayer()
     {
         // Read Direction Input
-        directionX = moveAction.ReadValue<float>();
+        directionX = 0;
+        if (pressingLeft) directionX--;
+        if (pressingRight) directionX++;
 
         SetRunAnimation(directionX);
 
