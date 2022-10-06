@@ -138,6 +138,8 @@ MonoBehaviour:
   staminaRefill: 10
   currentlyDashing: 0
   dashOnCooldown: 0
+  pressingLeft: 0
+  pressingRight: 0
 --- !u!114 &36325881200039104
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,7 +225,19 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents:
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 36325881200039107}
+        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
+        m_MethodName: OnMoveLeft
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: dd09ecb9-21c7-4197-94fb-67783e94fa5d
     m_ActionName: Ground/Move[/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
@@ -273,10 +287,26 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 84ca71b5-7b78-42c4-bfae-6b836faa3930
-    m_ActionName: Land/Attack[/Mouse/leftButton]
+    m_ActionName: Game/Attack[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 36325881200039107}
+        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
+        m_MethodName: OnMoveRight
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 95faac64-376a-4c3d-9b94-4dc9e446a51d
+    m_ActionName: Game/Move Right[/Keyboard/d]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: Land
+  m_DefaultActionMap: Game
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!96 &36325881200039111
