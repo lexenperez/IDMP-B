@@ -10,6 +10,9 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    // Options
+    public static bool isPlayerInvincible = false;
+
     public static bool gameEnded = false;
     public static Scene currScene;
 
@@ -37,12 +40,18 @@ public class GameManager : MonoBehaviour
     public GameObject[] bosses = new GameObject[0];
     public GameObject[] players = new GameObject[0];
     private bool endScreenShown = false;
+
+    private void Awake()
+    {
+
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         if (GameObject.FindGameObjectsWithTag("GameController").Length > 1)
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
         else
         {

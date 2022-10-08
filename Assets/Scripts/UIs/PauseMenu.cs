@@ -7,11 +7,9 @@ public class PauseMenu : MonoBehaviour
 {
     public static bool gameIsPaused = false;
 
-    private bool inControlsMenu = false;
-
     [SerializeField] private GameObject mainPauseMenuUI;
     [SerializeField] private GameObject subPauseMenuUI;
-    [SerializeField] private GameObject controlsMenuUI;
+    [SerializeField] private GameObject optionsMenuUI;
 
     [SerializeField] private string mainMenuScene;
 
@@ -19,15 +17,16 @@ public class PauseMenu : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape) && !GameManager.gameEnded)
         {
-            if (inControlsMenu)
-                GoBack();
-            else
-            {
+            //if (inControlsMenu)
+            //    GoBack();
+            //else
+            //{
+            if (!optionsMenuUI.activeSelf)
                 if (gameIsPaused)
                     Resume();
                 else
                     Pause();
-            }
+            //}
         }
     }
 
@@ -52,17 +51,15 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
     }
 
-    public void ViewControls()
+    public void ViewOptions()
     {
-        inControlsMenu = true;
-        controlsMenuUI.SetActive(true);
+        optionsMenuUI.SetActive(true);
         subPauseMenuUI.SetActive(false);
     }
 
     public void GoBack()
     {
-        inControlsMenu = false;
-        controlsMenuUI.SetActive(false);
+        optionsMenuUI.SetActive(false);
         subPauseMenuUI.SetActive(true);
     }
 }
