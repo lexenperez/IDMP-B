@@ -329,7 +329,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shakeDuration: 0
   shakeMagnitude: 0.2
+  noiseMagnitude: 0
+  noiseAmplitude: 0
   dampingSpeed: 2
+  vCam: {fileID: 0}
 --- !u!1 &46343481
 GameObject:
   m_ObjectHideFlags: 0
@@ -84764,8 +84767,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7799103394854712990, guid: 5ac298b2ba729874bb56899c56fba25b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7799103394854712990, guid: 5ac298b2ba729874bb56899c56fba25b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.29
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7799103394854712990, guid: 5ac298b2ba729874bb56899c56fba25b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 7799103394854712991, guid: 5ac298b2ba729874bb56899c56fba25b, type: 3}
       propertyPath: orthographic

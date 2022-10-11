@@ -222,7 +222,7 @@ public class GameManager : MonoBehaviour
         endCanvas.SetActive(true);
 
         bool newRec = UpdateRecord(currentBoss);
-        endText.GetComponent<TextMeshProUGUI>().text = EndText(TimeSpan.FromSeconds(currentBossTime).ToString("mm':'ss':'ff"), currentBoss + 1, newRec);
+        endText.GetComponent<TextMeshProUGUI>().text = EndText(TimeSpan.FromSeconds(currentBossTime).ToString("mm':'ss':'ff"), currentBoss, newRec);
         //endText.GetComponent<TextMeshProUGUI>().text = "This Time: " + TimeSpan.FromSeconds(currentBossTime).ToString("mm':'ss':'ff") + "\n";
     }
 
@@ -252,7 +252,7 @@ public class GameManager : MonoBehaviour
     private string EndText(string currTime, int boss, bool newRecord)
     {
         string s = "";
-        s += string.Format("Boss {0} Defeated!\n", boss);
+        s += string.Format("Boss {0} Defeated!\n", boss + 1);
         s += "Time: " + currTime + "\n";
         if (newRecord)
         {

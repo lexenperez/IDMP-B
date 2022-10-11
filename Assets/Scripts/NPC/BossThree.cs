@@ -5,6 +5,9 @@ using static BossVars;
 
 public class BossThree : Enemy
 {
+    public GameObject cam;
+    public float rotateTime;
+
     [Header("Phase One Variables")]
     [SerializeField] private GameObject spawnTrigger;
     [SerializeField] private GameObject phaseOneTrigger;
@@ -233,38 +236,36 @@ public class BossThree : Enemy
 
     Phase PhaseFour(float t)
     {
-        //cam.GetComponent<CameraShake>().ScreenShake(10.0f);
+        cam.GetComponent<CameraShake>().ScreenShake(10.0f);
         //audioSource.PlayOneShot(deathSfx);
-        //LeanTween.cancel(gameObject);
-        //BaseRotationTween();
-        //LTSeq sq = LeanTween.sequence();
-        //Vector3 scale = gameObject.transform.localScale;
-        //Color low = phaseThreeColor * 0.5f;
-        //low.a = 1.0f;
-        //Color high = phaseThreeColor * -0.25f;
-        //high.a = 1.0f;
+        LeanTween.cancel(gameObject);
+        BaseRotationTween();
+        LTSeq sq = LeanTween.sequence();
+        Vector3 scale = gameObject.transform.localScale;
+        Color low = sprite.color * 0.5f;
+        low.a = 1.0f;
+        Color high = sprite.color * -0.25f;
+        high.a = 1.0f;
         //sq.append(() => ps.Play());
-        //sq.append(0.5f);
-        //sq.append(LeanTween.scale(gameObject, scale * 0.5f, 1));
+        sq.append(0.5f);
+        sq.append(LeanTween.scale(gameObject, scale * 0.5f, 1));
         //sq.append(() => ps.Emit(100));
-        //sq.append(LeanTween.scale(gameObject, scale, 1));
-        //sq.append(LeanTween.scale(gameObject, scale * 0.3f, 1));
+        sq.append(LeanTween.scale(gameObject, scale, 1));
+        sq.append(LeanTween.scale(gameObject, scale * 0.3f, 1));
         //sq.append(() => ps.Emit(100));
-        //sq.append(LeanTween.scale(gameObject, scale, 1));
-        //sq.append(LeanTween.scale(gameObject, scale * 0.1f, 1));
+        sq.append(LeanTween.scale(gameObject, scale, 1));
+        sq.append(LeanTween.scale(gameObject, scale * 0.1f, 1));
         //sq.append(() => ps.Emit(100));
-        //sq.append(LeanTween.scale(gameObject, scale, 0));
+        sq.append(LeanTween.scale(gameObject, scale, 0));
         //sq.append(() => ps.Emit(100));
         //sq.append(() => ps.Stop());
-        //sq.append(() => Death());
-        //LTSeq sc = LeanTween.sequence();
-        //sc.append(LeanTween.color(gameObject, low, 0.5f));
-        //sc.append(LeanTween.color(gameObject, high, 0.5f));
-        //sc.append(LeanTween.color(gameObject, low, 0.5f));
-        //sc.append(LeanTween.color(gameObject, high, 0.5f));
-        //return Phase.HPThreshold;
-        Death();
-        return Phase.Nothing;
+        sq.append(() => Death());
+        LTSeq sc = LeanTween.sequence();
+        sc.append(LeanTween.color(gameObject, low, 0.5f));
+        sc.append(LeanTween.color(gameObject, high, 0.5f));
+        sc.append(LeanTween.color(gameObject, low, 0.5f));
+        sc.append(LeanTween.color(gameObject, high, 0.5f));
+        return Phase.HPThreshold;
     }
 
     private void Death()
@@ -329,6 +330,11 @@ public class BossThree : Enemy
         }
     }
 
+    public void BaseRotationTween()
+    {
+        LeanTween.rotateAround(gameObject, Vector3.forward, 360.0f, rotateTime)
+            .setRepeat(-1);
+    }
 
 
 }

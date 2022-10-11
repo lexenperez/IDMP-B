@@ -11,6 +11,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private GameObject recordTxt;
     [SerializeField] private int boss1;
     [SerializeField] private int boss2;
+    [SerializeField] private int boss3;
     [SerializeField] private GameObject gameManager;
     private string gmTag;
     private void Start()
@@ -34,6 +35,11 @@ public class MainMenu : MonoBehaviour
     {
         
         SceneManager.LoadScene(boss2);
+    }
+
+    public void StartBoss3()
+    {
+        SceneManager.LoadScene(boss3);
     }
 
     public void ViewRecords()
