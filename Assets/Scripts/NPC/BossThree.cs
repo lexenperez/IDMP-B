@@ -19,8 +19,29 @@ public class BossThree : Enemy
     [SerializeField] private GameObject turretSpawner;
     private bool cannonballsOn = false;
 
+    [Header("Phase Two Variables")]
+    [SerializeField] private Transform thirdTeleportLocation;
+    [SerializeField] private LayerMask playerMask;
 
-    
+    [Header("Phase Three Variables")]
+    [SerializeField] private Transform thirdStartLocation;
+    [SerializeField] private Transform thirdEndLocation;
+    [SerializeField] private GameObject thirdTurretSpawner;
+    [SerializeField] private GameObject[] thirdCannonballs;
+    [SerializeField] private GameObject[] thirdLavas;
+    [SerializeField] private float cannonballSpawnTime;
+    [SerializeField] private float lavaTime;
+    [SerializeField] private float thirdStartTime;
+    [SerializeField] private GameObject thirdBulletSpawnerOne;
+    [SerializeField] private GameObject thirdBulletSpawnerTwo;
+    [SerializeField] private float bulletRotationMod;
+    private float thirdTotalTime = 0;
+    private bool thirdCannonballsOn = false;
+    private bool startPhaseThree = false;
+    private bool initialMove = false;
+    private float speedToEnd = 5;
+
+
     private List<int> ballIndices;
     private float t;
     private float currentPhase = 0;
@@ -37,6 +58,11 @@ public class BossThree : Enemy
         }
         teleport.SetActive(false);
         turretSpawner.SetActive(false);
+        for(int i = 0; i < thirdCannonballs.Length; i++)
+        {
+            thirdCannonballs[i].SetActive(false);
+        }
+        thirdTurretSpawner.SetActive(false);
 
 
     }
@@ -87,14 +113,14 @@ public class BossThree : Enemy
     Phase PhaseZero(float t)
     {
         // Start trigger
-        if (TriggerHit(spawnTrigger, thePlayer))
+        if (HelperFuncs.TriggerHit2D(spawnTrigger, thePlayer))
         {
             transform.LeanMove(phaseOnePosition.position, 7);
             spawnTrigger.SetActive(false);
         }
 
         // Start Phase One fight
-        if (TriggerHit(phaseOneTrigger, thePlayer))
+        if (HelperFuncs.TriggerHit2D(phaseOneTrigger, thePlayer))
         {
             phaseOneTrigger.SetActive(false);
             bulletSpawner.SetActive(true);
@@ -114,23 +140,26 @@ public class BossThree : Enemy
             {
                 bulletSpawner.GetComponent<BulletSpawner>().vars.rotation += 15.0f;
             }
+            // Turn on cannonball spawning
             if (!cannonballsOn)
             {
-                StartCoroutine(PhaseOneCannonballs(cannonballTime));
                 cannonballsOn = true;
+                StartCoroutine(PhaseOneCannonballs(cannonballTime));
             }
             return Phase.TimeReset;
         }
 
         if (hp / maxHp <= 0.75f)
         {
-
+            cannonballsOn = false;
             teleport.SetActive(true);
             spikes.SetActive(false);
             platforms.SetActive(false);
             bulletSpawner.SetActive(false);
             turretSpawner.SetActive(false);
-            StopCoroutine(PhaseOneCannonballs(0));
+            StopCoroutine(PhaseOneCannonballs(cannonballTime));
+            HelperFuncs.DestroyObjectsOfTag(cannonballs[0].tag);
+            HelperFuncs.DestroyObjectsOfTag(bulletSpawner.GetComponent<BulletSpawner>().bullet.tag);
             return Phase.HPThreshold;
         }
 
@@ -139,28 +168,149 @@ public class BossThree : Enemy
 
     Phase PhaseTwo(float t)
     {
+        // In this case just check if the player teleported to the final area
+        if (Physics2D.OverlapCircle(thirdTeleportLocation.position, 3.0f, playerMask))
+        {
+            transform.position = thirdStartLocation.position;
+            return Phase.HPThreshold;
+        }
+        
         return Phase.Nothing;
     }
 
     Phase PhaseThree(float t)
     {
+        if (!initialMove)
+        {
+            LTSeq sq = LeanTween.sequence();
+            sq.append(LeanTween.move(gameObject, thirdEndLocation.position, speedToEnd));
+
+            sq.append(speedToEnd);
+            sq.append(() => startPhaseThree = true);
+            sq.append(() =>
+            {
+                thirdTurretSpawner.SetActive(true);
+                thirdBulletSpawnerOne.SetActive(true);
+                //thirdBulletSpawnerTwo.SetActive(true);
+            });
+            thirdTotalTime = thirdStartTime;
+
+            initialMove = true;
+        }
+
+        if (startPhaseThree && t >= thirdTotalTime)
+        {
+            // Cannonballs on even/odds
+            // Timer for lava movement
+            // Spawn turrets
+            LTSeq sq = LeanTween.sequence();
+            sq.append(cannonballSpawnTime);
+            sq.append(() => PhaseThreeCannonballs());
+            sq.append(() => PhaseThreeSwapBulletHell());
+            //sq.append(lavaTime);
+            //sq.append(() => PhaseThreeLava());
+            thirdTotalTime = thirdStartTime + cannonballSpawnTime + lavaTime;
+            return Phase.TimeReset;
+
+        }
+
+        if (hp / maxHp <= 0.0f)
+        {
+            thirdTurretSpawner.SetActive(true);
+            thirdBulletSpawnerOne.SetActive(false);
+            thirdBulletSpawnerTwo.SetActive(false);
+            foreach(GameObject lava in thirdLavas)
+            {
+                lava.SetActive(false);
+            }
+            HelperFuncs.DestroyObjectsOfTag(cannonballs[0].tag);
+            HelperFuncs.DestroyObjectsOfTag(bulletSpawner.GetComponent<BulletSpawner>().bullet.tag);
+            return Phase.HPThreshold;
+        }
+
         return Phase.Nothing;
     }
 
     Phase PhaseFour(float t)
     {
+        //cam.GetComponent<CameraShake>().ScreenShake(10.0f);
+        //audioSource.PlayOneShot(deathSfx);
+        //LeanTween.cancel(gameObject);
+        //BaseRotationTween();
+        //LTSeq sq = LeanTween.sequence();
+        //Vector3 scale = gameObject.transform.localScale;
+        //Color low = phaseThreeColor * 0.5f;
+        //low.a = 1.0f;
+        //Color high = phaseThreeColor * -0.25f;
+        //high.a = 1.0f;
+        //sq.append(() => ps.Play());
+        //sq.append(0.5f);
+        //sq.append(LeanTween.scale(gameObject, scale * 0.5f, 1));
+        //sq.append(() => ps.Emit(100));
+        //sq.append(LeanTween.scale(gameObject, scale, 1));
+        //sq.append(LeanTween.scale(gameObject, scale * 0.3f, 1));
+        //sq.append(() => ps.Emit(100));
+        //sq.append(LeanTween.scale(gameObject, scale, 1));
+        //sq.append(LeanTween.scale(gameObject, scale * 0.1f, 1));
+        //sq.append(() => ps.Emit(100));
+        //sq.append(LeanTween.scale(gameObject, scale, 0));
+        //sq.append(() => ps.Emit(100));
+        //sq.append(() => ps.Stop());
+        //sq.append(() => Death());
+        //LTSeq sc = LeanTween.sequence();
+        //sc.append(LeanTween.color(gameObject, low, 0.5f));
+        //sc.append(LeanTween.color(gameObject, high, 0.5f));
+        //sc.append(LeanTween.color(gameObject, low, 0.5f));
+        //sc.append(LeanTween.color(gameObject, high, 0.5f));
+        //return Phase.HPThreshold;
+        Death();
         return Phase.Nothing;
     }
 
-
-    private bool TriggerHit(GameObject trigger, GameObject triggeree)
+    private void Death()
     {
-        return trigger.GetComponent<Collider2D>().IsTouching(triggeree.GetComponent<Collider2D>());
+        if (gameObject != null)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+
+    private void PhaseThreeCannonballs()
+    {
+        int index = Random.Range(0, thirdCannonballs.Length);
+        Instantiate(thirdCannonballs[ballIndices[index]], thirdCannonballs[ballIndices[index]].transform.position, Quaternion.identity, null).SetActive(true);
+    }
+
+    private void PhaseThreeSwapBulletHell()
+    {
+        thirdBulletSpawnerOne.GetComponent<BulletSpawner>().modRotation(bulletRotationMod);
+        thirdBulletSpawnerTwo.GetComponent<BulletSpawner>().modRotation(bulletRotationMod);
+        
+        if (thirdBulletSpawnerOne.activeSelf)
+        {
+            thirdBulletSpawnerOne.SetActive(false);
+            thirdBulletSpawnerTwo.SetActive(true);
+        }
+        else
+        {
+            thirdBulletSpawnerOne.SetActive(true);
+            thirdBulletSpawnerTwo.SetActive(false);
+        }
+    }
+
+    private void PhaseThreeLava()
+    {
+        int index = Random.Range(0, thirdLavas.Length);
+        RisingTrap trap = thirdLavas[index].GetComponent<RisingTrap>();
+        trap.RefreshParameters();
+        trap.ResumeTween();
+        // TODO find when lava has returned and x time has passed when that is finished
     }
 
     private IEnumerator PhaseOneCannonballs(float wait)
     {
-        while(true)
+        while(cannonballsOn)
         {
             SpawnCannonballs();
             yield return new WaitForSeconds(wait);
@@ -178,5 +328,7 @@ public class BossThree : Enemy
             indices.Remove(index);
         }
     }
+
+
 
 }

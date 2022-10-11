@@ -24,7 +24,9 @@ public class PullTarget : MonoBehaviour
             {
                 if (Vector3.Distance(obj.transform.position, transform.position) <= distanceThreshold)
                 {
-                    obj.transform.position = Vector2.MoveTowards(obj.transform.position, transform.position, Time.deltaTime * pullForce);
+                    Vector3 pos = Vector2.MoveTowards(obj.transform.position, transform.position, Time.deltaTime * pullForce);
+                    pos.z = 0;
+                    obj.transform.position = pos;
                 }
             }
         }

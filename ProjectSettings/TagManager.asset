@@ -18,6 +18,7 @@ TagManager:
   - CurrentBoss
   - Trap
   - Platform
+  - Cannonball
   layers:
   - Default
   - TransparentFX
@@ -27,7 +28,7 @@ TagManager:
   - UI
   - Ground
   - Turret
-  - 
+  - Player
   - 
   - 
   - 

@@ -63,9 +63,13 @@ public class Parabola : LifeTimer
     {
         if (collision.gameObject.CompareTag(platformTag))
         {
-            collision.gameObject.GetComponent<DamagingPlatform>().EnableDamage();
-            //TODO add explosion particles
-            Destroy(gameObject);
+            if (collision.gameObject.GetComponent<DamagingPlatform>())
+            {
+                collision.gameObject.GetComponent<DamagingPlatform>().EnableDamage();
+                //TODO add explosion particles
+                Destroy(gameObject);
+            }
+
         }
     }
 

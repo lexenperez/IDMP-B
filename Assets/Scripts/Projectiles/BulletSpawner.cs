@@ -34,6 +34,14 @@ public class BulletSpawner : MonoBehaviour
         StopAllCoroutines();
     }
 
+    public void modRotation(float rotation)
+    {
+        vars.rotation += rotation;
+        if (vars.rotation >= 360.0f)
+        {
+            vars.rotation = 360.0f - vars.rotation;
+        }
+    }
     // Update is called once per frame
     void Update()
     {
