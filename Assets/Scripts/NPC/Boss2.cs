@@ -15,7 +15,7 @@ public class Boss2 : Enemy
     void Awake()
     {
         base.Init();
-        Collider = base.baseCollider;
+        Collider = (BoxCollider2D)base.baseCollider;
     }
 
     // Update is called once per frame
