@@ -287,13 +287,6 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                         m_RebindStopEvent?.Invoke(this, operation);
 
                         SwapDuplicateBindings(prevBinding, action, bindingIndex, allCompositeParts);
-                        //if (SwapDuplicateBindings(action, bindingIndex, allCompositeParts))
-                        //{
-                        //    action.RemoveBindingOverride(bindingIndex);
-                        //    CleanUp();
-                        //    PerformInteractiveRebind(action, bindingIndex, allCompositeParts);
-                        //    return;
-                        //}
 
                         UpdateBindingDisplay();
                         CleanUp();
@@ -345,18 +338,13 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 InputBinding binding = action.actionMap.bindings[i];
                 if (binding.action == newBinding.action)
                 {
-                    Debug.Log("Binding Skipped: " + binding + "- New Binding: " + newBinding);
                     continue;
                 }
 
-                Debug.Log("Binding EPath: " + binding.effectivePath + "- New Binding Path: " + newBinding.effectivePath);
                 if (binding.effectivePath == newBinding.effectivePath)
                 {
-                    Debug.Log("Duplicate binding found: " + newBinding.effectivePath);
                     // Swap bindings
-                    Debug.Log("Override Path: " + prevBinding.effectivePath);
                     action.actionMap.FindAction(binding.action).ApplyBindingOverride(prevBinding.effectivePath);
-                    //action.RemoveBindingOverride(bindingIndex);
                     return;
                 }
             }
