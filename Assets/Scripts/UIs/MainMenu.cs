@@ -1,16 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] private GameObject mainMenu;
-    [SerializeField] private GameObject controls;
+    [SerializeField] private GameObject optionsMenu;
     [SerializeField] private GameObject records;
     [SerializeField] private GameObject recordTxt;
     [SerializeField] private int boss1;
     [SerializeField] private int boss2;
+    [SerializeField] private int boss3;
     [SerializeField] private GameObject gameManager;
     private string gmTag;
     private void Start()
@@ -36,6 +35,11 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene(boss2);
     }
 
+    public void StartBoss3()
+    {
+        SceneManager.LoadScene(boss3);
+    }
+
     public void ViewRecords()
     {
         GameObject gm = GameObject.FindGameObjectWithTag(gmTag);
@@ -48,16 +52,16 @@ public class MainMenu : MonoBehaviour
         mainMenu.SetActive(false);
     }
 
-    public void ViewControls()
+    public void ViewOptions()
     {
-        controls.SetActive(true);
+        optionsMenu.SetActive(true);
         mainMenu.SetActive(false);
     }
 
     public void GoBack()
     {
-        if (controls.activeSelf)
-            controls.SetActive(false);
+        if (optionsMenu.activeSelf)
+            optionsMenu.SetActive(false);
 
         else if (records.activeSelf)
             records.SetActive(false);

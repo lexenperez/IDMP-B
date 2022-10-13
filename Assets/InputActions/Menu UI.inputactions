@@ -1,0 +1,54 @@
+{
+    "name": "Menu UI",
+    "maps": [
+        {
+            "name": "UI",
+            "id": "8f77ca7f-1cfb-4b10-9ef6-75af17e30441",
+            "actions": [
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "314b675d-0650-4797-8759-991d4daf2799",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Back",
+                    "type": "Button",
+                    "id": "4b9074e4-8aa4-458a-863f-cb41cf8b751a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "64008085-1e3b-4796-841b-36da3b929189",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "eb37d23b-bb76-4704-b48d-b4b3ed080e02",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Back",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
