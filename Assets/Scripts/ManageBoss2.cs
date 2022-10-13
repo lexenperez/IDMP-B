@@ -21,7 +21,7 @@ public class ManageBoss2 : MonoBehaviour
     [SerializeField] ParticleSystem ps1, ps2;
 
     //atack pattern choices
-    private int attack1 = 25, attack2 = 5, attack3 = 10, attack4 = 10;
+    private int attack1 = 25, attack2 = 10, attack3 = 10, attack4 = 10;
     private int total, result;
     private bool needToUpdate = false;
 
@@ -132,8 +132,6 @@ public class ManageBoss2 : MonoBehaviour
             }
             if (charge)
             {
-                boss1trail.Clear();
-                boss2trail.Clear();
                 ChargeAttack();
                 if (needToUpdate)
                 {
@@ -142,8 +140,6 @@ public class ManageBoss2 : MonoBehaviour
             }
             if (doublecharge)
             {
-                boss1trail.Clear();
-                boss2trail.Clear();
                 DoubleCharge();
                 if (needToUpdate)
                 {
@@ -152,8 +148,6 @@ public class ManageBoss2 : MonoBehaviour
             }
             if (beyblade)
             {
-                boss1trail.Clear();
-                boss2trail.Clear();
                 BeyBlade();
                 if (needToUpdate)
                 {
@@ -162,8 +156,6 @@ public class ManageBoss2 : MonoBehaviour
             }
             if (circle)
             {
-                boss1trail.Clear();
-                boss2trail.Clear();
                 Circle();
                 if (needToUpdate)
                 {
@@ -436,9 +428,8 @@ public class ManageBoss2 : MonoBehaviour
             }
             else
             {
-                choice = 4;
+                choice = 2;
             }
-            Debug.Log(result);
         }
         lastchoice = choice;
         busy = true;
@@ -482,6 +473,7 @@ public class ManageBoss2 : MonoBehaviour
     {
         ResetAll();
         NoOfBosses = 1;
+        dead.DestroyHead();
         Destroy(dead.gameObject);
         boss2 = survivor;
         boss1 = survivor;
@@ -688,7 +680,7 @@ public class ManageBoss2 : MonoBehaviour
                 break;
             case 2:
                 attack1 += 2;
-                attack2 -= 5;
+                attack2 -= 10;
                 attack3 += 2;
                 attack4 += 2;
                 break;
@@ -704,6 +696,15 @@ public class ManageBoss2 : MonoBehaviour
                 attack3 += 2;
                 attack4 -= 5;
                 break;
+        }
+        if (attack1 < 0){
+            attack1 = 0;
+        }if (attack2 < 0){
+            attack2 = 0;
+        }if (attack2 < 0){
+            attack2 = 0;
+        }if (attack2 < 0){
+            attack2 = 0;
         }
         needToUpdate = false;
     }

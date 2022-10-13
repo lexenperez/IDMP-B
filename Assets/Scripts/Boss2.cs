@@ -11,6 +11,7 @@ public class Boss2 : Enemy
     [SerializeField] private AudioClip circle;
     [SerializeField] private AudioClip chargeup;
     [SerializeField] private AudioClip explode;
+    [SerializeField] private AudioSource secondaudio;
     // Start is called before the first frame update
     void Awake()
     {
@@ -28,36 +29,41 @@ public class Boss2 : Enemy
 
     public void DashSound()
     {
-        audioSource.PlayOneShot(dash);
+        secondaudio.PlayOneShot(dash);
     }
 
     public void SpinUp()
     {
-        audioSource.PlayOneShot(chargeup);
+        secondaudio.PlayOneShot(chargeup);
     }
 
     public void Beyblade()
     {
-        audioSource.PlayOneShot(spin);
+        secondaudio.PlayOneShot(spin);
     }
 
     public void Circle()
     {
-        audioSource.PlayOneShot(circle);
+        secondaudio.PlayOneShot(circle);
     }
 
     public void StopAudio()
     {
-        audioSource.Stop();
+        secondaudio.Stop();
     }
 
     public void Explode()
     {
-        audioSource.PlayOneShot(explode);
+        secondaudio.PlayOneShot(explode);
     }
 
     public bool AudioTest()
     {
-        return audioSource.isPlaying;
+        return secondaudio.isPlaying;
+    }
+
+    public void DestroyHead()
+    {
+        Destroy(Head.gameObject);
     }
 }

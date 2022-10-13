@@ -16,6 +16,7 @@ TagManager:
   - ArrowHead
   - Walls
   - CurrentBoss
+  - Laser
   layers:
   - Default
   - TransparentFX
