@@ -1,12 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using static BossVars;
 
 public class BossThree : Enemy
 {
+    [Header("General Variables")]
     public GameObject cam;
     public float rotateTime;
+    public TextMeshProUGUI phasetxt;
+    [SerializeField] private AudioClip spawnInSfx;
+    [SerializeField] private AudioClip phaseChangeSfx;
+    [SerializeField] private AudioClip deathSfx;
 
     [Header("Phase One Variables")]
     [SerializeField] private GameObject spawnTrigger;
@@ -33,7 +39,7 @@ public class BossThree : Enemy
     [SerializeField] private GameObject[] thirdCannonballs;
     [SerializeField] private GameObject[] thirdLavas;
     [SerializeField] private float cannonballSpawnTime;
-    [SerializeField] private float lavaTime;
+    [SerializeField] private float bulletChangeTime;
     [SerializeField] private float thirdStartTime;
     [SerializeField] private GameObject thirdBulletSpawnerOne;
     [SerializeField] private GameObject thirdBulletSpawnerTwo;
@@ -48,6 +54,7 @@ public class BossThree : Enemy
     private List<int> ballIndices;
     private float t;
     private float currentPhase = 0;
+    private ParticleSystem ps;
     // Start is called before the first frame update
     void Start()
     {
@@ -66,7 +73,7 @@ public class BossThree : Enemy
             thirdCannonballs[i].SetActive(false);
         }
         thirdTurretSpawner.SetActive(false);
-
+        ps = GetComponent<ParticleSystem>();
 
     }
 
@@ -75,6 +82,11 @@ public class BossThree : Enemy
     {
         t += Time.deltaTime;
         Phase p = Phase.Nothing;
+
+        if (currentPhase >= 4)
+        {
+            GameManager.isPlayerInvincible = true;
+        }
 
         switch(currentPhase)
         {
@@ -108,6 +120,9 @@ public class BossThree : Enemy
         }
         else if (p == Phase.HPThreshold)
         {
+            cam.GetComponent<CameraShake>().ScreenShake(2.0f);
+            audioSource.PlayOneShot(phaseChangeSfx);
+            phasetxt.text = string.Format("PHASE {0}", currentPhase);
             currentPhase++;
         }
 
@@ -118,8 +133,10 @@ public class BossThree : Enemy
         // Start trigger
         if (HelperFuncs.TriggerHit2D(spawnTrigger, thePlayer))
         {
+            BaseRotationTween();
             transform.LeanMove(phaseOnePosition.position, 7);
             spawnTrigger.SetActive(false);
+            audioSource.PlayOneShot(spawnInSfx);
         }
 
         // Start Phase One fight
@@ -209,17 +226,18 @@ public class BossThree : Enemy
             LTSeq sq = LeanTween.sequence();
             sq.append(cannonballSpawnTime);
             sq.append(() => PhaseThreeCannonballs());
+            sq.append(bulletChangeTime);
             sq.append(() => PhaseThreeSwapBulletHell());
             //sq.append(lavaTime);
             //sq.append(() => PhaseThreeLava());
-            thirdTotalTime = thirdStartTime + cannonballSpawnTime + lavaTime;
+            thirdTotalTime = thirdStartTime + cannonballSpawnTime + bulletChangeTime;
             return Phase.TimeReset;
 
         }
 
         if (hp / maxHp <= 0.0f)
         {
-            thirdTurretSpawner.SetActive(true);
+            thirdTurretSpawner.SetActive(false);
             thirdBulletSpawnerOne.SetActive(false);
             thirdBulletSpawnerTwo.SetActive(false);
             foreach(GameObject lava in thirdLavas)
@@ -228,6 +246,8 @@ public class BossThree : Enemy
             }
             HelperFuncs.DestroyObjectsOfTag(cannonballs[0].tag);
             HelperFuncs.DestroyObjectsOfTag(bulletSpawner.GetComponent<BulletSpawner>().bullet.tag);
+            StopAllCoroutines();
+            
             return Phase.HPThreshold;
         }
 
@@ -237,7 +257,7 @@ public class BossThree : Enemy
     Phase PhaseFour(float t)
     {
         cam.GetComponent<CameraShake>().ScreenShake(10.0f);
-        //audioSource.PlayOneShot(deathSfx);
+        audioSource.PlayOneShot(deathSfx);
         LeanTween.cancel(gameObject);
         BaseRotationTween();
         LTSeq sq = LeanTween.sequence();
@@ -246,19 +266,19 @@ public class BossThree : Enemy
         low.a = 1.0f;
         Color high = sprite.color * -0.25f;
         high.a = 1.0f;
-        //sq.append(() => ps.Play());
+        sq.append(() => ps.Play());
         sq.append(0.5f);
         sq.append(LeanTween.scale(gameObject, scale * 0.5f, 1));
-        //sq.append(() => ps.Emit(100));
+        sq.append(() => ps.Emit(100));
         sq.append(LeanTween.scale(gameObject, scale, 1));
         sq.append(LeanTween.scale(gameObject, scale * 0.3f, 1));
-        //sq.append(() => ps.Emit(100));
+        sq.append(() => ps.Emit(100));
         sq.append(LeanTween.scale(gameObject, scale, 1));
         sq.append(LeanTween.scale(gameObject, scale * 0.1f, 1));
-        //sq.append(() => ps.Emit(100));
+        sq.append(() => ps.Emit(100));
         sq.append(LeanTween.scale(gameObject, scale, 0));
-        //sq.append(() => ps.Emit(100));
-        //sq.append(() => ps.Stop());
+        sq.append(() => ps.Emit(100));
+        sq.append(() => ps.Stop());
         sq.append(() => Death());
         LTSeq sc = LeanTween.sequence();
         sc.append(LeanTween.color(gameObject, low, 0.5f));
@@ -330,7 +350,7 @@ public class BossThree : Enemy
         }
     }
 
-    public void BaseRotationTween()
+    private void BaseRotationTween()
     {
         LeanTween.rotateAround(gameObject, Vector3.forward, 360.0f, rotateTime)
             .setRepeat(-1);

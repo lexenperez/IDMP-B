@@ -8,6 +8,7 @@ public class Turret : Enemy
     [SerializeField] private Transform[] crossHairs;
     [SerializeField] private GameObject bullet;
     [SerializeField] private string playerTag;
+    [SerializeField] private AudioClip fireSfx;
 
     // Remove collider, just using for radius debugging
     //private CircleCollider2D debugRadius;
@@ -47,7 +48,11 @@ public class Turret : Enemy
         {
             t = 0;
             if (Vector2.Distance(transform.position, thePlayer.transform.position) <= DistanceForTrigger)
-            StartCoroutine(BulletHellFuncs.ShotgunBullet(sb, bullet, transform));
+            {
+                StartCoroutine(BulletHellFuncs.ShotgunBullet(sb, bullet, transform));
+                audioSource.PlayOneShot(fireSfx);
+            }
+            
         }
 
         if (IsDead())

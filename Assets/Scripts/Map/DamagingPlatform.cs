@@ -9,12 +9,15 @@ public class DamagingPlatform : MonoBehaviour
     [SerializeField] private float duration;
     private float t = 0;
     private Color originalColor;
+
+    private ParticleSystem ps;
     // Start is called before the first frame update
     void Start()
     {
         hitbox.SetActive(false);
         sr = GetComponent<SpriteRenderer>();
         originalColor = sr.color;
+        ps = GetComponent<ParticleSystem>();
     }
 
     // Update is called once per frame
@@ -34,6 +37,7 @@ public class DamagingPlatform : MonoBehaviour
         t = 0;
         sr.color = Color.red;
         hitbox.SetActive(true);
+        if (ps) ps.Play();
 
     }
 }

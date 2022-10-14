@@ -19,8 +19,11 @@ public class RisingTrap : MonoBehaviour
     [SerializeField] private bool camShake = true;
     [SerializeField] private float shakeDuration;
     [SerializeField] private Camera cam;
+    [SerializeField] private AudioClip lavaSfx;
 
     public float repeatTimer = 0;
+
+    private AudioSource audioSource;
     public bool start = false;
     private int totalParams = 0;
     private float t = 0;
@@ -38,6 +41,7 @@ public class RisingTrap : MonoBehaviour
         }
         // Store and pause the animation
         LeanTween.pause(gameObject);
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -69,6 +73,7 @@ public class RisingTrap : MonoBehaviour
         {
             sq.append(parameters[i].delay);
             if (camShake) sq.append(() => cam.GetComponent<CameraShake>().ScreenShake(shakeDuration));
+            sq.append(() => audioSource.PlayOneShot(lavaSfx));
             sq.append(LeanTween.move(gameObject, parameters[i].transform.position, parameters[i].time));
         }
     }
