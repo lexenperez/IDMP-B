@@ -11,6 +11,7 @@ public class Boss2 : Enemy
     [SerializeField] private AudioClip circle;
     [SerializeField] private AudioClip chargeup;
     [SerializeField] private AudioClip explode;
+    [SerializeField] private AudioClip deflect;
     [SerializeField] private AudioSource secondaudio;
     // Start is called before the first frame update
     void Awake()
@@ -65,5 +66,19 @@ public class Boss2 : Enemy
     public void DestroyHead()
     {
         Destroy(Head.gameObject);
+    }
+
+    public void Deflect()
+    {
+        isInvincible = true;
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(deflect);
+        }
+    }
+
+    public void UnDeflect()
+    {
+        isInvincible = false;
     }
 }

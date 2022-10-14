@@ -8,7 +8,6 @@ using static UnityEditor.PlayerSettings;
 public class ManageBoss2 : MonoBehaviour
 {
     [SerializeField] Boss2 boss1, boss2;
-    [SerializeField] TrailRenderer boss1trail, boss2trail;
     private GameObject player;
     [SerializeField] bool phase1 = true;
     private bool phase0;
@@ -85,11 +84,11 @@ public class ManageBoss2 : MonoBehaviour
         }
         else if (boss1.hp <= 0)
         {
-            Phase2(boss2, boss2trail, boss1);
+            Phase2(boss2, boss1);
         }
         else if (boss2.hp <= 0)
         {
-            Phase2(boss1, boss1trail, boss2);
+            Phase2(boss1, boss2);
         }
 
         timer += Time.deltaTime;
@@ -176,12 +175,12 @@ public class ManageBoss2 : MonoBehaviour
             //only accelerate for 0.1 sec
             if (timer > (totalChargeTime / 5) * 4.1f)
             {
-                ShootOutButt();
+                ShootOutButt(boss2);
             }
             //attack 2
             else if (timer > (totalChargeTime / 5) * 4)
             {
-                ShootOutButt();
+                ShootOutButt(boss2);
                 boss2.GetComponent<Rigidbody2D>().velocity = new Vector3(1 * attackSpeed, 0, 0);
                 if (!boss2.AudioTest())
                 {
@@ -191,21 +190,21 @@ public class ManageBoss2 : MonoBehaviour
             //position 2
             else if (timer > (totalChargeTime / 5) * 3)
             {
-                ShootOutButt();
+                ShootOutButt(boss1);
+                ShootOutButt(boss2);
                 boss2.transform.eulerAngles = new Vector3(0, 0, 180);
-                boss2trail.Clear();
                 boss2.transform.position = new Vector3(-15, player.transform.position.y, 0);
-                boss1.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+                boss2.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
             }
             //only accelerate for 0.1 sec
             else if (timer > (totalChargeTime / 5) * 2.1f)
             {
-                ShootOutButt();
+                ShootOutButt(boss1);
             }
             //attack
             else if (timer > (totalChargeTime / 5) * 2)
             {
-                ShootOutButt();
+                ShootOutButt(boss1);
                 boss1.GetComponent<Rigidbody2D>().velocity = new Vector3(-1 * attackSpeed, 0, 0);
                 if (!boss1.AudioTest())
                 {
@@ -215,8 +214,7 @@ public class ManageBoss2 : MonoBehaviour
             //position
             else if (timer > totalChargeTime / 5)
             {
-                ShootOutButt();
-                boss1trail.Clear();
+                ShootOutButt(boss1);
                 boss1.transform.position = new Vector3(15, player.transform.position.y, 0);
                 boss1.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
             }
@@ -231,15 +229,22 @@ public class ManageBoss2 : MonoBehaviour
     {
         if (timer < totalDoubleTime)
         {
-            //only accelerate for 0.1 sec
-            if (timer > (totalDoubleTime / 5) * 2.1f)
+            //stop with the lasers
+            if (timer > (totalDoubleTime / 5) * 2.5f)
             {
-                ShootOutButt();
+                //do nothing
+            }
+            //only accelerate for 0.1 sec
+            else if (timer > (totalDoubleTime / 5) * 2.1f)
+            {
+                ShootOutButt(boss1);
+                ShootOutButt(boss2);
             }
             //attack
             else if (timer > (totalDoubleTime / 5) * 2)
             {
-                ShootOutButt();
+                ShootOutButt(boss1);
+                ShootOutButt(boss2);
                 boss1.GetComponent<Rigidbody2D>().velocity = new Vector3(-1 * attackSpeed, 0, 0);
                 boss2.GetComponent<Rigidbody2D>().velocity = new Vector3(1 * attackSpeed, 0, 0);
                 if (!boss1.AudioTest())
@@ -254,13 +259,11 @@ public class ManageBoss2 : MonoBehaviour
             //position
             else if (timer > totalDoubleTime / 5)
             {
-                ShootOutButt();
-                boss1trail.Clear();
+                ShootOutButt(boss2);
                 boss1.transform.position = new Vector3(15, player.transform.position.y, 0);
                 boss1.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
                 boss2.transform.eulerAngles = new Vector3(0, 0, 180);
-                ShootOutButt();
-                boss2trail.Clear();
+                ShootOutButt(boss1);
                 boss2.transform.position = new Vector3(-15, player.transform.position.y, 0);
                 boss2.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
             }
@@ -281,8 +284,6 @@ public class ManageBoss2 : MonoBehaviour
                 centre.SetActive(true);
                 centre.GetComponent<circle>().Pause();
                 spawnOnce = false;
-                boss2trail.Clear();
-                boss1trail.Clear();
                 if (!boss1.AudioTest())
                 {
                     boss1.SpinUp();
@@ -331,10 +332,8 @@ public class ManageBoss2 : MonoBehaviour
     {
         if (timer < 1)
         {
-            boss1trail.Clear();
             boss1.transform.position = new Vector3(-13, 0, 0);
             boss1.transform.eulerAngles = new Vector3(0, 0, 90);
-            boss2trail.Clear();
             boss2.transform.position = new Vector3(13, 0, 0);
             boss2.transform.eulerAngles = new Vector3(0, 0, -90);
             if (!boss1.AudioTest())
@@ -351,9 +350,9 @@ public class ManageBoss2 : MonoBehaviour
 
             v = Quaternion.AngleAxis(360 / totalCircleTime * 5 * Time.deltaTime, Vector3.forward) * v;
             o = new Vector3(0, Mathf.Sin(2 * Mathf.PI / totalCircleTime * 5 * (timer - 1)), 0);
-            boss1.transform.position = new Vector3(0, 0, 0) + v + o * 6;
+            boss1.transform.position = new Vector3(0, 0, 0) + v + o * 5;
             boss1.transform.eulerAngles = new Vector3(0, 0, 90 + 360 * (timer - 1) / NoOfBosses);
-            boss2.transform.position = new Vector3(0, 0, 0) - v - o * 6;
+            boss2.transform.position = new Vector3(0, 0, 0) - v - o * 5;
             boss2.transform.eulerAngles = new Vector3(0, 0, 270 + 360 * (timer - 1) / NoOfBosses);
             //shoot projectiles at player while moving
             if (cooldown > 0.4f)
@@ -384,14 +383,12 @@ public class ManageBoss2 : MonoBehaviour
 
     }
 
-    private void ShootOutButt()
+    private void ShootOutButt(Boss2 buttguy)
     {
         if (cooldown > 0.2f)
         {
             GameObject currentlaser = Instantiate(laser);
-            currentlaser.transform.position = boss1.transform.position + boss1.transform.right * 2.5f - new Vector3(0, 0, 0.05f);
-            currentlaser = Instantiate(laser);
-            currentlaser.transform.position = boss2.transform.position + boss2.transform.right * 2.5f - new Vector3(0, 0, 0.05f);
+            currentlaser.transform.position = buttguy.transform.position + buttguy.transform.right * 2.5f - new Vector3(0, 0, 0.05f);
             cooldown = 0;
         }
 
@@ -448,13 +445,11 @@ public class ManageBoss2 : MonoBehaviour
         beyblade = false;
         boss1.transform.position = home1;
         boss1.transform.parent = null;
-        boss1trail.Clear();
         boss1.transform.eulerAngles = new Vector3(0, 0, 0);
         boss1.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         boss2.transform.position = home2;
         boss2.transform.parent = null;
         boss2.transform.eulerAngles = new Vector3(0, 0, 0);
-        boss2trail.Clear();
         boss2.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         timer = 0;
         v = new Vector3(-13, 0, 0);
@@ -469,7 +464,7 @@ public class ManageBoss2 : MonoBehaviour
         boss2.StopAudio();
     }
 
-    private void Phase2(Boss2 survivor,TrailRenderer survivortrail, Boss2 dead)
+    private void Phase2(Boss2 survivor, Boss2 dead)
     {
         ResetAll();
         NoOfBosses = 1;
@@ -477,8 +472,6 @@ public class ManageBoss2 : MonoBehaviour
         Destroy(dead.gameObject);
         boss2 = survivor;
         boss1 = survivor;
-        boss1trail = survivortrail;
-        boss2trail = survivortrail;
         //speed up charge and double charge
         totalChargeTime = 3.5f;
         totalDoubleTime = 3;
@@ -499,11 +492,9 @@ public class ManageBoss2 : MonoBehaviour
             {
                 boss1.transform.eulerAngles = new Vector3(0, 0, 0);
                 boss1.transform.position = new Vector3(15, 0, 0);
-                boss1trail.Clear();
                 boss1.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
                 boss2.transform.eulerAngles = new Vector3(0, 0, 180);
                 boss2.transform.position = new Vector3(-15, 0, 0);
-                boss2trail.Clear();
                 boss2.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
                 ps1.Play();
                 if (!boss1.AudioTest())
@@ -532,7 +523,6 @@ public class ManageBoss2 : MonoBehaviour
                     boss1.DashSound();
                 }
                 boss2.transform.position = new Vector3(-6, 16, 0);
-                boss2trail.Clear();
                 boss2.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
                 boss2.transform.eulerAngles = new Vector3(0, 0, 45);
 
@@ -545,7 +535,6 @@ public class ManageBoss2 : MonoBehaviour
                     boss2.DashSound();
                 }
                 boss1.transform.position = new Vector3(6, -16, 0);
-                boss1trail.Clear();
                 boss1.GetComponent<Rigidbody2D>().velocity = Vector3.zero; 
                 boss1.transform.eulerAngles = new Vector3(0, 0, 225);
             }
@@ -557,14 +546,12 @@ public class ManageBoss2 : MonoBehaviour
                     boss1.DashSound();
                 }
                 boss2.transform.position = new Vector3(6, 16, 0);
-                boss2trail.Clear();
                 boss2.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
                 boss2.transform.eulerAngles = new Vector3(0, 0, -225);
             }
             else if (timer > (initial_grace / 24) * 16)
             {
                 boss1.transform.position = new Vector3(-6, -16, 0);
-                boss1trail.Clear();
                 boss1.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
                 boss1.transform.eulerAngles = new Vector3(0, 0, -45);
             }
@@ -584,10 +571,8 @@ public class ManageBoss2 : MonoBehaviour
             else if (timer > (initial_grace / 24) * 12)
             {
                 boss1.transform.position = new Vector3(-16, -16, 0);
-                boss1trail.Clear();
                 boss1.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
                 boss2.transform.position = new Vector3(16, 16, 0);
-                boss2trail.Clear();
                 boss2.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
             }
             else if (timer > (initial_grace / 24) * 10)
@@ -606,11 +591,9 @@ public class ManageBoss2 : MonoBehaviour
             else if (timer > (initial_grace / 24) * 8)
             {
                 boss1.transform.position = new Vector3(16, -16, 0);
-                boss1trail.Clear();
                 boss1.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
                 boss1.transform.eulerAngles = new Vector3(0, 0, -90);
                 boss2.transform.position = new Vector3(-16, 16, 0);
-                boss2trail.Clear();
                 boss2.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
                 boss2.transform.eulerAngles = new Vector3(0, 0, 90);
             }
@@ -630,10 +613,8 @@ public class ManageBoss2 : MonoBehaviour
             else if (timer > (initial_grace / 24) * 4)
             {
                 boss1.transform.position = new Vector3(25, -7.5f, 0);
-                boss1trail.Clear();
                 boss1.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
                 boss2.transform.position = new Vector3(-25, 8, 0);
-                boss2trail.Clear();
                 boss2.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
             }
             else if (timer > (initial_grace / 24) * 2)
@@ -653,9 +634,7 @@ public class ManageBoss2 : MonoBehaviour
             {
                 boss1.transform.position = new Vector3(25, 8, 0);
                 boss1.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-                boss1trail.Clear();
                 boss2.transform.position = new Vector3(-25, -7.5f, 0);
-                boss2trail.Clear();
                 boss2.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
                 boss2.transform.eulerAngles = new Vector3(0, 0, 180);
             }

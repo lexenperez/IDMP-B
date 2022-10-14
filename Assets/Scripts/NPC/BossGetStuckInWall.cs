@@ -8,13 +8,19 @@ public class BossGetStuckInWall : MonoBehaviour
     [SerializeField] Rigidbody2D rb2d;
     [SerializeField] Collider2D coll;
     [SerializeField] Collider2D parentcoll;
+    [SerializeField] Boss2 parent;
     private float damage;
     [SerializeField] DamageDealer attack;
 
+
+    public void Start()
+    {
+        damage = attack.GetDamage();
+    }
     // Update is called once per frame
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Boss"))
+        if (collision.CompareTag("ArrowHead"))
         {
             rb2d.velocity = Vector3.zero;
         }
@@ -22,20 +28,19 @@ public class BossGetStuckInWall : MonoBehaviour
         {
             rb2d.velocity = Vector3.zero;
         }
-        //if attacked by player in the arrow point disable all colliders for short time. i.e deflect the attack
-        //only works sometimes
-        //if (collision.CompareTag("PlayerAttack"))
-        //{
-        //    damage = attack.GetDamage();
-        //    attack.SetDamage(0);
-        //}
+        //if attacked by player in the arrow point deflect the attack by making the boss invincible
+        //doesnt really work that well
+        if (collision.CompareTag("PlayerAttack"))
+        {
+            //parent.Deflect();
+        }
     }
 
-    //public void OnTriggerExit2D(Collider2D collision)
-    //{
-    //    if (collision.CompareTag("PlayerAttack"))
-    //    {
-    //        attack.SetDamage(damage);
-    //    }
-    //}
+    public void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("PlayerAttack"))
+        {
+            //parent.UnDeflect();
+        }
+    }
 }

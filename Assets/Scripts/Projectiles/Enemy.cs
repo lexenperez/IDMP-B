@@ -12,7 +12,7 @@ public abstract class Enemy : NPC
 
     private Color ogColor;
     private const float TOTAL_FLICKER_TIME = 0.5f;
-    private bool isInvincible = false;
+    public bool isInvincible = false;
 
     public bool allowSelfHitbox;
 

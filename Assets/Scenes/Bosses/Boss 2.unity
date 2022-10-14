@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 18739974}
   - component: {fileID: 18739973}
   - component: {fileID: 18739975}
+  - component: {fileID: 18739976}
   m_Layer: 0
   m_Name: Point 1
   m_TagString: ArrowHead
@@ -150,7 +151,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 18739971}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -38.45, y: -3.79, z: 0}
+  m_LocalPosition: {x: -39.39, y: -0.48000002, z: 0}
   m_LocalScale: {x: 0.5, y: 0.3, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -212,7 +213,29 @@ MonoBehaviour:
   rb2d: {fileID: 486773715}
   coll: {fileID: 18739973}
   parentcoll: {fileID: 486773716}
+  parent: {fileID: 486773720}
   attack: {fileID: 1029197490}
+--- !u!50 &18739976
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 18739971}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 0.0001
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1001 &130155597
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -620,7 +643,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 323923710}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.26079917, y: -0.58770144, z: -4.9253902}
+  m_LocalPosition: {x: 0.26079917, y: -0.58770144, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1989157035}
@@ -657,7 +680,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 389713095}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 18.2392, y: 1.1677014, z: 4.9253902}
+  m_LocalPosition: {x: 18.2392, y: 1.1677014, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 323923711}
@@ -1036,7 +1059,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 486773714}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -37.01, y: -1.02, z: 0}
+  m_LocalPosition: {x: -37.619995, y: -0.50999975, z: 0}
   m_LocalScale: {x: 0.5, y: 0.3, z: 1}
   m_Children:
   - {fileID: 824346955}
@@ -1159,6 +1182,7 @@ MonoBehaviour:
   invincibilityTime: 0.5
   damageTags:
   - PlayerAttack
+  isInvincible: 0
   allowSelfHitbox: 1
   takeDamageSfx: {fileID: 8300000, guid: bea2325ab99225041b8eda5d027fa2a2, type: 3}
   Head: {fileID: 18739971}
@@ -1168,6 +1192,7 @@ MonoBehaviour:
   circle: {fileID: 8300000, guid: 87d0c570986e9954cbe0083520b6a31f, type: 3}
   chargeup: {fileID: 8300000, guid: f1d348e5d4a0d5a4083b0dbdc96369be, type: 3}
   explode: {fileID: 8300000, guid: 3c7707fdb7dbb734aa0774ab7d1cc260, type: 3}
+  deflect: {fileID: 8300000, guid: b687bf66f5d7acf4ab2b8461b9690052, type: 3}
   secondaudio: {fileID: 824346957}
 --- !u!114 &486773721
 MonoBehaviour:
@@ -6049,7 +6074,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 658492643}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.26079917, y: 4.1677012, z: 4.9253902}
+  m_LocalPosition: {x: -0.26079917, y: 4.1677012, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 931884602}
@@ -6484,6 +6509,7 @@ GameObject:
   - component: {fileID: 824346955}
   - component: {fileID: 824346956}
   - component: {fileID: 824346957}
+  - component: {fileID: 824346958}
   m_Layer: 0
   m_Name: 'Trail '
   m_TagString: Untagged
@@ -6717,6 +6743,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &824346958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 824346954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdd420c770d9ef448b47fab063c2c231, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trilRenderer: {fileID: 824346956}
 --- !u!1 &931884601
 GameObject:
   m_ObjectHideFlags: 0
@@ -22134,7 +22173,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 964814890}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.599066, y: 0.54539233, z: 4.4658947}
+  m_LocalPosition: {x: -2.599066, y: 0.54539233, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 694336753}
@@ -22162,6 +22201,7 @@ GameObject:
   - component: {fileID: 1011659536}
   - component: {fileID: 1011659535}
   - component: {fileID: 1011659537}
+  - component: {fileID: 1011659538}
   m_Layer: 0
   m_Name: Point 2
   m_TagString: ArrowHead
@@ -22177,7 +22217,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1011659533}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -38.63, y: 3.21, z: 0}
+  m_LocalPosition: {x: -38.912, y: 6.341, z: 0}
   m_LocalScale: {x: 0.5, y: 0.3, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -22239,7 +22279,29 @@ MonoBehaviour:
   rb2d: {fileID: 1891465350}
   coll: {fileID: 1011659535}
   parentcoll: {fileID: 1891465351}
+  parent: {fileID: 1891465355}
   attack: {fileID: 1029197490}
+--- !u!50 &1011659538
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011659533}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 0.0001
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!114 &1029197490 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5622422038985009466, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
@@ -22464,7 +22526,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1284837813}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -18.7608, y: 1.1677014, z: 4.9253902}
+  m_LocalPosition: {x: -18.7608, y: 1.1677014, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 323923711}
@@ -22574,7 +22636,7 @@ GameObject:
   - component: {fileID: 1369145444}
   m_Layer: 6
   m_Name: topCollision
-  m_TagString: Walls
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -22587,7 +22649,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1369145442}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.26079917, y: 10.27, z: 4.9253902}
+  m_LocalPosition: {x: -0.26079917, y: 10.27, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 323923711}
@@ -22975,6 +23037,7 @@ GameObject:
   - component: {fileID: 1510578042}
   - component: {fileID: 1510578043}
   - component: {fileID: 1510578044}
+  - component: {fileID: 1510578045}
   m_Layer: 0
   m_Name: Trail
   m_TagString: Untagged
@@ -23208,6 +23271,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1510578045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1510578041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdd420c770d9ef448b47fab063c2c231, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trilRenderer: {fileID: 1510578043}
 --- !u!1 &1569765485
 GameObject:
   m_ObjectHideFlags: 0
@@ -23337,8 +23413,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boss1: {fileID: 486773720}
   boss2: {fileID: 1891465355}
-  boss1trail: {fileID: 824346956}
-  boss2trail: {fileID: 1510578043}
   phase1: 1
   ps1: {fileID: 486773722}
   ps2: {fileID: 1891465357}
@@ -23586,6 +23660,38 @@ PrefabInstance:
     - target: {fileID: 4705838633256273049, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
       propertyPath: editorData.vertexPathUpToDate
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4915424162230074962, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4915424162230074962, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4915424162230074962, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
+      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[3].x
+      value: 4.1581836
+      objectReference: {fileID: 0}
+    - target: {fileID: 4915424162230074962, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
+      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[3].y
+      value: -0.24965611
+      objectReference: {fileID: 0}
+    - target: {fileID: 4915424162230074962, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
+      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[4].x
+      value: 4.0943623
+      objectReference: {fileID: 0}
+    - target: {fileID: 4915424162230074962, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
+      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[4].y
+      value: 0.78710365
+      objectReference: {fileID: 0}
+    - target: {fileID: 4915424162230074962, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
+      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[5].x
+      value: 3.0307336
+      objectReference: {fileID: 0}
+    - target: {fileID: 4915424162230074962, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
+      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[5].y
+      value: 1.6103607
       objectReference: {fileID: 0}
     - target: {fileID: 5622422038985009466, guid: 78cd389292e715f40a714fa2ddb02906, type: 3}
       propertyPath: damage
@@ -24236,6 +24342,7 @@ MonoBehaviour:
   invincibilityTime: 0.5
   damageTags:
   - PlayerAttack
+  isInvincible: 0
   allowSelfHitbox: 1
   takeDamageSfx: {fileID: 8300000, guid: bea2325ab99225041b8eda5d027fa2a2, type: 3}
   Head: {fileID: 1011659533}
@@ -24245,6 +24352,7 @@ MonoBehaviour:
   circle: {fileID: 8300000, guid: 87d0c570986e9954cbe0083520b6a31f, type: 3}
   chargeup: {fileID: 8300000, guid: f1d348e5d4a0d5a4083b0dbdc96369be, type: 3}
   explode: {fileID: 8300000, guid: 3c7707fdb7dbb734aa0774ab7d1cc260, type: 3}
+  deflect: {fileID: 8300000, guid: b687bf66f5d7acf4ab2b8461b9690052, type: 3}
   secondaudio: {fileID: 1510578044}
 --- !u!114 &1891465356
 MonoBehaviour:
@@ -29211,7 +29319,7 @@ GameObject:
   - component: {fileID: 1989157036}
   m_Layer: 6
   m_Name: botCollision
-  m_TagString: Walls
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29224,7 +29332,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1989157034}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.26079917, y: -8.71, z: 4.9253902}
+  m_LocalPosition: {x: -0.26079917, y: -8.71, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 323923711}
