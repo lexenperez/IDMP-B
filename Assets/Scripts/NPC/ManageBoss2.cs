@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 public class ManageBoss2 : MonoBehaviour
 {
