@@ -5,17 +5,17 @@ Interactive Digital Media Project B 2022
 - Max Tomaselli - s3828931
 - Lexen Perez - s3784281
 
-# Beta
+# Final
 A fast paced action platform fighting against a series of bosses.
 
-- 2 Bosses (1 Unfinished)
+- 3 Bosses
 - Player (Move, Jump, Wall Slide & Jump, Dashing)
 
 ## Player Controls
 - Move: A, D, Left Arrow, Right Arrow
 - Jump: Space, W, Up Arrow
 - Attack: Left Click, K
-- Dask: Shift, Right Click, L
+- Dash: Shift, Right Click, L
 - Pause: Esc
 
 # Sources / References:
